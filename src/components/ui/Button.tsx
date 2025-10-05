@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, spacing, borderRadius, typography } from '@/design-tokens';
+import { borderRadius, typography } from '@/design-tokens';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';

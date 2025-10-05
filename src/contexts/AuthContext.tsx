@@ -1,3 +1,4 @@
+//src/contexts/AuthContext.tsx
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -34,37 +35,77 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    // Check if user is logged in on app start
-    const checkAuth = () => {
-      try {
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-          const userData = JSON.parse(storedUser);
-          if (userData.isAuthenticated) {
-            setUser(userData);
-          }
-        }
-      } catch (error) {
-        console.error('Error checking authentication:', error);
-        localStorage.removeItem('user');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // useEffect(() => {
+  //   // Check if user is logged in on app start
+  //   const checkAuth = () => {
+  //     try {
+  //       const storedUser = localStorage.getItem('user');
+  //       if (storedUser) {
+  //         const userData = JSON.parse(storedUser);
+  //         if (userData.isAuthenticated) {
+  //           setUser(userData);
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error('Error checking authentication:', error);
+  //       localStorage.removeItem('user');
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
 
-    checkAuth();
+  //   checkAuth();
+  // }, []);
+
+
+  // src/contexts/AuthContext.tsx
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const r = await fetch('/api/auth/me', { cache: 'no-store' });
+        const json = await r.json();
+
+        if (!active) return;
+
+        if (json?.ok && json?.user) {
+          setUser({
+            name: json?.profile?.fullname || json?.user?.email?.split('@')[0] || 'User',
+            email: json?.user?.email || undefined,
+            isAuthenticated: true
+          });
+        } else {
+          setUser(null);
+        }
+      } catch {
+        setUser(null);
+      } finally {
+        if (active) setIsLoading(false);
+      }
+    })();
+
+    return () => { active = false; };
   }, []);
+
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch { }
+    setUser(null);
+    localStorage.removeItem('user'); // keep for old code paths
+  };
+
+
 
   const login = (userData: User) => {
     setUser(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('user');
-  };
+  // const logout = () => {
+  //   setUser(null);
+  //   localStorage.removeItem('user');
+  // };
 
   const value = {
     user,
