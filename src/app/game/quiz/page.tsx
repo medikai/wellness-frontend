@@ -8,7 +8,7 @@ import QuizForm from '@/components/forms/QuizForm';
 import QuestionEditor from '@/components/forms/QuestionEditor';
 
 export default function QuizManagementPage() {
-  const { quizzes, createQuiz, updateQuiz, deleteQuiz, addQuestion, updateQuestion, deleteQuestion } = useQuiz();
+  const { quizzes, createQuiz, updateQuiz, deleteQuiz, addQuestion, deleteQuestion } = useQuiz();
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [editingQuiz, setEditingQuiz] = useState<Quiz | null>(null);
   const [activeQuizId, setActiveQuizId] = useState<string | null>(null);

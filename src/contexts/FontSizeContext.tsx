@@ -49,11 +49,10 @@ export const FontSizeProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [fontSizePx]);
 
   const setFontSizePx = useCallback((nextPx: number) => {
-    setFontSizePxState(prev => {
-      const clamped = Math.min(MAX_FONT_SIZE_PX, Math.max(MIN_FONT_SIZE_PX, Math.round(nextPx)));
-      return clamped;
-    });
-  }, []);
+  const clamped = Math.min(MAX_FONT_SIZE_PX, Math.max(MIN_FONT_SIZE_PX, Math.round(nextPx)));
+  setFontSizePxState(clamped);
+}, []);
+
 
   const increase = useCallback(() => setFontSizePxState(prev => Math.min(MAX_FONT_SIZE_PX, prev + 1)), []);
   const decrease = useCallback(() => setFontSizePxState(prev => Math.max(MIN_FONT_SIZE_PX, prev - 1)), []);

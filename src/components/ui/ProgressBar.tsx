@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors } from '@/design-tokens';
+// import { colors } from '@/design-tokens';
 
 interface ProgressBarProps {
   value: number; // 0-100

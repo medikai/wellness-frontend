@@ -1,8 +1,12 @@
+//src/components/forms/QuestionEditor.tsx
 "use client";
 
 import React, { useMemo, useState } from 'react';
 import { Card, Button } from '@/components/ui';
 import { QuizQuestion } from '@/types/quiz';
+
+type AnswerType = 'multiple-choice' | 'true-false' | 'text' | 'number';
+
 
 interface QuestionEditorProps {
   question?: Partial<QuizQuestion>;
@@ -13,7 +17,7 @@ interface QuestionEditorProps {
 const QuestionEditor: React.FC<QuestionEditorProps> = ({ question, onSave, onCancel }) => {
   const [formData, setFormData] = useState({
     question: question?.question || '',
-    answerType: (question?.answerType || 'multiple-choice') as 'multiple-choice' | 'true-false' | 'text' | 'number',
+    answerType: (question?.answerType || 'multiple-choice') as AnswerType,
     options: question?.options && question.options.length ? question.options : ['Option 1', 'Option 2', 'Option 3', 'Option 4'],
     correctAnswer: (question?.correctAnswer ?? 0) as string | number | boolean,
     explanation: question?.explanation || '',
@@ -83,9 +87,12 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({ question, onSave, onCan
             <label className="block text-sm font-medium text-neutral-dark mb-2">Answer Type</label>
             <select
               value={formData.answerType}
-              onChange={(e) => setFormData(prev => ({ ...prev, answerType: e.target.value as any }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, answerType: e.target.value as AnswerType }))
+              }
               className="w-full px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary"
             >
+
               <option value="multiple-choice">Multiple Choice</option>
               <option value="true-false">True / False</option>
               <option value="text">Text</option>

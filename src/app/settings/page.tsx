@@ -11,7 +11,7 @@ export default function SettingsPage() {
 
       <Card className="p-6">
         <h2 className="text-lg font-semibold text-neutral-dark mb-4">Text Size</h2>
-        <p className="text-neutral-medium mb-4">Adjust the app's text size. This setting is saved on your device.</p>
+        <p className="text-neutral-medium mb-4">Adjust the app&apos;s text size. This setting is saved on your device.</p>
         <TextSizeControl />
       </Card>
     </div>
