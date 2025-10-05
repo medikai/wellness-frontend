@@ -37,8 +37,8 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#2C4A52] mb-2">Welcome to Health++</h1>
-          <p className="text-[#6B7280]">Your personal health companion for a better tomorrow</p>
+          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Health++</h1>
+          <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -46,27 +46,27 @@ export default function Home() {
           <div className="lg:col-span-2 space-y-6">
             {/* Welcome Section */}
             <div>
-              <h2 className="text-3xl font-bold text-[#2C4A52] mb-2">
+              <h2 className="text-3xl font-bold text-neutral-dark mb-2">
                 Good morning, Mary 👋
               </h2>
-              <p className="text-[#6B7280]">
+              <p className="text-neutral-medium">
                 Ready to start your health journey today?
               </p>
             </div>
 
             {/* Live Class Card */}
-            <Card hover className="p-6">
+            <Card hover className="p-6 border-l-4 border-teal-primary">
               <div className="flex justify-between items-start mb-4">
                 <div>
-                  <span className="text-sm text-[#6B7280]">Live Class</span>
-                  <h3 className="text-2xl font-bold text-[#2C4A52] mt-1">
+                  <span className="text-sm text-teal-primary font-medium">Live Class</span>
+                  <h3 className="text-2xl font-bold text-neutral-dark mt-1">
                     Yoga for Joints
                   </h3>
-                  <p className="text-[#6B7280] mt-1">
+                  <p className="text-neutral-medium mt-1">
                     Today at 10:00 AM
                   </p>
                 </div>
-                <Button variant="secondary" size="lg">
+                <Button variant="primary" size="lg">
                   Start Class →
                 </Button>
               </div>
@@ -74,13 +74,13 @@ export default function Home() {
 
             {/* Progress Card */}
             <Card className="p-6">
-              <h3 className="text-xl font-bold text-[#2C4A52] mb-4">
+              <h3 className="text-xl font-bold text-neutral-dark mb-4">
                 Your Progress
               </h3>
-              <p className="text-[#6B7280] mb-4">
+              <p className="text-neutral-medium mb-4">
                 You&apos;ve completed 3 classes this week 💪
               </p>
-              <p className="text-[#2C4A52] font-medium mb-4">
+              <p className="text-neutral-dark font-medium mb-4">
                 Keep going!
               </p>
               <ProgressBar 
@@ -95,22 +95,22 @@ export default function Home() {
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
             {/* Text Size Control */}
-            <Card className="p-4">
-              <h3 className="text-lg font-semibold text-[#2C4A52] mb-4">
+            <Card className="p-6">
+              <h3 className="text-lg font-semibold text-neutral-dark mb-4">
                 Text Size
               </h3>
               <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-[#F8F9FA] rounded-full"></div>
-                  <span className="text-sm text-[#6B7280]">Small</span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-neutral-light rounded-full"></div>
+                  <span className="text-sm text-neutral-medium">Small</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-3 h-3 bg-[#4CAF9D] rounded-full"></div>
-                  <span className="text-sm text-[#2C4A52] font-medium">Medium</span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-4 h-4 bg-teal-primary rounded-full"></div>
+                  <span className="text-sm text-neutral-dark font-medium">Medium</span>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-4 h-4 bg-[#F8F9FA] rounded-full"></div>
-                  <span className="text-sm text-[#6B7280]">Large</span>
+                <div className="flex items-center space-x-3">
+                  <div className="w-5 h-5 bg-neutral-light rounded-full"></div>
+                  <span className="text-sm text-neutral-medium">Large</span>
                 </div>
               </div>
             </Card>

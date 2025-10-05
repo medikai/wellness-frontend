@@ -78,9 +78,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
       {/* Main Content */}
       <div className="lg:pl-64 min-h-screen">
-        {/* Top Header */}
+        {/* Mobile Header */}
         <header className="bg-white shadow-sm border-b border-neutral-light lg:hidden">
-          <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center justify-between px-4 py-4">
             <button
               onClick={toggleSidebar}
               className="p-2 rounded-lg hover:bg-neutral-light transition-colors"
@@ -89,37 +89,51 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             </button>
             
             <div className="flex items-center space-x-2">
-              <Icon name="heart" size="lg" color="#4CAF9D" />
+              <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
+                <Icon name="heart" size="sm" color="white" />
+              </div>
               <h1 className="text-lg font-bold text-neutral-dark">Health++</h1>
             </div>
             
-            <div className="w-8 h-8 bg-teal-primary rounded-full flex items-center justify-center">
+            <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
               <Icon name="user" size="sm" color="white" />
             </div>
           </div>
         </header>
-         <header className="bg-[#F9FAFB] shadow-sm border-b h-16 border-neutral-light hidden lg:block">
-           <div className="flex items-center justify-between px-4 py-3">
-             <div className="flex items-center space-x-2">
-               <Icon name="heart" size="lg" color="#4CAF9D" />
-               <h1 className="text-lg font-bold text-neutral-dark">Health++</h1>            
-             </div>
+
+        {/* Desktop Header */}
+        <header className="bg-white shadow-sm border-b border-neutral-light hidden lg:block">
+          <div className="flex items-center justify-between px-6 py-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
+                <Icon name="heart" size="sm" color="white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-neutral-dark">Health++</h1>
+                <p className="text-xs text-neutral-medium">Health Companion</p>
+              </div>
+            </div>
             
-             <div className="flex items-center space-x-4">
-               <span className="text-sm text-neutral-medium">Welcome, {user?.name}</span>
-               <button
-                 onClick={logout}
-                 className="flex items-center space-x-2 px-3 py-2 text-sm text-neutral-medium hover:text-teal-primary hover:bg-teal-light rounded-lg transition-colors"
-               >
-                 <Icon name="logOut" size="sm" />
-                 <span>Logout</span>
-               </button>
-               <div className="w-8 h-8 bg-teal-primary rounded-full flex items-center justify-center">
-                 <Icon name="user" size="sm" color="white" />
-               </div>
-             </div>
-           </div>
-         </header>
+            <div className="flex items-center space-x-6">
+              <div className="text-right">
+                <p className="text-sm font-medium text-neutral-dark">Welcome back!</p>
+                <p className="text-xs text-neutral-medium">{user?.name}</p>
+              </div>
+              
+              <button
+                onClick={logout}
+                className="flex items-center space-x-2 px-4 py-2 text-sm text-neutral-medium hover:text-teal-primary hover:bg-teal-light rounded-lg transition-colors group"
+              >
+                <Icon name="logOut" size="sm" />
+                <span className="font-medium">Logout</span>
+              </button>
+              
+              <div className="w-10 h-10 bg-gradient-to-r from-teal-primary to-teal-dark rounded-xl flex items-center justify-center">
+                <Icon name="user" size="sm" color="white" />
+              </div>
+            </div>
+          </div>
+        </header>
 
         {/* Page Content */}
         <main className="min-h-screen bg-background">

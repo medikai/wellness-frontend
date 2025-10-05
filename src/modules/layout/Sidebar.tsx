@@ -18,6 +18,8 @@ interface NavItem {
   icon: string;
   badge?: string;
   isActive?: boolean;
+  isAction?: boolean;
+  onClick?: () => void;
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
@@ -70,6 +72,16 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     },
   ];
 
+  const bottomActions: NavItem[] = [
+    {
+      name: "Logout",
+      href: "#",
+      icon: "logOut",
+      isAction: true,
+      onClick: logout,
+    },
+  ];
+
   const handleItemClick = () => {
     // Close sidebar on mobile after selection
     if (window.innerWidth < 1024) {
@@ -90,17 +102,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-0 left-0 z-50 h-screen w-64 bg-white shadow-lg 
-    transform transition-transform duration-300 ease-in-out
+    fixed top-0 left-0 z-50 h-screen w-64 bg-white shadow-xl border-r border-neutral-light
+    transform transition-transform duration-300 ease-in-out flex flex-col
     ${isOpen ? "translate-x-0" : "-translate-x-full"}
     lg:translate-x-0
   `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-neutral-light">
-          <div className="flex items-center space-x-2">
-            <Icon name="heart" size="lg" color={colors.teal.primary} />
-            <h1 className="text-xl font-bold text-neutral-dark">Health++</h1>
+        <div className="flex items-center justify-between p-6 border-b border-neutral-light flex-shrink-0">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
+              <Icon name="heart" size="lg" color="white" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-neutral-dark">Health++</h1>
+              <p className="text-xs text-neutral-medium">Health Companion</p>
+            </div>
           </div>
           <button
             onClick={onClose}
@@ -111,34 +128,38 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-3 py-4 space-y-1">
+        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
           {navigationItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={handleItemClick}
               className={`
-                flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200 group
+                flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group
                 ${
                   item.isActive
-                    ? "bg-teal-light text-teal-primary font-medium"
+                    ? "bg-teal-light text-teal-primary font-semibold shadow-sm"
                     : "text-neutral-dark hover:bg-neutral-light hover:text-teal-primary"
                 }
               `}
             >
               <div className="flex items-center space-x-3">
-                <Icon
-                  name={item.icon}
-                  size="md"
-                  color={
-                    item.isActive ? colors.teal.primary : colors.neutral.medium
-                  }
-                />
-                <span className="text-lg font-medium">{item.name}</span>
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
+                  item.isActive ? 'bg-teal-primary' : 'bg-neutral-light group-hover:bg-teal-light'
+                }`}>
+                  <Icon
+                    name={item.icon}
+                    size="sm"
+                    color={
+                      item.isActive ? 'white' : colors.neutral.medium
+                    }
+                  />
+                </div>
+                <span className="text-base font-medium">{item.name}</span>
               </div>
 
               {item.badge && (
-                <span className="px-2 py-1 text-xs font-medium bg-orange-primary text-white rounded-full">
+                <span className="px-2 py-1 text-xs font-semibold bg-orange-primary text-white rounded-full animate-pulse">
                   {item.badge}
                 </span>
               )}
@@ -146,28 +167,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           ))}
         </nav>
 
-        {/* Footer */}
-        <div className="p-3 border-t border-neutral-light">
-          <div className="flex items-center space-x-3 p-3 rounded-lg bg-neutral-light">
-            <div className="w-8 h-8 bg-teal-primary rounded-full flex items-center justify-center">
+        {/* Footer - Fixed at bottom */}
+        <div className="p-4 border-t border-neutral-light flex-shrink-0">
+          <div className="flex items-center space-x-3 p-4 rounded-xl bg-gradient-to-r from-teal-light to-blue-50 mb-3">
+            <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
               <Icon name="user" size="sm" color="white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-lg font-medium text-neutral-dark truncate">
+              <p className="text-base font-semibold text-neutral-dark truncate">
                 {user?.name || 'User'}
               </p>
-              <p className="text-xs text-neutral-medium truncate">
+              <p className="text-xs text-teal-primary font-medium truncate">
                 Premium Member
               </p>
             </div>
           </div>
-          <button
-            onClick={logout}
-            className="w-full mt-2 flex items-center space-x-2 px-3 py-2 text-sm text-neutral-medium hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-          >
-            <Icon name="logOut" size="sm" />
-            <span>Logout</span>
-          </button>
+          
+          {/* Bottom Actions - Aligned with navigation */}
+          <div className="space-y-2">
+            {bottomActions.map((item) => (
+              <button
+                key={item.name}
+                onClick={item.onClick}
+                className="w-full flex items-center space-x-3 px-4 py-3 text-sm text-neutral-medium hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors group"
+              >
+                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-light group-hover:bg-red-100">
+                  <Icon
+                    name={item.icon}
+                    size="sm"
+                    color={colors.neutral.medium}
+                  />
+                </div>
+                <span className="font-medium">{item.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </>
