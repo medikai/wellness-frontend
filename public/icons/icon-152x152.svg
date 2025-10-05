@@ -1,0 +1,11 @@
+<svg width="152" height="152" viewBox="0 0 152 152" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="76" cy="76" r="76" fill="#4CAF9D"/>
+  
+  <!-- Heart Icon -->
+  <path d="M76 133C76 133 38 95 38 66.5C38 57 52.25 52.25 66.5 52.25C85.5 52.25 95 57 95 66.5C95 95 76 133 76 133Z" fill="white" stroke="white" stroke-width="3.04" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Plus Sign -->
+  <circle cx="76" cy="76" r="22.8" fill="#F58220"/>
+  <path d="M64.6 76H87.39999999999999M76 64.6V87.39999999999999" stroke="white" stroke-width="4.56" stroke-linecap="round"/>
+</svg>
