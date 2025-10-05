@@ -1,3 +1,4 @@
+//src/modules/register/components/RegisterForm.tsx
 'use client';
 
 import React, { useState } from 'react';
@@ -71,24 +72,40 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store user data in localStorage (in real app, this would be handled by your backend)
-      localStorage.setItem('user', JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        isAuthenticated: true
-      }));
-      
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // // Store user data in localStorage (in real app, this would be handled by your backend)
+      // localStorage.setItem('user', JSON.stringify({
+      //   name: formData.name,
+      //   email: formData.email,
+      //   phone: formData.phone,
+      //   isAuthenticated: true
+      // }));
+
+      // router.push('/');
+
+      const r = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || undefined,
+          password: formData.password
+        })
+      });
+      const json = await r.json();
+      if (!json.ok) { setErrors({ general: json.error || 'Registration failed' }); return; }
+
       router.push('/');
+
     } catch {
       setErrors({ general: 'Registration failed. Please try again.' });
     } finally {
@@ -120,9 +137,8 @@ const RegisterForm = () => {
             name="name"
             value={formData.name}
             onChange={handleInputChange}
-            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${
-              errors.name ? 'border-red-300' : 'border-neutral-200'
-            }`}
+            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${errors.name ? 'border-red-300' : 'border-neutral-200'
+              }`}
             placeholder="Enter your full name"
           />
           {errors.name && (
@@ -140,9 +156,8 @@ const RegisterForm = () => {
             name="email"
             value={formData.email}
             onChange={handleInputChange}
-            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${
-              errors.email ? 'border-red-300' : 'border-neutral-200'
-            }`}
+            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${errors.email ? 'border-red-300' : 'border-neutral-200'
+              }`}
             placeholder="Enter your email address"
           />
           {errors.email && (
@@ -160,9 +175,8 @@ const RegisterForm = () => {
             name="phone"
             value={formData.phone}
             onChange={handleInputChange}
-            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${
-              errors.phone ? 'border-red-300' : 'border-neutral-200'
-            }`}
+            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${errors.phone ? 'border-red-300' : 'border-neutral-200'
+              }`}
             placeholder="Enter your 10-digit phone number"
           />
           {errors.phone && (
@@ -181,9 +195,8 @@ const RegisterForm = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${
-                errors.password ? 'border-red-300' : 'border-neutral-200'
-              }`}
+              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${errors.password ? 'border-red-300' : 'border-neutral-200'
+                }`}
               placeholder="Create a password (min 6 characters)"
             />
             <button
@@ -209,9 +222,8 @@ const RegisterForm = () => {
               name="confirmPassword"
               value={formData.confirmPassword}
               onChange={handleInputChange}
-              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${
-                errors.confirmPassword ? 'border-red-300' : 'border-neutral-200'
-              }`}
+              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${errors.confirmPassword ? 'border-red-300' : 'border-neutral-200'
+                }`}
               placeholder="Confirm your password"
             />
             <button

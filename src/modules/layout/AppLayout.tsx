@@ -1,3 +1,4 @@
+//src/modules/layout/AppLayout.tsx
 'use client';
 
 import React, { useState, useEffect } from 'react';
@@ -36,11 +37,13 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   }, []);
 
   // Redirect to login if not authenticated and not on auth pages
-  useEffect(() => {
-    if (!isLoading && !user && !isAuthPage) {
-      router.push('/login');
-    }
-  }, [user, isLoading, isAuthPage, router]);
+  // src/modules/layout/AppLayout.tsx
+useEffect(() => {
+  if (isLoading) return;
+  if (!user && !isAuthPage) {
+    router.push('/login');
+  }
+}, [user, isLoading, isAuthPage, router]);
 
   // Show loading state
   if (isLoading) {

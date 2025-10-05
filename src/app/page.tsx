@@ -1,3 +1,4 @@
+//src/app/page.tsx
 'use client';
 
 import { Button, Card, ProgressBar, Icon } from '@/components/ui';
@@ -47,7 +48,7 @@ export default function Home() {
             {/* Welcome Section */}
             <div>
               <h2 className="text-3xl font-bold text-neutral-dark mb-2">
-                Good morning, Mary 👋
+                {`Good morning, ${user?.name ?? 'friend'} 👋`}
               </h2>
               <p className="text-neutral-medium">
                 Ready to start your health journey today?

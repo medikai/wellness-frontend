@@ -1,12 +1,13 @@
+//src/modules/login/components/LoginForm.tsx
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { Button, Icon } from '@/components/ui';
 import Link from 'next/link';
 
 const LoginForm = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const [formData, setFormData] = useState({
     emailOrPhone: '',
     password: ''
@@ -50,24 +51,42 @@ const LoginForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Store user data in localStorage (in real app, this would be handled by your backend)
-      localStorage.setItem('user', JSON.stringify({
-        email: formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
-        phone: !formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
-        name: 'Mary Johnson', // This would come from your backend
-        isAuthenticated: true
-      }));
-      
-      router.push('/');
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+
+      // // Store user data in localStorage (in real app, this would be handled by your backend)
+      // localStorage.setItem('user', JSON.stringify({
+      //   email: formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
+      //   phone: !formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
+      //   name: 'Mary Johnson', // This would come from your backend
+      //   isAuthenticated: true
+      // }));
+
+      // router.push('/');
+
+      const r = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ emailOrPhone: formData.emailOrPhone, password: formData.password })
+      });
+      const json = await r.json();
+      if (!json.ok) { setErrors({ general: json.error || 'Login failed' }); return; }
+
+      // router.push('/dashboard');
+      // window.location.assign('/dashboard');
+      // router.replace('/dashboard'); 
+      // router.refresh();
+      // src/modules/login/components/LoginForm.tsx
+      // after json.ok check
+      window.location.assign('/dashboard'); // replaces router.push('/dashboard')
+
+
     } catch {
       setErrors({ general: 'Login failed. Please try again.' });
     } finally {
@@ -99,9 +118,8 @@ const LoginForm = () => {
             name="emailOrPhone"
             value={formData.emailOrPhone}
             onChange={handleInputChange}
-            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${
-              errors.emailOrPhone ? 'border-red-300' : 'border-neutral-200'
-            }`}
+            className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 ${errors.emailOrPhone ? 'border-red-300' : 'border-neutral-200'
+              }`}
             placeholder="Enter your email or phone number"
           />
           {errors.emailOrPhone && (
@@ -120,9 +138,8 @@ const LoginForm = () => {
               name="password"
               value={formData.password}
               onChange={handleInputChange}
-              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${
-                errors.password ? 'border-red-300' : 'border-neutral-200'
-              }`}
+              className={`w-full px-3 py-3 border-2 rounded-lg focus:ring-2 focus:ring-teal-primary focus:border-teal-primary transition-all duration-200 pr-10 ${errors.password ? 'border-red-300' : 'border-neutral-200'
+                }`}
               placeholder="Enter your password"
             />
             <button

@@ -1,5 +1,5 @@
 import React from 'react';
-import { borderRadius, shadows, spacing } from '@/design-tokens';
+// import { borderRadius, shadows, spacing } from '@/design-tokens';
 
 interface CardProps {
   children: React.ReactNode;
