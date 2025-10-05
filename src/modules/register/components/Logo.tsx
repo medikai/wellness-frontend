@@ -6,7 +6,7 @@ const Logo = () => {
     <div className="mb-6">
       <div className="flex items-center space-x-2 mb-2">
         <Icon name="heart" size="lg" color="#4CAF9D" />
-        <h1 className="text-2xl font-bold text-neutral-dark">Health++</h1>
+        <h1 className="text-2xl font-bold text-neutral-dark">Wellness</h1>
       </div>
     </div>
   )

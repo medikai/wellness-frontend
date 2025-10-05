@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Button, Icon } from '@/components/ui'
+import Link from 'next/link'
 
 const AvailableGames = () => {
   return (
@@ -35,9 +36,11 @@ const AvailableGames = () => {
         <p className="text-sm text-neutral-medium mb-4">
           Answer questions about nutrition, exercise, and wellness.
         </p>
-        <Button variant="outline" size="lg" className="w-full">
-          Start Quiz
-        </Button>
+        <Link href="/game/quiz" className="w-full inline-block">
+          <Button variant="outline" size="lg" className="w-full">
+            Start Quiz
+          </Button>
+        </Link>
       </Card>
 
       <Card hover className="p-6">

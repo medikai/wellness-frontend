@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Health++ Color Palette */
+  /* Wellness Color Palette */
   --primary: #3B92F6;
   --secondary: #22355E;
   --accent: #F87360;
@@ -117,14 +117,7 @@ a {
 }
 
 /* Remove default button styling */
-button {
-  background: none;
-  border: none;
-  padding: 0;
-  margin: 0;
-  font: inherit;
-  cursor: pointer;
-}
+
 
 /* Remove default list styling */
 ul, ol {

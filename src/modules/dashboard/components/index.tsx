@@ -3,7 +3,6 @@ import Header from './Header'
 import WelcomeSection from './WelcomeSection'
 import LiveClassCard from './LiveClassCard'
 import ProgressCard from './ProgressCard'
-import TextSizeControl from './TextSizeControl'
 import ActionButtons from './ActionButtons'
 
 const Dashboard = () => {
@@ -20,7 +19,6 @@ const Dashboard = () => {
 
         {/* Right Column - Sidebar */}
         <div className="space-y-6">
-          <TextSizeControl />
           <ActionButtons />
         </div>
       </div>

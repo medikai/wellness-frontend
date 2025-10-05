@@ -3,6 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AppLayout } from '@/modules/layout';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { FontSizeProvider } from '@/contexts/FontSizeContext';
+import { ClassProvider } from '@/contexts/ClassContext';
+import { QuizProvider } from '@/contexts/QuizContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,19 +18,19 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Health++ - Your Health Companion",
+  title: "Wellness - Your Health Companion",
   description: "A comprehensive health and wellness platform designed for elderly care, featuring live classes, progress tracking, and personalized support.",
   keywords: ["health", "wellness", "elderly care", "fitness", "medical", "healthcare"],
-  authors: [{ name: "Health++ Team" }],
+  authors: [{ name: "Wellness Team" }],
   openGraph: {
     type: "website",
-    siteName: "Health++",
-    title: "Health++ - Your Health Companion",
+    siteName: "Wellness",
+    title: "Wellness - Your Health Companion",
     description: "A comprehensive health and wellness platform designed for elderly care",
   },
   twitter: {
     card: "summary",
-    title: "Health++ - Your Health Companion",
+    title: "Wellness - Your Health Companion",
     description: "A comprehensive health and wellness platform designed for elderly care",
   },
 };
@@ -48,7 +51,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Basic Meta Tags */}
-        <meta name="application-name" content="Health++" />
+        <meta name="application-name" content="Wellness" />
         
         {/* Favicon */}
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
@@ -59,9 +62,15 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <AppLayout>
-            {children}
-          </AppLayout>
+          <FontSizeProvider>
+            <ClassProvider>
+              <QuizProvider>
+                <AppLayout>
+                  {children}
+                </AppLayout>
+              </QuizProvider>
+            </ClassProvider>
+          </FontSizeProvider>
         </AuthProvider>
       </body>
     </html>

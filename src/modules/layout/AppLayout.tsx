@@ -92,7 +92,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
                 <Icon name="heart" size="sm" color="white" />
               </div>
-              <h1 className="text-lg font-bold text-neutral-dark">Health++</h1>
+              <h1 className="text-lg font-bold text-neutral-dark">Wellness</h1>
             </div>
             
             <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
@@ -109,7 +109,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <Icon name="heart" size="sm" color="white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-dark">Health++</h1>
+                <h1 className="text-xl font-bold text-neutral-dark">Wellness</h1>
                 <p className="text-xs text-neutral-medium">Health Companion</p>
               </div>
             </div>

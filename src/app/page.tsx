@@ -37,7 +37,7 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Health++</h1>
+          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Wellness</h1>
           <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
         </div>
 
@@ -94,27 +94,6 @@ export default function Home() {
 
           {/* Right Column - Sidebar */}
           <div className="space-y-6">
-            {/* Text Size Control */}
-            <Card className="p-6">
-              <h3 className="text-lg font-semibold text-neutral-dark mb-4">
-                Text Size
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center space-x-3">
-                  <div className="w-3 h-3 bg-neutral-light rounded-full"></div>
-                  <span className="text-sm text-neutral-medium">Small</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-4 h-4 bg-teal-primary rounded-full"></div>
-                  <span className="text-sm text-neutral-dark font-medium">Medium</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <div className="w-5 h-5 bg-neutral-light rounded-full"></div>
-                  <span className="text-sm text-neutral-medium">Large</span>
-                </div>
-              </div>
-            </Card>
-
             {/* Action Buttons */}
             <div className="space-y-3">
               <Button variant="primary" size="lg" className="w-full">

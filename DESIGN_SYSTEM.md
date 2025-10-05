@@ -1,6 +1,6 @@
-# Health++ Design System
+# Wellness Design System
 
-This document outlines the design system and color palette for the Health++ application.
+This document outlines the design system and color palette for the Wellness application.
 
 ## Color Palette
 

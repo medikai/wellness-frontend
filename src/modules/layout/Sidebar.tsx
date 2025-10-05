@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Icon } from "@/components/ui";
 import { colors } from "@/design-tokens";
 import { useAuth } from "@/contexts/AuthContext";
+// Removed inline settings in favor of dedicated Settings page
 
 interface SidebarProps {
   isOpen: boolean;
@@ -25,6 +26,7 @@ interface NavItem {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
   const { user, logout } = useAuth();
+  // No local settings accordion; use Settings page instead
 
   const navigationItems: NavItem[] = [
     {
@@ -69,6 +71,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       href: "/help",
       icon: "helpCircle",
       isActive: pathname === "/help",
+    },
+    {
+      name: "Class Management",
+      href: "/class-management",
+      icon: "calendar",
+      isActive: pathname === "/class-management",
+    },
+    {
+      name: "Settings",
+      href: "/settings",
+      icon: "settings",
+      isActive: pathname === "/settings",
     },
   ];
 
@@ -115,7 +129,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <Icon name="heart" size="lg" color="white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-neutral-dark">Health++</h1>
+              <h1 className="text-xl font-bold text-neutral-dark">Wellness</h1>
               <p className="text-xs text-neutral-medium">Health Companion</p>
             </div>
           </div>
@@ -165,6 +179,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               )}
             </Link>
           ))}
+
+          {/* Settings moved to dedicated page */}
         </nav>
 
         {/* Footer - Fixed at bottom */}

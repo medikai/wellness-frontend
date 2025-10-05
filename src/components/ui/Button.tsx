@@ -1,5 +1,5 @@
 import React from 'react';
-import { colors, spacing, borderRadius, typography } from '@/design-tokens';
+import { borderRadius, typography } from '@/design-tokens';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
@@ -58,7 +58,8 @@ const Button: React.FC<ButtonProps> = ({
     `,
   };
 
-  const roundedStyles = `rounded-${borderRadius.lg}`;
+  // Use arbitrary value to honor design token (Tailwind v4 supports this)
+  const roundedStyles = `rounded-[${borderRadius.lg}]`;
 
   return (
     <button
@@ -66,7 +67,8 @@ const Button: React.FC<ButtonProps> = ({
         ${baseStyles}
         ${sizeStyles[size]}
         ${variantStyles[variant]}
-        ${roundedStyles}
+        // ${roundedStyles}
+        rounded-lg
       `}
       disabled={disabled || loading}
       {...props}

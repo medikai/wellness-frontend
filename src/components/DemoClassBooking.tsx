@@ -186,8 +186,13 @@ const DemoClassBooking: React.FC = () => {
 
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-2 mb-6">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-            <div key={day} className="text-center text-sm font-medium text-[#6B7280] py-2">
+          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((day, idx) => (
+            <div 
+              key={day} 
+              className={`text-center text-sm font-medium py-2 ${
+                (idx === 0 || idx === 6) ? 'text-orange-primary' : 'text-[#6B7280]'
+              }`}
+            >
               {day}
             </div>
           ))}
@@ -200,6 +205,7 @@ const DemoClassBooking: React.FC = () => {
             const hasSlots = daySlots.slots.length > 0;
             const isSelected = selectedDate === day.toISOString().split('T')[0];
             const isToday = day.toDateString() === new Date().toDateString();
+            const isWeekend = day.getDay() === 0 || day.getDay() === 6;
 
             return (
               <button
@@ -210,7 +216,7 @@ const DemoClassBooking: React.FC = () => {
                     ? 'bg-[#4CAF9D] text-white'
                     : hasSlots
                     ? 'bg-[#E6F7F5] text-[#2D7D6B] hover:bg-[#B2E5E0]'
-                    : 'text-[#F8F9FA] cursor-not-allowed'
+                    : `bg-[#F8F9FA] ${isWeekend ? 'text-[#6B7280]' : 'text-[#9CA3AF]'} cursor-not-allowed`
                 } ${isToday ? 'ring-2 ring-[#4CAF9D]' : ''}`}
                 disabled={!hasSlots}
               >
