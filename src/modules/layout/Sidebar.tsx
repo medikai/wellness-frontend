@@ -75,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     {
       name: "Class Management",
       href: "/class-management",
-      icon: "calendar",
+      icon: "users",
       isActive: pathname === "/class-management",
     },
     {
