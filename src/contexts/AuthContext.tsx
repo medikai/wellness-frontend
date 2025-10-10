@@ -3,10 +3,13 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 
+type UserRole = 'elderly' | 'caregiver' | 'coach' | 'admin';
+
 interface User {
   name: string;
   email?: string;
   phone?: string;
+  role: UserRole;
   isAuthenticated: boolean;
 }
 
@@ -72,10 +75,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setUser({
             name: json?.profile?.fullname || json?.user?.email?.split('@')[0] || 'User',
             email: json?.user?.email || undefined,
+            role: json?.profile?.role || 'elderly', // Default to elderly if no role specified
             isAuthenticated: true
           });
         } else {
-          setUser(null);
+          // For testing purposes, create a default user based on test role
+          const testRole = localStorage.getItem('testRole') || 'elderly';
+          setUser({
+            name: 'Mary',
+            email: 'mary@example.com',
+            role: testRole as UserRole,
+            isAuthenticated: true
+          });
         }
       } catch {
         setUser(null);

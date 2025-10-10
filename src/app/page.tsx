@@ -5,10 +5,12 @@ import { Button, Card, ProgressBar, Icon } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
 import DemoClassBooking from '@/components/DemoClassBooking';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function Home() {
   const { user, isLoading } = useAuth();
   const [hasBookedDemo, setHasBookedDemo] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     // Check if user has already booked a demo class
@@ -27,6 +29,18 @@ export default function Home() {
     );
   }
 
+  // Redirect authenticated users to their role-specific dashboard
+  if (user) {
+    router.push('/dashboard');
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-[#6B7280]">Redirecting to dashboard...</div>
+        </div>
+      </div>
+    );
+  }
+
   // Show demo class booking for new users who haven't booked a demo
   if (user && !hasBookedDemo) {
     return (
@@ -35,6 +49,7 @@ export default function Home() {
       </div>
     );
   }
+  
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
@@ -48,7 +63,7 @@ export default function Home() {
             {/* Welcome Section */}
             <div>
               <h2 className="text-3xl font-bold text-neutral-dark mb-2">
-                {`Good morning, ${user?.name ?? 'friend'} 👋`}
+                Good morning, friend! 👋
               </h2>
               <p className="text-neutral-medium">
                 Ready to start your health journey today?

@@ -7,6 +7,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { FontSizeProvider } from '@/contexts/FontSizeContext';
 import { ClassProvider } from '@/contexts/ClassContext';
 import { QuizProvider } from '@/contexts/QuizContext';
+import { CommunityProvider } from '@/contexts/CommunityContext';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -66,9 +67,11 @@ export default function RootLayout({
           <FontSizeProvider>
             <ClassProvider>
               <QuizProvider>
-                <AppLayout>
-                  {children}
-                </AppLayout>
+                <CommunityProvider>
+                  <AppLayout>
+                    {children}
+                  </AppLayout>
+                </CommunityProvider>
               </QuizProvider>
             </ClassProvider>
           </FontSizeProvider>
