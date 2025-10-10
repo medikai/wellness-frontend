@@ -44,6 +44,20 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       isActive: pathname === "/classes",
     },
     {
+      name: "Host",
+      href: "/host",
+      icon: "heart",
+      badge: "Live",
+      isActive: pathname === "/host",
+    },
+    {
+      name: "Join",
+      href: "/join",
+      icon: "heart",
+      badge: "Live",
+      isActive: pathname === "/join",
+    },
+    {
       name: "Game",
       href: "/game",
       icon: "gamepad",

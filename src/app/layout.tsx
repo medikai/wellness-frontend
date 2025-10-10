@@ -53,12 +53,31 @@ export default function RootLayout({
       <head>
         {/* Basic Meta Tags */}
         <meta name="application-name" content="Wellness" />
-        
+
         {/* Favicon */}
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png" />
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <meta
+              httpEquiv="Content-Security-Policy"
+              content="
+        default-src 'self' blob: data: https: ws: wss:;
+        script-src 'self' 'unsafe-inline' 'unsafe-eval';
+        style-src 'self' 'unsafe-inline' https:;
+        img-src 'self' data: blob: https:;
+        connect-src 'self' https: wss:;
+        font-src 'self' data: https:;
+        media-src 'self' blob:;
+        frame-src 'self' https:;
+      "
+            />
+            <meta httpEquiv="Permissions-Policy" content="camera=(self), microphone=(self)" />
+          </>
+        )}
+
       </head>
-      
+
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
