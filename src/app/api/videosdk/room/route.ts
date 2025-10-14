@@ -20,7 +20,7 @@ export async function POST() {
         Authorization: token,            // no "Bearer " prefix
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({}),          // you can pass { region, autoClose, ... } if needed
+      body: JSON.stringify({}),
     });
 
     if (!resp.ok) {
