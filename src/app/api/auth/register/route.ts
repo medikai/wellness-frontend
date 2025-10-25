@@ -2,11 +2,11 @@
 import { NextResponse } from 'next/server';
 import { supabaseAdmin, supabaseAnon } from '../../../../lib/supabaseServer';
 
-type Body = { name: string; email: string; phone?: string; password: string };
+type Body = { name: string; email: string; phone?: string; password: string; user_type?: string };
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, password } = (await req.json()) as Body;
+    const { name, email, phone, password, user_type } = (await req.json()) as Body;
     if (!name || !email || !password) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
     }
@@ -35,7 +35,8 @@ export async function POST(req: Request) {
     const { data: profile, error: rpcErr } = await supabaseAnon.rpc('ensure_profile', {
       fullname: name,
       phone,
-      locale: 'en'
+      locale: 'en',
+      user_type: user_type || 'user'
     });
     if (rpcErr) {
       return NextResponse.json({ ok: false, error: rpcErr.message }, { status: 400 });
