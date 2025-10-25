@@ -13,7 +13,7 @@ const TextSizeControl: React.FC<TextSizeControlProps> = ({
   variant = 'header', 
   className = '' 
 }) => {
-  const { fontSizePx, setFontSizePx, minPx, maxPx } = useFontSize();
+  const { fontSizePx, setFontSizePx } = useFontSize();
   const [isOpen, setIsOpen] = useState(false);
 
   const fontSizeOptions = [
@@ -109,7 +109,7 @@ const TextSizeControl: React.FC<TextSizeControlProps> = ({
           <div className="absolute right-0 top-full mt-3 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-3 overflow-hidden">
             <div className="px-4 py-3 border-b border-neutral-light/50 bg-gradient-to-r from-teal-light/20 to-blue-50">
               <p className="text-sm font-semibold text-neutral-dark">Text Size</p>
-              <p className="text-xs text-teal-primary font-medium">Adjust the app's text size</p>
+              <p className="text-xs text-teal-primary font-medium">Adjust the app&apos;s text size</p>
             </div>
             
             <div className="py-2">

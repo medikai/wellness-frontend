@@ -13,10 +13,28 @@ import {
 import { 
   fetchClasses, 
   joinClass, 
-  leaveClass,
   setSelectedClass 
 } from '@/store/slices/classSlice';
 import { Button } from '@/components/ui';
+
+interface ClassItem {
+  id: string;
+  title: string;
+  description: string;
+  instructor: string;
+  instructorId: string;
+  startTime: string;
+  endTime: string;
+  duration: number;
+  category: 'fitness' | 'yoga' | 'meditation' | 'nutrition' | 'wellness';
+  difficulty: 'beginner' | 'intermediate' | 'advanced';
+  maxParticipants: number;
+  currentParticipants: number;
+  isLive: boolean;
+  isCompleted: boolean;
+  thumbnail?: string;
+  tags: string[];
+}
 
 const ReduxExample: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -61,11 +79,8 @@ const ReduxExample: React.FC = () => {
     dispatch(joinClass(classId));
   };
 
-  const handleLeaveClass = (classId: string) => {
-    dispatch(leaveClass(classId));
-  };
 
-  const handleSelectClass = (classItem: any) => {
+  const handleSelectClass = (classItem: ClassItem) => {
     dispatch(setSelectedClass(classItem));
   };
 

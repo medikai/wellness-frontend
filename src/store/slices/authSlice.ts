@@ -42,7 +42,7 @@ export const loginUser = createAsyncThunk(
       }
       
       return data;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -65,7 +65,7 @@ export const registerUser = createAsyncThunk(
       }
       
       return data;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -86,7 +86,7 @@ export const logoutUser = createAsyncThunk(
       }
       
       return data;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -104,7 +104,7 @@ export const checkAuthStatus = createAsyncThunk(
       }
       
       return data;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }

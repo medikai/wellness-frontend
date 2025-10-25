@@ -53,7 +53,7 @@ export const fetchClasses = createAsyncThunk(
       }
       
       return data.classes;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -71,7 +71,7 @@ export const fetchUpcomingClasses = createAsyncThunk(
       }
       
       return data.classes;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -89,7 +89,7 @@ export const fetchLiveClasses = createAsyncThunk(
       }
       
       return data.classes;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -110,7 +110,7 @@ export const joinClass = createAsyncThunk(
       }
       
       return { classId, success: true };
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -131,7 +131,7 @@ export const leaveClass = createAsyncThunk(
       }
       
       return { classId, success: true };
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }
@@ -154,7 +154,7 @@ export const createClass = createAsyncThunk(
       }
       
       return data.class;
-    } catch (error) {
+    } catch {
       return rejectWithValue('Network error occurred');
     }
   }

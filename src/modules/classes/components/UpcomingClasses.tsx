@@ -32,9 +32,6 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, form
     }
   };
 
-  const handleSelfPaced = () => {
-    router.push('/self-paced');
-  };
 
   return (
     <div className="mb-12">

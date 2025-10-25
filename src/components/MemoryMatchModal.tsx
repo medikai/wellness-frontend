@@ -7,7 +7,7 @@ interface MemoryMatchModalProps {
   onClose: () => void;
 }
 
-const MemoryMatchModal: React.FC<MemoryMatchModalProps> = ({ onClose }) => {
+const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
