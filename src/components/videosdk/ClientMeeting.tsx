@@ -2,8 +2,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { MeetingProvider } from "@videosdk.live/react-sdk";
 import MeetingScreen from "./MeetingScreen";
+import JoineeMeetingScreen from "./JoineeMeetingScreen";
+import StableMeetingProvider from "./StableMeetingProvider";
 
 type Mode = "host" | "join";
 const Q_ROOM = "room";
@@ -192,8 +193,8 @@ export default function ClientMeeting({ mode }: { mode: Mode }) {
       </header>
 
       {(mode === "host" ? !!roomId : !!roomId && isNameOk) ? (
-        <MeetingProvider
-          token={token}
+        <StableMeetingProvider
+          token={token || ""}
           config={{
             meetingId: roomId,
             name, // shows in tiles and chat
@@ -202,8 +203,12 @@ export default function ClientMeeting({ mode }: { mode: Mode }) {
             debugMode: false,
           }}
         >
-          <MeetingScreen isHost={mode === "host"} />
-        </MeetingProvider>
+          {mode === "host" ? (
+            <MeetingScreen isHost={true} />
+          ) : (
+            <JoineeMeetingScreen />
+          )}
+        </StableMeetingProvider>
       ) : (
         <div className="text-gray-500">
           {mode === "host"
