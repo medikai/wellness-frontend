@@ -1,3 +1,4 @@
+-- supabase/migrations/20251007111500_rpcs_demo_first.sql
 -- Stable function bodies in public
 SET check_function_bodies = off;
 

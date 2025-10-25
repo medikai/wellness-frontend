@@ -1,3 +1,4 @@
+-- supabase/migrations/20251007090500_fix2_ensure_profile_locale_cast.sql
 -- Drop and recreate with the SAME signature, then cast inside.
 drop function if exists public.ensure_profile(text, text, text);
 
