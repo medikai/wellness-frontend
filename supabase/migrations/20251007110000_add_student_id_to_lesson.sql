@@ -1,3 +1,4 @@
+-- supabase/migrations/20251007110000_add_student_id_to_lesson.sql
 -- Add the student reference for 1-1 sessions
 ALTER TABLE public.lesson
 ADD COLUMN IF NOT EXISTS student_id uuid;

@@ -6,7 +6,7 @@ const ClientMeeting = dynamic(() => import("@/components/videosdk/ClientMeeting"
 export default function JoinPage() {
   return (
     <div className="p-6">
-      <h1 className="text-xl font-semibold mb-4">Join</h1>
+      {/* <h1 className="text-xl font-semibold mb-4">Join</h1> */}
       <ClientMeeting mode="join" />
     </div>
   );
