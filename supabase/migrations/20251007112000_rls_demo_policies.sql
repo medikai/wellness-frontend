@@ -1,3 +1,4 @@
+-- supabase/migrations/20251007112000_rls_demo_policies.sql
 -- Lesson: allow insert when caller is the student
 DO $$
 BEGIN
