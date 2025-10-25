@@ -6,7 +6,7 @@ type Body = { name: string; email: string; phone?: string; password: string; use
 
 export async function POST(req: Request) {
   try {
-    const { name, email, phone, password, user_type } = (await req.json()) as Body;
+    const { name, email, phone, password } = (await req.json()) as Body;
     if (!name || !email || !password) {
       return NextResponse.json({ ok: false, error: 'Missing required fields' }, { status: 400 });
     }
