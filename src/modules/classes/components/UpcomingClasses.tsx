@@ -1,5 +1,6 @@
 import React from 'react'
 import { Card, Button } from '@/components/ui'
+import { useRouter } from 'next/navigation'
 
 interface BookedClass {
   id: string;
@@ -17,7 +18,23 @@ interface UpcomingClassesProps {
 }
 
 const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, formatClassDate }) => {
+  const router = useRouter();
+  
   if (upcomingClasses.length === 0) return null;
+
+  const handleJoinClass = (classItem: BookedClass) => {
+    // For demo classes, redirect to self-paced session
+    if (classItem.type === 'demo') {
+      router.push('/self-paced');
+    } else {
+      // For live classes, redirect to join page
+      router.push('/join');
+    }
+  };
+
+  const handleSelfPaced = () => {
+    router.push('/self-paced');
+  };
 
   return (
     <div className="mb-12">
@@ -44,8 +61,12 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, form
               <span className="text-sm text-[#6B7280]">
                 {classItem.type === 'demo' ? 'Free Demo' : 'Included in Plan'}
               </span>
-              <Button variant="primary" size="md">
-                Join Class
+              <Button 
+                variant="primary" 
+                size="md"
+                onClick={() => handleJoinClass(classItem)}
+              >
+                {classItem.type === 'demo' ? 'Start Self-Paced' : 'Join Class'}
               </Button>
             </div>
           </Card>

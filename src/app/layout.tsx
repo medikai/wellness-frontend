@@ -7,6 +7,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { FontSizeProvider } from '@/contexts/FontSizeContext';
 import { ClassProvider } from '@/contexts/ClassContext';
 import { QuizProvider } from '@/contexts/QuizContext';
+import { ReduxProvider } from '@/store/ReduxProvider';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -81,17 +82,19 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <AuthProvider>
-          <FontSizeProvider>
-            <ClassProvider>
-              <QuizProvider>
-                <AppLayout>
-                  {children}
-                </AppLayout>
-              </QuizProvider>
-            </ClassProvider>
-          </FontSizeProvider>
-        </AuthProvider>
+        <ReduxProvider>
+          <AuthProvider>
+            <FontSizeProvider>
+              <ClassProvider>
+                <QuizProvider>
+                  <AppLayout>
+                    {children}
+                  </AppLayout>
+                </QuizProvider>
+              </ClassProvider>
+            </FontSizeProvider>
+          </AuthProvider>
+        </ReduxProvider>
       </body>
     </html>
   );

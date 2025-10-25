@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Icon } from '@/components/ui';
+import { Icon, TextSizeControl } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
 import Sidebar from './Sidebar';
 
@@ -18,7 +18,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const pathname = usePathname();
 
   // Check if current path is auth page
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced';
 
   useEffect(() => {
     const checkMobile = () => {
@@ -82,57 +82,62 @@ useEffect(() => {
       {/* Main Content */}
       <div className="lg:pl-64 min-h-screen">
         {/* Mobile Header */}
-        <header className="bg-white shadow-sm border-b border-neutral-light lg:hidden">
-          <div className="flex items-center justify-between px-4 py-4">
+        <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-neutral-light/50 lg:hidden sticky top-0 z-30">
+          <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={toggleSidebar}
-              className="p-2 rounded-lg hover:bg-neutral-light transition-colors"
+              className="p-2.5 rounded-xl hover:bg-teal-light/50 transition-all duration-200 group"
             >
-              <Icon name="menu" size="md" color="#6B7280" />
+              <Icon name="menu" size="md" color="#059669" />
             </button>
             
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md">
                 <Icon name="heart" size="sm" color="white" />
               </div>
-              <h1 className="text-lg font-bold text-neutral-dark">Wellness</h1>
+              <div>
+                <h1 className="text-lg font-bold text-neutral-dark">Wellness</h1>
+                <p className="text-xs text-teal-primary font-medium">Health Companion</p>
+              </div>
             </div>
             
-            <div className="w-8 h-8 bg-teal-primary rounded-lg flex items-center justify-center">
-              <Icon name="user" size="sm" color="white" />
+            <div className="flex items-center space-x-2">
+              <TextSizeControl variant="header" />
+              <div className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md">
+                <Icon name="user" size="sm" color="white" />
+              </div>
             </div>
           </div>
         </header>
 
         {/* Desktop Header */}
-        <header className="bg-white shadow-sm border-b border-neutral-light hidden lg:block">
-          <div className="flex items-center justify-between px-6 py-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
-                <Icon name="heart" size="sm" color="white" />
+        <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-neutral-light/50 hidden lg:block sticky top-0 z-30">
+          <div className="flex items-center justify-between px-8 py-4">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
+                <Icon name="heart" size="md" color="white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-neutral-dark">Wellness</h1>
-                <p className="text-xs text-neutral-medium">Health Companion</p>
+                <h1 className="text-2xl font-bold text-neutral-dark">Wellness</h1>
+                <p className="text-sm text-teal-primary font-medium">Health Companion</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-6">
-              <div className="text-right">
-                <p className="text-sm font-medium text-neutral-dark">Welcome back!</p>
-                <p className="text-xs text-neutral-medium">{user?.name}</p>
-              </div>
+              
+              
+              <TextSizeControl variant="header" />
               
               <button
                 onClick={logout}
-                className="flex items-center space-x-2 px-4 py-2 text-sm text-neutral-medium hover:text-teal-primary hover:bg-teal-light rounded-lg transition-colors group"
+                className="flex items-center space-x-2 px-4 py-2.5 text-sm text-neutral-medium hover:text-white hover:bg-red-500 rounded-xl transition-all duration-200 group shadow-sm hover:shadow-md"
               >
                 <Icon name="logOut" size="sm" />
                 <span className="font-medium">Logout</span>
               </button>
               
-              <div className="w-10 h-10 bg-gradient-to-r from-teal-primary to-teal-dark rounded-xl flex items-center justify-center">
-                <Icon name="user" size="sm" color="white" />
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200">
+                <Icon name="user" size="md" color="white" />
               </div>
             </div>
           </div>

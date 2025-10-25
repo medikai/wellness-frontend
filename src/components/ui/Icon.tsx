@@ -240,6 +240,44 @@ const Icon: React.FC<IconProps> = ({
         <circle cx="12" cy="12" r="3" />
       </svg>
     ),
+    type: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="4,7 4,4 20,4 20,7" />
+        <line x1="9" y1="20" x2="15" y2="20" />
+        <line x1="12" y1="4" x2="12" y2="20" />
+      </svg>
+    ),
+    chevronUp: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="18,15 12,9 6,15" />
+      </svg>
+    ),
+    chevronDown: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="6,9 12,15 18,9" />
+      </svg>
+    ),
   };
 
   const iconElement = iconMap[name];

@@ -4,7 +4,7 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon } from "@/components/ui";
+import { Icon, TextSizeControl } from "@/components/ui";
 import { colors } from "@/design-tokens";
 import { useAuth } from "@/contexts/AuthContext";
 // Removed inline settings in favor of dedicated Settings page
@@ -131,50 +131,52 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-0 left-0 z-50 h-screen w-64 bg-white shadow-xl border-r border-neutral-light
-    transform transition-transform duration-300 ease-in-out flex flex-col
+    fixed top-0 left-0 z-50 h-screen w-64 bg-white/95 backdrop-blur-sm shadow-2xl border-r border-neutral-light/50
+    transform transition-all duration-300 ease-in-out flex flex-col
     ${isOpen ? "translate-x-0" : "-translate-x-full"}
     lg:translate-x-0
   `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-light flex-shrink-0">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
+        <div className="flex items-center justify-between p-6 border-b border-neutral-light/50 flex-shrink-0 bg-gradient-to-r from-teal-light/10 to-blue-50">
+          <div className="flex items-center space-x-4">
+            <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
               <Icon name="heart" size="lg" color="white" />
             </div>
             <div>
               <h1 className="text-xl font-bold text-neutral-dark">Wellness</h1>
-              <p className="text-xs text-neutral-medium">Health Companion</p>
+              <p className="text-sm text-teal-primary font-medium">Health Companion</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="lg:hidden p-2 rounded-lg hover:bg-neutral-light transition-colors"
+            className="lg:hidden p-2.5 rounded-xl hover:bg-red-100 hover:text-red-600 transition-all duration-200"
           >
-            <Icon name="x" size="md" color={colors.neutral.medium} />
+            <Icon name="x" size="md" color="#6B7280" />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {navigationItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={handleItemClick}
               className={`
-                flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-200 group
+                flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 group relative
                 ${
                   item.isActive
-                    ? "bg-teal-light text-teal-primary font-semibold shadow-sm"
-                    : "text-neutral-dark hover:bg-neutral-light hover:text-teal-primary"
+                    ? "bg-gradient-to-r from-teal-light to-blue-50 text-teal-primary font-semibold shadow-md border border-teal-light/50"
+                    : "text-neutral-dark hover:bg-neutral-light/50 hover:text-teal-primary hover:shadow-sm"
                 }
               `}
             >
               <div className="flex items-center space-x-3">
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${
-                  item.isActive ? 'bg-teal-primary' : 'bg-neutral-light group-hover:bg-teal-light'
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                  item.isActive 
+                    ? 'bg-teal-primary shadow-sm' 
+                    : 'bg-neutral-light group-hover:bg-teal-light group-hover:shadow-sm'
                 }`}>
                   <Icon
                     name={item.icon}
@@ -188,48 +190,51 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               </div>
 
               {item.badge && (
-                <span className="px-2 py-1 text-xs font-semibold bg-orange-primary text-white rounded-full animate-pulse">
+                <span className="px-2.5 py-1 text-xs font-bold bg-gradient-to-r from-orange-primary to-red-500 text-white rounded-full animate-pulse shadow-sm">
                   {item.badge}
                 </span>
               )}
             </Link>
           ))}
 
-          {/* Settings moved to dedicated page */}
+          {/* Text Size Control */}
+          <div className="px-4 py-2">
+            <TextSizeControl variant="sidebar" />
+          </div>
         </nav>
 
         {/* Footer - Fixed at bottom */}
-        <div className="p-4 border-t border-neutral-light flex-shrink-0">
-          <div className="flex items-center space-x-3 p-4 rounded-xl bg-gradient-to-r from-teal-light to-blue-50 mb-3">
-            <div className="w-10 h-10 bg-teal-primary rounded-xl flex items-center justify-center">
+        <div className="p-4 border-t border-neutral-light/50 flex-shrink-0 bg-gradient-to-t from-neutral-light/20 to-transparent">
+          <div className="flex items-center space-x-3 p-4 rounded-2xl bg-gradient-to-r from-teal-light/30 to-blue-50/50 mb-4 shadow-sm border border-teal-light/20">
+            <div className="w-11 h-11 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-md">
               <Icon name="user" size="sm" color="white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-base font-semibold text-neutral-dark truncate">
+              <p className="text-base font-bold text-neutral-dark truncate">
                 {user?.name || 'User'}
               </p>
-              <p className="text-xs text-teal-primary font-medium truncate">
+              <p className="text-xs text-teal-primary font-semibold truncate">
                 Premium Member
               </p>
             </div>
           </div>
           
           {/* Bottom Actions - Aligned with navigation */}
-          <div className="space-y-2">
+          <div className="space-y-1">
             {bottomActions.map((item) => (
               <button
                 key={item.name}
                 onClick={item.onClick}
-                className="w-full flex items-center space-x-3 px-4 py-3 text-sm text-neutral-medium hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors group"
+                className="w-full flex items-center space-x-3 px-4 py-3.5 text-sm text-neutral-medium hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md"
               >
-                <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-neutral-light group-hover:bg-red-100">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-neutral-light group-hover:bg-white/20 transition-all duration-200">
                   <Icon
                     name={item.icon}
                     size="sm"
                     color={colors.neutral.medium}
                   />
                 </div>
-                <span className="font-medium">{item.name}</span>
+                <span className="font-semibold">{item.name}</span>
               </button>
             ))}
           </div>
