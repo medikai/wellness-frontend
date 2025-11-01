@@ -67,7 +67,7 @@ const LoginForm = () => {
       console.log(json.profile);
       if (!json.ok) { setErrors({ general: json.error || 'Login failed' }); return; }
 
-      alert(json.profile.role);
+      // alert(json.profile.role);
       window.location.assign('/dashboard'); // replaces router.push('/dashboard')
 
     } catch {
