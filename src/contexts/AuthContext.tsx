@@ -2,11 +2,14 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import { useAppDispatch } from '@/store/hooks';
+import { checkAuthStatus, logoutUser } from '@/store/slices/authSlice';
 
 interface User {
   name: string;
   email?: string;
   phone?: string;
+  role?: string;
   isAuthenticated: boolean;
 }
 
@@ -34,44 +37,24 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const dispatch = useAppDispatch();
 
-  // useEffect(() => {
-  //   // Check if user is logged in on app start
-  //   const checkAuth = () => {
-  //     try {
-  //       const storedUser = localStorage.getItem('user');
-  //       if (storedUser) {
-  //         const userData = JSON.parse(storedUser);
-  //         if (userData.isAuthenticated) {
-  //           setUser(userData);
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking authentication:', error);
-  //       localStorage.removeItem('user');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   checkAuth();
-  // }, []);
-
-
-  // src/contexts/AuthContext.tsx
+  // Sync with Redux on mount - check auth status and store in Redux
   useEffect(() => {
     let active = true;
     (async () => {
       try {
-        const r = await fetch('/api/auth/me', { cache: 'no-store' });
-        const json = await r.json();
-
+        // Dispatch checkAuthStatus to Redux which will store user with role
+        const result = await dispatch(checkAuthStatus()).unwrap();
+        
         if (!active) return;
 
-        if (json?.ok && json?.user) {
+        // checkAuthStatus returns { ok, user, profile } or rejects
+        if (result?.ok && result?.user) {
           setUser({
-            name: json?.profile?.fullname || json?.user?.email?.split('@')[0] || 'User',
-            email: json?.user?.email || undefined,
+            name: result?.profile?.fullname || result?.user?.email?.split('@')[0] || 'User',
+            email: result?.profile?.email || undefined,
+            role: result?.profile?.role || undefined,
             isAuthenticated: true
           });
         } else {
@@ -85,11 +68,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     })();
 
     return () => { active = false; };
-  }, []);
+  }, [dispatch]);
 
   const logout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' });
+      // Logout from Redux
+      await dispatch(logoutUser()).unwrap();
     } catch { }
     setUser(null);
     localStorage.removeItem('user'); // keep for old code paths

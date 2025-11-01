@@ -4,8 +4,9 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Icon, TextSizeControl } from "@/components/ui";
+import { Icon } from "@/components/ui";
 import { colors } from "@/design-tokens";
+import { useAppSelector } from "@/store/hooks";
 import { useAuth } from "@/contexts/AuthContext";
 // Removed inline settings in favor of dedicated Settings page
 
@@ -22,19 +23,24 @@ interface NavItem {
   isActive?: boolean;
   isAction?: boolean;
   onClick?: () => void;
+  roles?: string[]; // Roles that can see this item
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const pathname = usePathname();
-  const { user, logout } = useAuth();
-  // No local settings accordion; use Settings page instead
+  const { logout } = useAuth();
+  // Get user and role from Redux store
+  const user = useAppSelector((state) => state.auth.user);
+  const userRole = user?.role;
 
-  const navigationItems: NavItem[] = [
+  // Define all possible navigation items
+  const allNavigationItems: NavItem[] = [
     {
       name: "Home",
       href: "/",
       icon: "home",
       isActive: pathname === "/",
+      roles: ["student", "coach"], // Available for both roles
     },
     {
       name: "Classes",
@@ -42,64 +48,57 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       icon: "heart",
       badge: "Live",
       isActive: pathname === "/classes",
-    },
-    {
-      name: "Host",
-      href: "/host",
-      icon: "heart",
-      badge: "Live",
-      isActive: pathname === "/host",
-    },
-    {
-      name: "Join",
-      href: "/join",
-      icon: "heart",
-      badge: "Live",
-      isActive: pathname === "/join",
+      roles: ["student"], // Only for students
     },
     {
       name: "Game",
       href: "/game",
       icon: "gamepad",
       isActive: pathname === "/game",
+      roles: ["student"], // Only for students
     },
     {
       name: "Progress",
       href: "/progress",
       icon: "chart",
       isActive: pathname === "/progress",
+      roles: ["student"], // Only for students
     },
     {
       name: "Reports",
       href: "/reports",
       icon: "fileText",
       isActive: pathname === "/reports",
+      roles: ["student"], // Only for students
     },
     {
       name: "Community",
       href: "/community",
       icon: "users",
       isActive: pathname === "/community",
+      roles: ["student"], // Only for students
     },
     {
       name: "Help & Support",
       href: "/help",
       icon: "helpCircle",
       isActive: pathname === "/help",
+      roles: ["student"], // Only for students
     },
     {
       name: "Class Management",
       href: "/class-management",
       icon: "users",
       isActive: pathname === "/class-management",
+      roles: ["coach"], // Only for coaches
     },
-    // {
-    //   name: "Settings",
-    //   href: "/settings",
-    //   icon: "settings",
-    //   isActive: pathname === "/settings",
-    // },
   ];
+
+  // Filter navigation items based on user role
+  const navigationItems: NavItem[] = allNavigationItems.filter((item) => {
+    if (!userRole) return false; // Hide navigation if role is not available
+    return item.roles?.includes(userRole);
+  });
 
   const bottomActions: NavItem[] = [
     {
@@ -123,7 +122,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Mobile Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0  bg-opacity-50 z-40 lg:hidden"
           onClick={onClose}
         />
       )}
@@ -138,7 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-neutral-light/50 flex-shrink-0 bg-gradient-to-r from-teal-light/10 to-blue-50">
+        <div className="flex items-center justify-between p-4 border-b border-neutral-light/50 flex-shrink-0 bg-gradient-to-r from-teal-light/10 to-blue-50">
           <div className="flex items-center space-x-4">
             <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
               <Icon name="heart" size="lg" color="white" />

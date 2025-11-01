@@ -114,13 +114,13 @@ useEffect(() => {
         <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-neutral-light/50 hidden lg:block sticky top-0 z-30">
           <div className="flex items-center justify-between px-8 py-4">
             <div className="flex items-center space-x-4">
-              <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
+              {/* <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
                 <Icon name="heart" size="md" color="white" />
-              </div>
-              <div>
+              </div> */}
+              {/* <div>
                 <h1 className="text-2xl font-bold text-neutral-dark">waylness</h1>
                 <p className="text-sm text-teal-primary font-medium">Health Companion</p>
-              </div>
+              </div> */}
             </div>
             
             <div className="flex items-center space-x-6">

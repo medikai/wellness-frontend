@@ -6,7 +6,8 @@ interface User {
   name: string;
   email: string;
   phone?: string;
-  user_type: 'user' | 'coach';
+  user_type?: 'user' | 'coach';
+  role?: string; // 'student' | 'coach'
   isAuthenticated: boolean;
 }
 
@@ -135,7 +136,28 @@ const authSlice = createSlice({
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user || action.payload.profile;
+        if (action.payload?.user) {
+          state.user = {
+            id: action.payload.user.id,
+            name: action.payload.profile?.fullname || action.payload.user.email?.split('@')[0] || 'User',
+            email: action.payload.user.email,
+            phone: action.payload.profile?.phone,
+            user_type: action.payload.profile?.user_type || (action.payload.profile?.role === 'coach' ? 'coach' : 'user'),
+            role: action.payload.profile?.role,
+            isAuthenticated: true,
+          };
+        } else if (action.payload?.profile) {
+          // Login API returns only profile, construct user from profile
+          state.user = {
+            id: action.payload.profile.id,
+            name: action.payload.profile.fullname || 'User',
+            email: action.payload.profile.email || '',
+            phone: action.payload.profile.phone,
+            user_type: action.payload.profile.user_type || (action.payload.profile.role === 'coach' ? 'coach' : 'user'),
+            role: action.payload.profile.role,
+            isAuthenticated: true,
+          };
+        }
         state.isAuthenticated = true;
         state.error = null;
       })
@@ -151,7 +173,28 @@ const authSlice = createSlice({
       })
       .addCase(registerUser.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.user = action.payload.user || action.payload.profile;
+        if (action.payload?.user) {
+          state.user = {
+            id: action.payload.user.id,
+            name: action.payload.profile?.fullname || action.payload.user.email?.split('@')[0] || 'User',
+            email: action.payload.user.email,
+            phone: action.payload.profile?.phone,
+            user_type: action.payload.profile?.user_type || (action.payload.profile?.role === 'coach' ? 'coach' : 'user'),
+            role: action.payload.profile?.role,
+            isAuthenticated: true,
+          };
+        } else if (action.payload?.profile) {
+          // Register API might return only profile
+          state.user = {
+            id: action.payload.profile.id,
+            name: action.payload.profile.fullname || 'User',
+            email: action.payload.profile.email || '',
+            phone: action.payload.profile.phone,
+            user_type: action.payload.profile.user_type || (action.payload.profile.role === 'coach' ? 'coach' : 'user'),
+            role: action.payload.profile.role,
+            isAuthenticated: true,
+          };
+        }
         state.isAuthenticated = true;
         state.error = null;
       })
@@ -186,7 +229,8 @@ const authSlice = createSlice({
             name: action.payload.profile?.fullname || action.payload.user.email?.split('@')[0] || 'User',
             email: action.payload.user.email,
             phone: action.payload.profile?.phone,
-            user_type: action.payload.profile?.user_type || 'user',
+            user_type: action.payload.profile?.user_type || (action.payload.profile?.role === 'coach' ? 'coach' : 'user'),
+            role: action.payload.profile?.role,
             isAuthenticated: true,
           };
           state.isAuthenticated = true;

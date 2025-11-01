@@ -64,10 +64,10 @@ const LoginForm = () => {
         body: JSON.stringify({ emailOrPhone: formData.emailOrPhone, password: formData.password })
       });
       const json = await r.json();
-      console.log(json);
+      console.log(json.profile);
       if (!json.ok) { setErrors({ general: json.error || 'Login failed' }); return; }
 
-      alert("!!!");
+      alert(json.profile.role);
       window.location.assign('/dashboard'); // replaces router.push('/dashboard')
 
     } catch {
