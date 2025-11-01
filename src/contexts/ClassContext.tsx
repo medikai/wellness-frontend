@@ -16,8 +16,8 @@ type ClassContextValue = {
   getBookingsByUserId: (userId: string) => ClassBooking[];
 };
 
-const CLASSES_STORAGE_KEY = "wellness_classes";
-const BOOKINGS_STORAGE_KEY = "wellness_class_bookings";
+const CLASSES_STORAGE_KEY = "waylness_classes";
+const BOOKINGS_STORAGE_KEY = "waylness_class_bookings";
 
 const ClassContext = createContext<ClassContextValue | undefined>(undefined);
 

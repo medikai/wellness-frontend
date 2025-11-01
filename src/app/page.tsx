@@ -38,7 +38,7 @@ export default function Home() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Wellness</h1>
+          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to waylness</h1>
           <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
         </div>
 

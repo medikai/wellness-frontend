@@ -146,7 +146,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
               <option value="health">Health</option>
               <option value="fitness">Fitness</option>
               <option value="nutrition">Nutrition</option>
-              <option value="wellness">Wellness</option>
+              <option value="waylness">waylness</option>
               <option value="general">General</option>
             </select>
           </div>

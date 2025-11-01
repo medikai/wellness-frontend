@@ -26,7 +26,7 @@ interface ClassItem {
   startTime: string;
   endTime: string;
   duration: number;
-  category: 'fitness' | 'yoga' | 'meditation' | 'nutrition' | 'wellness';
+  category: 'fitness' | 'yoga' | 'meditation' | 'nutrition' | 'waylness';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   maxParticipants: number;
   currentParticipants: number;

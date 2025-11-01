@@ -96,7 +96,7 @@ useEffect(() => {
                 <Icon name="heart" size="sm" color="white" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-neutral-dark">Wellness</h1>
+                <h1 className="text-lg font-bold text-neutral-dark">waylness</h1>
                 <p className="text-xs text-teal-primary font-medium">Health Companion</p>
               </div>
             </div>
@@ -118,7 +118,7 @@ useEffect(() => {
                 <Icon name="heart" size="md" color="white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-neutral-dark">Wellness</h1>
+                <h1 className="text-2xl font-bold text-neutral-dark">waylness</h1>
                 <p className="text-sm text-teal-primary font-medium">Health Companion</p>
               </div>
             </div>

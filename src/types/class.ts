@@ -7,7 +7,7 @@ export interface Class {
   time: string; // HH:MM format
   duration: number; // in minutes
   maxParticipants: number;
-  category: 'fitness' | 'wellness' | 'therapy' | 'education' | 'social';
+  category: 'fitness' | 'waylness' | 'therapy' | 'education' | 'social';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   location: 'online' | 'in-person';
   meetingLink?: string; // for online classes

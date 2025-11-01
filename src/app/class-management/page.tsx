@@ -62,7 +62,7 @@ const ClassManagementPage = () => {
   const getCategoryIcon = (category: string) => {
     switch (category) {
       case 'fitness': return 'dumbbell';
-      case 'wellness': return 'heart';
+      case 'waylness': return 'heart';
       case 'therapy': return 'shield';
       case 'education': return 'book';
       case 'social': return 'users';
@@ -76,7 +76,7 @@ const ClassManagementPage = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold text-neutral-dark">Class Management</h1>
-          <p className="text-neutral-medium mt-2">Create and manage your wellness classes</p>
+          <p className="text-neutral-medium mt-2">Create and manage your waylness classes</p>
         </div>
         <Button
           variant="primary"

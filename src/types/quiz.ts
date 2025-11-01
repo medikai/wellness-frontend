@@ -13,7 +13,7 @@ export interface Quiz {
   id: string;
   title: string;
   description: string;
-  category: 'health' | 'fitness' | 'nutrition' | 'wellness' | 'general';
+  category: 'health' | 'fitness' | 'nutrition' | 'waylness' | 'general';
   difficulty: 'easy' | 'medium' | 'hard';
   timeLimit?: number; // in minutes, optional
   maxAttempts?: number; // optional

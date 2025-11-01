@@ -20,20 +20,20 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Wellness - Your Health Companion",
-  description: "A comprehensive health and wellness platform designed for elderly care, featuring live classes, progress tracking, and personalized support.",
-  keywords: ["health", "wellness", "elderly care", "fitness", "medical", "healthcare"],
-  authors: [{ name: "Wellness Team" }],
+  title: "waylness - Your Health Companion",
+  description: "A comprehensive health and waylness platform designed for elderly care, featuring live classes, progress tracking, and personalized support.",
+  keywords: ["health", "waylness", "elderly care", "fitness", "medical", "healthcare"],
+  authors: [{ name: "waylness Team" }],
   openGraph: {
     type: "website",
-    siteName: "Wellness",
-    title: "Wellness - Your Health Companion",
-    description: "A comprehensive health and wellness platform designed for elderly care",
+    siteName: "waylness",
+    title: "waylness - Your Health Companion",
+    description: "A comprehensive health and waylness platform designed for elderly care",
   },
   twitter: {
     card: "summary",
-    title: "Wellness - Your Health Companion",
-    description: "A comprehensive health and wellness platform designed for elderly care",
+    title: "waylness - Your Health Companion",
+    description: "A comprehensive health and waylness platform designed for elderly care",
   },
 };
 
@@ -53,7 +53,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Basic Meta Tags */}
-        <meta name="application-name" content="Wellness" />
+        <meta name="application-name" content="waylness" />
 
         {/* Favicon */}
         <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png" />

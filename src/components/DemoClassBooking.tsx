@@ -158,7 +158,7 @@ const DemoClassBooking: React.FC = () => {
       <div className="text-center">
         <h2 className="text-3xl font-bold text-[#2C4A52] mb-2">Join a Demo Class</h2>
         <p className="text-[#6B7280]">
-          Experience our health and wellness classes with a free demo session
+          Experience our health and waylness classes with a free demo session
         </p>
       </div>
 

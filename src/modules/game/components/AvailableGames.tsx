@@ -34,7 +34,7 @@ const AvailableGames = () => {
           </div>
         </div>
         <p className="text-sm text-neutral-medium mb-4">
-          Answer questions about nutrition, exercise, and wellness.
+          Answer questions about nutrition, exercise, and waylness.
         </p>
         <Link href="/game/quiz" className="w-full inline-block">
           <Button variant="outline" size="lg" className="w-full">

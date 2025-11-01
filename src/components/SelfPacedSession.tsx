@@ -20,10 +20,10 @@ interface SelfPacedSessionProps {
 const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({ 
   classData = {
     id: '1',
-    title: 'Health & Wellness Session',
-    description: 'Self-paced wellness activities',
-    instructor: 'Wellness Coach',
-    category: 'wellness'
+    title: 'Health & waylness Session',
+    description: 'Self-paced waylness activities',
+    instructor: 'waylness Coach',
+    category: 'waylness'
   }
 }) => {
   const router = useRouter();

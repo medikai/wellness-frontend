@@ -15,7 +15,7 @@ const HealthPreview = () => {
       <div className="relative z-10 text-white">
         <div className="mb-6">
           <h2 className="text-3xl font-bold mb-3">Join Our Health Community</h2>
-          <p className="text-lg text-teal-100">Connect with others on their wellness journey</p>
+          <p className="text-lg text-teal-100">Connect with others on their waylness journey</p>
         </div>
 
         {/* Health Classes Preview */}
@@ -61,7 +61,7 @@ const HealthPreview = () => {
             <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">
               <Icon name="chart" size="sm" color="white" />
             </div>
-            <span className="text-sm">Track your wellness progress</span>
+            <span className="text-sm">Track your waylness progress</span>
           </div>
           <div className="flex items-center space-x-2">
             <div className="w-6 h-6 bg-white/20 rounded-full flex items-center justify-center">

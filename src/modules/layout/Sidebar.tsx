@@ -93,12 +93,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       icon: "users",
       isActive: pathname === "/class-management",
     },
-    {
-      name: "Settings",
-      href: "/settings",
-      icon: "settings",
-      isActive: pathname === "/settings",
-    },
+    // {
+    //   name: "Settings",
+    //   href: "/settings",
+    //   icon: "settings",
+    //   isActive: pathname === "/settings",
+    // },
   ];
 
   const bottomActions: NavItem[] = [
@@ -144,7 +144,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               <Icon name="heart" size="lg" color="white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-neutral-dark">Wellness</h1>
+              <h1 className="text-xl font-bold text-neutral-dark">waylness</h1>
               <p className="text-sm text-teal-primary font-medium">Health Companion</p>
             </div>
           </div>
@@ -198,9 +198,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
           ))}
 
           {/* Text Size Control */}
-          <div className="px-4 py-2">
+          {/* <div className="px-4 py-2">
             <TextSizeControl variant="sidebar" />
-          </div>
+          </div> */}
         </nav>
 
         {/* Footer - Fixed at bottom */}

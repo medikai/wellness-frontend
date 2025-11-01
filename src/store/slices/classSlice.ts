@@ -10,7 +10,7 @@ interface Class {
   startTime: string;
   endTime: string;
   duration: number; // in minutes
-  category: 'fitness' | 'yoga' | 'meditation' | 'nutrition' | 'wellness';
+  category: 'fitness' | 'yoga' | 'meditation' | 'nutrition' | 'waylness';
   difficulty: 'beginner' | 'intermediate' | 'advanced';
   maxParticipants: number;
   currentParticipants: number;

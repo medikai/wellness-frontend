@@ -43,7 +43,7 @@ const QuickActions = () => {
         <Card hover className="p-6 text-center">
           <Icon name="play" size="lg" color="#4CAF9D" className="mx-auto mb-4" />
           <h3 className="font-semibold text-[#2C4A52] mb-2">Self-Paced Session</h3>
-          <p className="text-sm text-[#6B7280] mb-4">Start a self-paced wellness session</p>
+          <p className="text-sm text-[#6B7280] mb-4">Start a self-paced waylness session</p>
           <Button 
             variant="primary" 
             size="md" 

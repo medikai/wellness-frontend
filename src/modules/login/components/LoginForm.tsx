@@ -57,35 +57,18 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call
-      // await new Promise(resolve => setTimeout(resolve, 1000));
-
-      // // Store user data in localStorage (in real app, this would be handled by your backend)
-      // localStorage.setItem('user', JSON.stringify({
-      //   email: formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
-      //   phone: !formData.emailOrPhone.includes('@') ? formData.emailOrPhone : null,
-      //   name: 'Mary Johnson', // This would come from your backend
-      //   isAuthenticated: true
-      // }));
-
-      // router.push('/');
-
+     
       const r = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailOrPhone: formData.emailOrPhone, password: formData.password })
       });
       const json = await r.json();
+      console.log(json);
       if (!json.ok) { setErrors({ general: json.error || 'Login failed' }); return; }
 
-      // router.push('/dashboard');
-      // window.location.assign('/dashboard');
-      // router.replace('/dashboard'); 
-      // router.refresh();
-      // src/modules/login/components/LoginForm.tsx
-      // after json.ok check
+      alert("!!!");
       window.location.assign('/dashboard'); // replaces router.push('/dashboard')
-
 
     } catch {
       setErrors({ general: 'Login failed. Please try again.' });

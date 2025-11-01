@@ -15,7 +15,7 @@ const HealthPreview = () => {
       <div className="relative z-10 text-white">
         <div className="mb-6">
           <h2 className="text-3xl font-bold mb-3">Your Health Journey Starts Here</h2>
-          <p className="text-lg text-teal-100">Track your wellness, join classes, and achieve your health goals</p>
+          <p className="text-lg text-teal-100">Track your waylness, join classes, and achieve your health goals</p>
         </div>
 
         {/* Health Dashboard Mockup */}

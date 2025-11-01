@@ -23,9 +23,9 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, form
   if (upcomingClasses.length === 0) return null;
 
   const handleJoinClass = (classItem: BookedClass) => {
-    // For demo classes, redirect to self-paced session
+    // For demo classes, redirect to course page
     if (classItem.type === 'demo') {
-      router.push('/self-paced');
+      router.push('/course/1'); // Using dummy course ID
     } else {
       // For live classes, redirect to join page
       router.push('/join');
@@ -42,7 +42,7 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, form
             <div className="mb-4">
               <span className="text-sm text-[#4CAF9D] font-medium">UPCOMING</span>
               <h3 className="text-xl font-bold text-[#2C4A52] mt-1">
-                {classItem.type === 'demo' ? 'Demo Class' : 'Health & Wellness Class'}
+                {classItem.type === 'demo' ? 'Demo Class' : 'Health & waylness Class'}
               </h3>
               <p className="text-[#6B7280] mt-1">
                 {formatClassDate(classItem.date, classItem.time)}
@@ -50,8 +50,8 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses, form
             </div>
             <p className="text-sm text-[#6B7280] mb-4">
               {classItem.type === 'demo' 
-                ? 'Experience our health and wellness classes with this free demo session.'
-                : 'Join our live health and wellness class designed for your needs.'
+                ? 'Experience our health and waylness classes with this free demo session.'
+                : 'Join our live health and waylness class designed for your needs.'
               }
             </p>
             <div className="flex items-center justify-between">

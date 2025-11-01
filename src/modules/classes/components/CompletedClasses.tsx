@@ -28,7 +28,7 @@ const CompletedClasses: React.FC<CompletedClassesProps> = ({ completedClasses, f
             <div className="mb-4">
               <span className="text-sm text-green-500 font-medium">COMPLETED</span>
               <h3 className="text-xl font-bold text-[#2C4A52] mt-1">
-                {classItem.type === 'demo' ? 'Demo Class' : 'Health & Wellness Class'}
+                {classItem.type === 'demo' ? 'Demo Class' : 'Health & waylness Class'}
               </h3>
               <p className="text-[#6B7280] mt-1">
                 {formatClassDate(classItem.date, classItem.time)}

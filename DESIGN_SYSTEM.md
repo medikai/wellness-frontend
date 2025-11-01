@@ -1,6 +1,6 @@
-# Wellness Design System
+# waylness Design System
 
-This document outlines the design system and color palette for the Wellness application.
+This document outlines the design system and color palette for the waylness application.
 
 ## Color Palette
 
@@ -10,7 +10,7 @@ This document outlines the design system and color palette for the Wellness appl
 - **Accent Orange**: `#F87360` - Accent color for highlights
 
 ### Health Theme Colors
-- **Teal Primary**: `#4CAF9D` - Main health/wellness color
+- **Teal Primary**: `#4CAF9D` - Main health/waylness color
 - **Teal Light**: `#E6F7F5` - Light teal for backgrounds
 - **Teal Dark**: `#2D7D6B` - Dark teal for hover states
 

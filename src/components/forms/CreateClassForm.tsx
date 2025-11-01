@@ -226,7 +226,7 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               className="w-full px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary"
             >
               <option value="fitness">Fitness</option>
-              <option value="wellness">Wellness</option>
+              <option value="waylness">waylness</option>
               <option value="therapy">Therapy</option>
               <option value="education">Education</option>
               <option value="social">Social</option>

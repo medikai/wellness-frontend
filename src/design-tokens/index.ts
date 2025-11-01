@@ -1,4 +1,4 @@
-// Wellness Design Tokens
+// waylness Design Tokens
 // This file contains all design system constants for consistent usage across modules
 
 export const colors = {

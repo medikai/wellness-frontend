@@ -23,9 +23,9 @@ type QuizContextValue = {
   getResultsByQuizId: (quizId: string) => QuizResult[];
 };
 
-const QUIZZES_STORAGE_KEY = "wellness_quizzes";
-const ATTEMPTS_STORAGE_KEY = "wellness_quiz_attempts";
-const RESULTS_STORAGE_KEY = "wellness_quiz_results";
+const QUIZZES_STORAGE_KEY = "waylness_quizzes";
+const ATTEMPTS_STORAGE_KEY = "waylness_quiz_attempts";
+const RESULTS_STORAGE_KEY = "waylness_quiz_results";
 
 const QuizContext = createContext<QuizContextValue | undefined>(undefined);
 
