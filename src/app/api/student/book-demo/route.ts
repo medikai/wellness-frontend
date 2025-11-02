@@ -1,15 +1,17 @@
-// src/app/api/student/book-demo/route.ts
-import { NextResponse } from 'next/server';
-import { supabaseAnon } from '@/lib/supabaseServer';
-import { bindSessionFromCookies } from '@/lib/http/session';
+import { NextResponse } from "next/server";
+import { supabaseAnon } from "@/lib/supabaseServer";
+import { bindSessionFromCookies } from "@/lib/http/session";
 
-type Body = { slot_start: string; slot_minutes?: number };
+type Body = {
+  slot_id: string;
+  coach_id: string;
+  slot_minutes?: number;
+};
 
-// helper to create meeting using your existing Videosdk endpoint
-async function createMeetingId() {
-  const base = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
-  const res = await fetch(`${base}/api/videosdk/room`, { method: 'POST' });
-  if (!res.ok) throw new Error('Failed to create meeting');
+async function createMeetingRoom() {
+  const base = process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000";
+  const res = await fetch(`${base}/api/videosdk/room`, { method: "POST" });
+  if (!res.ok) throw new Error("VideoSDK room creation failed");
   const data = await res.json();
   return data.roomId as string;
 }
@@ -17,50 +19,52 @@ async function createMeetingId() {
 export async function POST(req: Request) {
   try {
     const user = await bindSessionFromCookies();
-    if (!user) {
-      return NextResponse.json({ ok: false, error: 'Not authenticated' }, { status: 401 });
+    if (!user)
+      return NextResponse.json({ ok: false, error: "Not authenticated" }, { status: 401 });
+
+    const body = (await req.json()) as Body;
+    const { slot_id, coach_id, slot_minutes = 60 } = body;
+
+    if (!slot_id || !coach_id) {
+      return NextResponse.json(
+        { ok: false, error: "slot_id and coach_id required" },
+        { status: 400 }
+      );
     }
 
-    const { slot_start, slot_minutes = 60 } = (await req.json()) as Body;
-    if (!slot_start) {
-      return NextResponse.json({ ok: false, error: 'slot_start is required ISO string' }, { status: 400 });
-    }
-
-    // Step 1: book the demo slot using Supabase RPC
-    const { data, error } = await supabaseAnon.rpc('book_demo_slot', {
-      p_slot_start: slot_start,
+    // Step 1: Call RPC
+    const { data, error } = await supabaseAnon.rpc("book_demo_slot", {
+      p_student_id: user.id,
+      p_coach_id: coach_id,
+      p_slot_id: slot_id,
       p_slot_minutes: slot_minutes,
     });
+
     if (error) {
+      console.error("RPC error:", error);
       return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
     }
 
     const booking = Array.isArray(data) ? data[0] : data;
-    const bookingId = booking?.booking_id;
-    if (!bookingId) {
-      return NextResponse.json({ ok: false, error: 'Booking failed, no ID returned' }, { status: 400 });
-    }
+    const lessonId = booking?.lesson_id;
+    if (!lessonId)
+      return NextResponse.json({ ok: false, error: "Lesson not created" }, { status: 400 });
 
-    // Step 2: create a new VideoSDK meeting room
-    const meetingId = await createMeetingId();
+    // Step 2: Create VideoSDK meeting
+    const realMeetingId = await createMeetingRoom();
 
-    // Step 3: update the Supabase lesson record with meetingId
-    const { error: updateErr } = await supabaseAnon
-      .from('lesson')
-      .update({ zoom_start_url: meetingId })
-      .eq('id', bookingId);
+    // Step 3: Update meeting ID on lesson
+    await supabaseAnon.rpc("update_lesson_meeting", {
+      p_lesson: lessonId,
+      p_meeting: realMeetingId,
+    });
 
-    if (updateErr) {
-      console.error('Failed to update meeting ID:', updateErr);
-    }
-
-    // Step 4: return final booking response including meeting ID
     return NextResponse.json({
       ok: true,
-      booking: { ...booking, meeting_id: meetingId },
+      booking: { ...booking, meeting_id: realMeetingId },
     });
-  } catch (e: unknown) {
-    const errorMessage = e instanceof Error ? e.message : 'unknown error';
-    return NextResponse.json({ ok: false, error: errorMessage }, { status: 500 });
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : "unknown error";
+    return NextResponse.json({ ok: false, error: msg }, { status: 500 });
   }
 }
