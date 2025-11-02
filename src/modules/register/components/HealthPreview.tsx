@@ -1,9 +1,9 @@
 import React from 'react'
 import { Icon } from '@/components/ui'
 
-const HealthPreview = () => {
+const HealthPreview = ({ className = '' }: { className?: string }) => {
   return (
-    <div className="flex-1 bg-gradient-to-br from-teal-500 to-teal-600 p-6 flex items-center justify-center relative overflow-hidden">
+    <div className={`flex-1 bg-gradient-to-br from-teal-500 to-teal-600 p-6 flex items-center justify-center relative overflow-hidden ${className}`}>
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-10 left-10 w-32 h-32 bg-white rounded-full"></div>
