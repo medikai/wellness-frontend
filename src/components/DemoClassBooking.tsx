@@ -73,15 +73,6 @@ const DemoClassBooking: React.FC = () => {
 
   const handleSlotClick = (id: string) => setSelectedSlot(id);
 
-  const handleBookDemo_old = () => {
-    if (!selectedDate || !selectedSlot) return;
-    const booking = { date: selectedDate, slotId: selectedSlot, bookedAt: new Date().toISOString() };
-    const existing = JSON.parse(localStorage.getItem('demoBookings') || '[]');
-    existing.push(booking);
-    localStorage.setItem('demoBookings', JSON.stringify(existing));
-    setIsBookingConfirmed(true);
-  };
-
   const handleBookDemo = async () => {
   if (!selectedDate || !selectedSlot) return;
 
