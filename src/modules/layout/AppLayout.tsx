@@ -17,8 +17,9 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Check if current path is auth page
+  // Check if current path is auth page or homepage
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced';
+  const isHomePage = pathname === '/';
 
   useEffect(() => {
     const checkMobile = () => {
@@ -36,14 +37,16 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Redirect to login if not authenticated and not on auth pages
-  // src/modules/layout/AppLayout.tsx
-useEffect(() => {
-  if (isLoading) return;
-  if (!user && !isAuthPage) {
-    router.push('/login');
-  }
-}, [user, isLoading, isAuthPage, router]);
+  // Redirect to login if not authenticated and not on auth pages or homepage
+  // Redirect authenticated users from / to /home
+  useEffect(() => {
+    if (isLoading) return;
+    if (!user && !isAuthPage && !isHomePage) {
+      router.push('/login');
+    } else if (user && isHomePage) {
+      router.push('/home');
+    }
+  }, [user, isLoading, isAuthPage, isHomePage, router]);
 
   // Show loading state
   if (isLoading) {
@@ -57,8 +60,8 @@ useEffect(() => {
     );
   }
 
-  // Show auth pages without layout
-  if (isAuthPage) {
+  // Show auth pages and homepage without layout
+  if (isAuthPage || isHomePage) {
     return <>{children}</>;
   }
 

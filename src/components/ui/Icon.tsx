@@ -278,6 +278,32 @@ const Icon: React.FC<IconProps> = ({
         <polyline points="6,9 12,15 18,9" />
       </svg>
     ),
+    code: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="16,18 22,12 16,6" />
+        <polyline points="8,6 2,12 8,18" />
+      </svg>
+    ),
+    video: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polygon points="23,7 16,12 23,17 23,7" />
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2" />
+      </svg>
+    ),
   };
 
   const iconElement = iconMap[name];

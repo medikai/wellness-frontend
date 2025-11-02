@@ -2,8 +2,8 @@ import React from 'react';
 import { borderRadius, typography } from '@/design-tokens';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'outline' | 'ghost';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'hero';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   children: React.ReactNode;
   className?: string;
   disabled?: boolean;
@@ -31,6 +31,7 @@ const Button: React.FC<ButtonProps> = ({
     sm: `h-8 px-3 text-sm ${typography.fontSize.sm}`,
     md: `h-10 px-4 text-base ${typography.fontSize.base}`,
     lg: `h-12 px-6 text-lg ${typography.fontSize.lg}`,
+    xl: `h-14 px-8 text-xl font-semibold`,
   };
 
   const variantStyles = {
@@ -55,6 +56,12 @@ const Button: React.FC<ButtonProps> = ({
       text-neutral-dark
       hover:bg-neutral-light
       focus:ring-neutral-medium
+    `,
+    hero: `
+      bg-white text-teal-primary
+      hover:bg-teal-light
+      focus:ring-teal-primary
+      shadow-lg hover:shadow-xl
     `,
   };
 

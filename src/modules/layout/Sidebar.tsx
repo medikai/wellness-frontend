@@ -37,9 +37,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const allNavigationItems: NavItem[] = [
     {
       name: "Home",
-      href: "/",
+      href: "/home",
       icon: "home",
-      isActive: pathname === "/",
+      isActive: pathname === "/home",
       roles: ["student", "coach"], // Available for both roles
     },
     {
