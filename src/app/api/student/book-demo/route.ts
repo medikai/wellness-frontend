@@ -1,3 +1,4 @@
+//src/app/api/student/book-demo/route.ts
 import { NextResponse } from "next/server";
 import { supabaseAnon } from "@/lib/supabaseServer";
 import { bindSessionFromCookies } from "@/lib/http/session";

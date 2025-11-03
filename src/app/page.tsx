@@ -12,6 +12,8 @@ import StatCard from '@/components/StatCard';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { ArrowRight, Heart, GraduationCap, BarChart3, Users, CheckCircle2, Zap, Mail, Linkedin, Twitter, ChevronDown } from 'lucide-react';
+import Image from 'next/image';
+
 
 export default function Home() {
   const { user, isLoading } = useAuth();
@@ -28,7 +30,7 @@ export default function Home() {
   // Scroll reveal animation
   useEffect(() => {
     if (user) return; // Only run on landing page
-    
+
     const initObserver = () => {
       observerRef.current = new IntersectionObserver(
         (entries) => {
@@ -95,7 +97,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-background">
         <Navigation />
-        
+
         {/* Hero Section */}
         <section className="gradient-subtle py-20 px-4">
           <div className="max-w-7xl mx-auto">
@@ -121,16 +123,19 @@ export default function Home() {
                 </Link>
               </div>
             </div>
-           
+
             <div className="max-w-5xl mx-auto reveal-on-scroll">
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                <img 
-                  src={"/images/hero.jpg"} 
-                  alt="Elderly people participating in wellness activities" 
+                <Image
+                  src="/images/hero.jpg"
+                  alt="Elderly people participating in wellness activities"
+                  width={1920} // ✅ required by next/image
+                  height={1080} // ✅ keeps 16:9 aspect ratio
                   className="w-full h-auto object-cover"
-                  loading="eager"
+                  priority // same as loading="eager"
                   style={{ aspectRatio: '16/9' }}
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
               </div>
             </div>
@@ -160,7 +165,7 @@ export default function Home() {
                 Simple, fun, and designed just for you
               </p>
             </div>
-            
+
             <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
               <div className="reveal-on-scroll">
                 <FeatureCard
@@ -247,7 +252,7 @@ export default function Home() {
                 Getting started is easy—just four simple steps
               </p>
             </div>
-            
+
             <div className="space-y-8">
               <div className="reveal-on-scroll">
                 <StepCard
@@ -347,9 +352,8 @@ export default function Home() {
                     >
                       <h3 className="text-lg font-semibold text-neutral-dark pr-4">{faq.question}</h3>
                       <ChevronDown
-                        className={`w-5 h-5 text-teal-primary flex-shrink-0 transition-transform ${
-                          openFAQ === index ? 'rotate-180' : ''
-                        }`}
+                        className={`w-5 h-5 text-teal-primary flex-shrink-0 transition-transform ${openFAQ === index ? 'rotate-180' : ''
+                          }`}
                       />
                     </button>
                     {openFAQ === index && (
@@ -381,8 +385,8 @@ export default function Home() {
                 </Button>
               </Link>
               <Link href="/register">
-                <Button 
-                  variant="ghost" 
+                <Button
+                  variant="ghost"
                   size="xl"
                   className="text-white hover:bg-white/20 border-2 border-white/50"
                 >
@@ -451,80 +455,80 @@ export default function Home() {
   // Show dashboard for authenticated users
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Waylness</h1>
-          <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
-        </div>
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Waylness</h1>
+        <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Welcome Section */}
-            <div>
-              <h2 className="text-3xl font-bold text-neutral-dark mb-2">
-                {`Good morning, ${user?.name ?? 'friend'} 👋`}
-              </h2>
-              <p className="text-neutral-medium">
-                Ready to start your health journey today?
-              </p>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Left Column - Main Content */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Welcome Section */}
+          <div>
+            <h2 className="text-3xl font-bold text-neutral-dark mb-2">
+              {`Good morning, ${user?.name ?? 'friend'} 👋`}
+            </h2>
+            <p className="text-neutral-medium">
+              Ready to start your health journey today?
+            </p>
+          </div>
 
-            {/* Live Class Card */}
-            <Card hover className="p-6 border-l-4 border-teal-primary">
-              <div className="flex justify-between items-start mb-4">
-                <div>
-                  <span className="text-sm text-teal-primary font-medium">Live Class</span>
-                  <h3 className="text-2xl font-bold text-neutral-dark mt-1">
-                    Yoga for Joints
-                  </h3>
-                  <p className="text-neutral-medium mt-1">
-                    Today at 10:00 AM
-                  </p>
-                </div>
-                <Button variant="primary" size="lg">
-                  Start Class →
-                </Button>
+          {/* Live Class Card */}
+          <Card hover className="p-6 border-l-4 border-teal-primary">
+            <div className="flex justify-between items-start mb-4">
+              <div>
+                <span className="text-sm text-teal-primary font-medium">Live Class</span>
+                <h3 className="text-2xl font-bold text-neutral-dark mt-1">
+                  Yoga for Joints
+                </h3>
+                <p className="text-neutral-medium mt-1">
+                  Today at 10:00 AM
+                </p>
               </div>
-            </Card>
-
-            {/* Progress Card */}
-            <Card className="p-6">
-              <h3 className="text-xl font-bold text-neutral-dark mb-4">
-                Your Progress
-              </h3>
-              <p className="text-neutral-medium mb-4">
-                You&apos;ve completed 3 classes this week 💪
-              </p>
-              <p className="text-neutral-dark font-medium mb-4">
-                Keep going!
-              </p>
-              <ProgressBar 
-                value={75} 
-                showLabel 
-                label="Weekly Goal" 
-                color="teal"
-              />
-            </Card>
-          </div>
-
-          {/* Right Column - Sidebar */}
-          <div className="space-y-6">
-            {/* Action Buttons */}
-            <div className="space-y-3">
-              <Button variant="primary" size="lg" className="w-full">
-                Join a Class
-              </Button>
-              <Button variant="outline" size="lg" className="w-full">
-                <Icon name="phone" size="sm" className="mr-2" />
-                Get Help
-              </Button>
-              <Button variant="outline" size="lg" className="w-full">
-                <Icon name="settings" size="sm" className="mr-2" />
-                Settings
+              <Button variant="primary" size="lg">
+                Start Class →
               </Button>
             </div>
+          </Card>
+
+          {/* Progress Card */}
+          <Card className="p-6">
+            <h3 className="text-xl font-bold text-neutral-dark mb-4">
+              Your Progress
+            </h3>
+            <p className="text-neutral-medium mb-4">
+              You&apos;ve completed 3 classes this week 💪
+            </p>
+            <p className="text-neutral-dark font-medium mb-4">
+              Keep going!
+            </p>
+            <ProgressBar
+              value={75}
+              showLabel
+              label="Weekly Goal"
+              color="teal"
+            />
+          </Card>
+        </div>
+
+        {/* Right Column - Sidebar */}
+        <div className="space-y-6">
+          {/* Action Buttons */}
+          <div className="space-y-3">
+            <Button variant="primary" size="lg" className="w-full">
+              Join a Class
+            </Button>
+            <Button variant="outline" size="lg" className="w-full">
+              <Icon name="phone" size="sm" className="mr-2" />
+              Get Help
+            </Button>
+            <Button variant="outline" size="lg" className="w-full">
+              <Icon name="settings" size="sm" className="mr-2" />
+              Settings
+            </Button>
           </div>
         </div>
+      </div>
     </div>
   );
 }
