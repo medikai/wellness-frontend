@@ -6,6 +6,7 @@ import { useAppDispatch } from '@/store/hooks';
 import { checkAuthStatus, logoutUser } from '@/store/slices/authSlice';
 
 interface User {
+  id: string;
   name: string;
   email?: string;
   phone?: string;
@@ -46,20 +47,28 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       try {
         // Dispatch checkAuthStatus to Redux which will store user with role
         const result = await dispatch(checkAuthStatus()).unwrap();
-        
+
         if (!active) return;
 
         // checkAuthStatus returns { ok, user, profile } or rejects
         if (result?.ok && result?.user) {
+          const resolvedId =
+            result?.user?.id ||
+            result?.profile?.id ||
+            result?.profile?.user_id ||
+            '';
+
           setUser({
+            id: resolvedId, // ✅ added
             name: result?.profile?.fullname || result?.user?.email?.split('@')[0] || 'User',
             email: result?.profile?.email || undefined,
             role: result?.profile?.role || undefined,
-            isAuthenticated: true
+            isAuthenticated: true,
           });
         } else {
           setUser(null);
         }
+
       } catch {
         setUser(null);
       } finally {

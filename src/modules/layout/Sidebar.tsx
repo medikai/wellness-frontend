@@ -51,6 +51,22 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       roles: ["student"], // Only for students
     },
     {
+      name: "Upcoming Classes",
+      href: "/classes",
+      icon: "heart",
+      badge: "Live",
+      isActive: pathname === "/classes",
+      roles: ["student"], // Only for students
+    },
+    {
+      name: "Upcoming Classes",
+      href: "/coach/classes",
+      icon: "heart",
+      badge: "Live",
+      isActive: pathname === "/classes",
+      roles: ["coach"], // Only for students
+    },
+    {
       name: "Game",
       href: "/game",
       icon: "gamepad",

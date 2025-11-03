@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Icon } from '@/components/ui';
 
+
 interface Slot {
   id: string;
   coach_id: string;
@@ -11,6 +12,7 @@ interface Slot {
   slot_start: string;
   slot_end: string;
   is_booked: boolean;
+  student_id?: string | null;
 }
 
 
@@ -27,8 +29,19 @@ const DemoClassBooking: React.FC = () => {
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+
 
   const fmt = (d: Date) => d.toLocaleDateString('en-CA');
+
+  useEffect(() => {
+    fetch("/api/me")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.ok && data.user) setCurrentUser(data.user);
+      })
+      .catch(() => setCurrentUser(null));
+  }, []);
 
   // Fetch available slots for the current month
   useEffect(() => {
@@ -74,52 +87,52 @@ const DemoClassBooking: React.FC = () => {
   const handleSlotClick = (id: string) => setSelectedSlot(id);
 
   const handleBookDemo = async () => {
-  if (!selectedDate || !selectedSlot) return;
+    if (!selectedDate || !selectedSlot) return;
 
-  try {
-    const selected = Object.values(availableSlots)
-      .flat()
-      .find((s) => s.id === selectedSlot);
+    try {
+      const selected = Object.values(availableSlots)
+        .flat()
+        .find((s) => s.id === selectedSlot);
 
-    if (!selected) return;
+      if (!selected) return;
 
-    // Payload now includes coach_id directly from the slot
-    const payload = {
-      slot_id: selected.id,
-      coach_id: selected.coach_id,
-      slot_minutes: 60,
-    };
+      // Payload now includes coach_id directly from the slot
+      const payload = {
+        slot_id: selected.id,
+        coach_id: selected.coach_id,
+        slot_minutes: 60,
+      };
 
-    const res = await fetch('/api/student/book-demo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+      const res = await fetch('/api/student/book-demo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-    const data = await res.json();
-    if (!res.ok || !data.ok) throw new Error(data.error || 'Booking failed');
+      const data = await res.json();
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Booking failed');
 
-    // Refresh slots after booking
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const from = fmt(new Date(year, month, 1));
-    const to = fmt(new Date(year, month + 1, 0));
-    const refreshed = await fetchAvailableSlots(from, to);
+      // Refresh slots after booking
+      const year = currentMonth.getFullYear();
+      const month = currentMonth.getMonth();
+      const from = fmt(new Date(year, month, 1));
+      const to = fmt(new Date(year, month + 1, 0));
+      const refreshed = await fetchAvailableSlots(from, to);
 
-    const grouped: Record<string, Slot[]> = {};
-    refreshed.forEach((s: Slot) => {
-      const dateKey = new Date(s.slot_start).toLocaleDateString('en-CA');
-      if (!grouped[dateKey]) grouped[dateKey] = [];
-      grouped[dateKey].push(s);
-    });
+      const grouped: Record<string, Slot[]> = {};
+      refreshed.forEach((s: Slot) => {
+        const dateKey = new Date(s.slot_start).toLocaleDateString('en-CA');
+        if (!grouped[dateKey]) grouped[dateKey] = [];
+        grouped[dateKey].push(s);
+      });
 
-    setAvailableSlots(grouped);
-    setIsBookingConfirmed(true);
-  } catch (err) {
-    console.error(err);
-    alert('Booking failed. Try again.');
-  }
-};
+      setAvailableSlots(grouped);
+      setIsBookingConfirmed(true);
+    } catch (err) {
+      console.error(err);
+      alert('Booking failed. Try again.');
+    }
+  };
 
 
 
@@ -220,28 +233,38 @@ const DemoClassBooking: React.FC = () => {
               })}
             </h4>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {availableSlots[selectedDate].map((slot) => (
-                <button
-                  key={slot.id}
-                  onClick={() => handleSlotClick(slot.id)}
-                  disabled={slot.is_booked}
-                  className={`p-3 rounded-lg border text-center transition-colors ${selectedSlot === slot.id
-                    ? 'border-[#4CAF9D] bg-[#E6F7F5] text-[#2D7D6B]'
-                    : 'border-[#F8F9FA] hover:border-[#4CAF9D] hover:bg-[#E6F7F5]'
-                    }`}
-                >
-                  <div className="font-medium">
-                    {new Date(slot.slot_start).toLocaleTimeString([], {
-                      hour: 'numeric',
-                      minute: '2-digit',
-                    })}
-                  </div>
-                  <div className="text-xs text-[#6B7280]">
-                    {slot.is_booked ? 'Booked' : `Coach: ${slot.coach_name ?? 'Unknown'}`}
-                  </div>
+              {availableSlots[selectedDate].map((slot) => {
+                const isMine = slot.student_id === currentUser?.id;
+                const isBookedByOther = slot.is_booked && !isMine;
 
-                </button>
-              ))}
+                return (
+                  <button
+                    key={slot.id}
+                    onClick={() => handleSlotClick(slot.id)}
+                    disabled={isBookedByOther}
+                    className={`p-3 rounded-lg border text-center transition-colors ${isBookedByOther
+                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                        : selectedSlot === slot.id
+                          ? 'border-[#4CAF9D] bg-[#E6F7F5] text-[#2D7D6B]'
+                          : 'border-[#F8F9FA] hover:border-[#4CAF9D] hover:bg-[#E6F7F5]'
+                      }`}
+                  >
+                    <div className="font-medium">
+                      {new Date(slot.slot_start).toLocaleTimeString([], {
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                    </div>
+                    <div className="text-xs text-[#6B7280]">
+                      {isMine
+                        ? '✔ Booked by You'
+                        : isBookedByOther
+                          ? 'Booked by another student'
+                          : `Coach: ${slot.coach_name ?? 'Unknown'}`}
+                    </div>
+                  </button>
+                );
+              })}
             </div>
 
             {selectedSlot && (
