@@ -85,7 +85,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       {/* Main Content */}
       <div className="lg:pl-64 min-h-screen">
         {/* Mobile Header */}
-        <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-neutral-light/50 lg:hidden sticky top-0 z-30">
+        <header className="bg-white/95 backdrop-blur-sm shadow border-b border-neutral-light/50 lg:hidden sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={toggleSidebar}
@@ -114,7 +114,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </header>
 
         {/* Desktop Header */}
-        <header className="bg-white/95 backdrop-blur-sm shadow-lg border-b border-neutral-light/50 hidden lg:block sticky top-0 z-30">
+        <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-neutral-light/50 hidden lg:block sticky top-0 z-30">
           <div className="flex items-center justify-between px-8 py-4">
             <div className="flex items-center space-x-4">
               {/* <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">

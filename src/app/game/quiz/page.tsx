@@ -36,7 +36,7 @@ export default function QuizManagementPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-start gap-6">
         {/* Left: Editor */}
         <div className="flex-1 space-y-6">

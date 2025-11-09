@@ -11,9 +11,8 @@ import TestimonialCard from '@/components/TestimonialCard';
 import StatCard from '@/components/StatCard';
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Heart, GraduationCap, BarChart3, Users, CheckCircle2, Zap, Mail, Linkedin, Twitter, ChevronDown } from 'lucide-react';
 import Image from 'next/image';
-
+import { ArrowRight, Heart, GraduationCap, BarChart3, Users, CheckCircle2, Zap, Mail, Linkedin, Twitter, ChevronDown } from 'lucide-react';
 
 export default function Home() {
   const { user, isLoading } = useAuth();
@@ -126,13 +125,13 @@ export default function Home() {
 
             <div className="max-w-5xl mx-auto reveal-on-scroll">
               <div className="relative rounded-2xl shadow-2xl overflow-hidden">
-                <Image
-                  src="/images/hero.jpg"
-                  alt="Elderly people participating in wellness activities"
-                  width={1920} // ✅ required by next/image
-                  height={1080} // ✅ keeps 16:9 aspect ratio
+                <Image 
+                  src={"/images/hero.jpg"} 
+                  alt="Elderly people participating in wellness activities" 
+                  width={1920}
+                  height={1080}
                   className="w-full h-auto object-cover"
-                  priority // same as loading="eager"
+                  priority
                   style={{ aspectRatio: '16/9' }}
                 />
 

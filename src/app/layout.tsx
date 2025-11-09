@@ -1,6 +1,6 @@
 //src/app/layout.tsx
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { AppLayout } from '@/modules/layout';
 import { AuthProvider } from '@/contexts/AuthContext';
@@ -9,12 +9,12 @@ import { ClassProvider } from '@/contexts/ClassContext';
 import { QuizProvider } from '@/contexts/QuizContext';
 import { ReduxProvider } from '@/store/ReduxProvider';
 
-const geistSans = Geist({
+const geistSans = Inter({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
+const geistMono = Roboto_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
