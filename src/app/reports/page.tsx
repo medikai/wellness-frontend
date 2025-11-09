@@ -2,7 +2,7 @@ import { Card, Button, Icon } from '@/components/ui';
 
 export default function ReportsPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-9xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-neutral-dark mb-2">Health Reports</h1>
           <p className="text-neutral-medium">View detailed reports and analytics of your health journey</p>

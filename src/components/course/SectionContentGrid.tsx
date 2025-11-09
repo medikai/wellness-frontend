@@ -21,7 +21,7 @@ interface SectionContentGridProps {
 
 export default function SectionContentGrid({ chapters, title }: SectionContentGridProps) {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
-  const [currentQuiz, setCurrentQuiz] = useState(0)
+  const [currentQuiz] = useState(0)
   const [currentVideo, setCurrentVideo] = useState(0)
 
   // Filter content by type

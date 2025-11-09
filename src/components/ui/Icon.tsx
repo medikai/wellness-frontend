@@ -278,6 +278,30 @@ const Icon: React.FC<IconProps> = ({
         <polyline points="6,9 12,15 18,9" />
       </svg>
     ),
+    chevronLeft: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="15,18 9,12 15,6" />
+      </svg>
+    ),
+    chevronRight: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <polyline points="9,18 15,12 9,6" />
+      </svg>
+    ),
     code: (
       <svg
         viewBox="0 0 24 24"
@@ -289,6 +313,18 @@ const Icon: React.FC<IconProps> = ({
       >
         <polyline points="16,18 22,12 16,6" />
         <polyline points="8,6 2,12 8,18" />
+      </svg>
+    ),
+    maximize: (
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
       </svg>
     ),
     video: (

@@ -130,7 +130,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-0 left-0 z-50 h-screen w-64 bg-white/95 backdrop-blur-sm shadow-2xl border-r border-neutral-light/50
+    fixed top-0 left-0 z-50 h-screen w-64 bg-white/95 backdrop-blur-sm shadow-lg border-r border-neutral-light/50
     transform transition-all duration-300 ease-in-out flex flex-col
     ${isOpen ? "translate-x-0" : "-translate-x-full"}
     lg:translate-x-0
@@ -144,7 +144,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-neutral-dark">waylness</h1>
-              <p className="text-sm text-teal-primary font-medium">Health Companion</p>
+              <p className="text-sm text-teal-primary font-medium">
+                Health Companion
+              </p>
             </div>
           </div>
           <button
@@ -172,17 +174,17 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
               `}
             >
               <div className="flex items-center space-x-3">
-                <div className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
-                  item.isActive 
-                    ? 'bg-teal-primary shadow-sm' 
-                    : 'bg-neutral-light group-hover:bg-teal-light group-hover:shadow-sm'
-                }`}>
+                <div
+                  className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
+                    item.isActive
+                      ? "bg-teal-primary shadow-sm"
+                      : "bg-neutral-light group-hover:bg-teal-light group-hover:shadow-sm"
+                  }`}
+                >
                   <Icon
                     name={item.icon}
                     size="sm"
-                    color={
-                      item.isActive ? 'white' : colors.neutral.medium
-                    }
+                    color={item.isActive ? "white" : colors.neutral.medium}
                   />
                 </div>
                 <span className="text-base font-medium">{item.name}</span>
@@ -210,14 +212,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-base font-bold text-neutral-dark truncate">
-                {user?.name || 'User'}
+                {user?.name || "User"}
               </p>
               <p className="text-xs text-teal-primary font-semibold truncate">
                 Premium Member
               </p>
             </div>
           </div>
-          
+
           {/* Bottom Actions - Aligned with navigation */}
           <div className="space-y-1">
             {bottomActions.map((item) => (

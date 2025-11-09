@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react'
 import { Chapter } from '@/types/course'
-import { Button } from '@/components/ui'
+import { Button, Icon } from '@/components/ui'
+import { colors } from '@/design-tokens'
 import VideoContent from './content/VideoContent'
 import SurveyContent from './content/SurveyContent'
 import QuizContent from './content/QuizContent'
@@ -11,27 +12,53 @@ import GameContent from './content/GameContent'
 import ActivityContent from './content/ActivityContent'
 import FeedbackModal from '@/components/FeedbackModal'
 
+// Type definitions for vendor-specific fullscreen APIs
+interface DocumentWithFullscreen extends Document {
+  webkitFullscreenElement?: Element | null
+  mozFullScreenElement?: Element | null
+  msFullscreenElement?: Element | null
+  webkitExitFullscreen?: () => Promise<void>
+  mozCancelFullScreen?: () => Promise<void>
+  msExitFullscreen?: () => Promise<void>
+}
+
+interface HTMLElementWithFullscreen extends HTMLElement {
+  webkitRequestFullscreen?: () => Promise<void>
+  mozRequestFullScreen?: () => Promise<void>
+  msRequestFullscreen?: () => Promise<void>
+}
+
 interface CourseraStyleLayoutProps {
   chapters: Chapter[]
   sectionTitle: string
   sectionDescription: string
+  onFullscreenChange?: (isFullscreen: boolean) => void
+  onToggleFullscreen?: () => void
+  isFullscreen?: boolean
 }
 
-export default function CourseraStyleLayout({ chapters, sectionTitle, sectionDescription }: CourseraStyleLayoutProps) {
+export default function CourseraStyleLayout({ chapters, sectionTitle, onFullscreenChange, onToggleFullscreen, isFullscreen: externalIsFullscreen }: CourseraStyleLayoutProps) {
   const [activeChapter, setActiveChapter] = useState<string>(chapters[0]?.id || '')
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
+  const [showChapterDropdown, setShowChapterDropdown] = useState(false)
+  const [internalFullscreen, setInternalFullscreen] = useState(false)
+  const containerRef = React.useRef<HTMLDivElement>(null)
+  
+  // Use external fullscreen state if provided, otherwise use internal
+  const isFullscreen = externalIsFullscreen !== undefined ? externalIsFullscreen : internalFullscreen
 
   const activeChapterData = chapters.find(ch => ch.id === activeChapter) || chapters[0]
+  const currentChapterIndex = chapters.findIndex(ch => ch.id === activeChapter)
 
   const getChapterIcon = (contentType: string) => {
     switch (contentType) {
-      case 'video': return '🎥'
-      case 'quiz': return '🧠'
-      case 'survey': return '📋'
-      case 'activities': return '💧'
-      case 'games': return '🎮'
-      case 'text': return '📄'
-      default: return '📚'
+      case 'video': return 'video'
+      case 'quiz': return 'helpCircle'
+      case 'survey': return 'fileText'
+      case 'activities': return 'heart'
+      case 'games': return 'gamepad'
+      case 'text': return 'fileText'
+      default: return 'fileText'
     }
   }
 
@@ -68,126 +95,287 @@ export default function CourseraStyleLayout({ chapters, sectionTitle, sectionDes
     handleCloseFeedbackModal()
   }
 
+  // Check if fullscreen is active
+  const checkFullscreen = () => {
+    const doc = document as DocumentWithFullscreen
+    return !!(
+      document.fullscreenElement ||
+      doc.webkitFullscreenElement ||
+      doc.mozFullScreenElement ||
+      doc.msFullscreenElement
+    )
+  }
+
+  // Handle fullscreen change events (only if not controlled externally)
+  React.useEffect(() => {
+    if (externalIsFullscreen !== undefined) return // Skip if controlled externally
+
+    const handleFullscreenChange = () => {
+      const isCurrentlyFullscreen = checkFullscreen()
+      setInternalFullscreen(isCurrentlyFullscreen)
+      if (onFullscreenChange) {
+        onFullscreenChange(isCurrentlyFullscreen)
+      }
+    }
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange)
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange)
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange)
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange)
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange)
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange)
+    }
+  }, [onFullscreenChange, externalIsFullscreen])
+
+  const handleToggleFullscreen = () => {
+    if (onToggleFullscreen) {
+      // Use parent's fullscreen handler
+      onToggleFullscreen()
+    } else {
+      // Fallback to local fullscreen handling
+      handleLocalFullscreen()
+    }
+  }
+
+  const handleLocalFullscreen = async () => {
+    try {
+      if (!containerRef.current) return
+
+      const isCurrentlyFullscreen = checkFullscreen()
+      const doc = document as DocumentWithFullscreen
+      const element = containerRef.current as HTMLElementWithFullscreen
+
+      if (isCurrentlyFullscreen) {
+        // Exit fullscreen
+        if (document.exitFullscreen) {
+          await document.exitFullscreen()
+        } else if (doc.webkitExitFullscreen) {
+          await doc.webkitExitFullscreen()
+        } else if (doc.mozCancelFullScreen) {
+          await doc.mozCancelFullScreen()
+        } else if (doc.msExitFullscreen) {
+          await doc.msExitFullscreen()
+        }
+      } else {
+        // Enter fullscreen - make the entire component fullscreen
+        if (element.requestFullscreen) {
+          await element.requestFullscreen()
+        } else if (element.webkitRequestFullscreen) {
+          await element.webkitRequestFullscreen()
+        } else if (element.mozRequestFullScreen) {
+          await element.mozRequestFullScreen()
+        } else if (element.msRequestFullscreen) {
+          await element.msRequestFullscreen()
+        }
+      }
+    } catch (error) {
+      console.error('Error toggling fullscreen:', error)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
-      {/* Top Header */}
-      <div className="bg-white shadow-md border-b border-gray-200">
+    <div className="min-h-screen bg-background flex flex-col h-full">
+      {/* Top Header with Chapter Navigation */}
+      <div className="bg-white shadow-sm border-b border-neutral-light/50 sticky top-0 z-30">
         <div className="max-w-full mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-3xl">🏥</span>
+              <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
+                <Icon name="heart" size="md" color="white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800">{sectionTitle}</h1>
-                <p className="text-lg text-gray-600">Self-paced Course</p>
+                <h1 className="text-xl lg:text-2xl font-bold text-neutral-dark">{sectionTitle}</h1>
+                <p className="text-sm text-teal-primary font-medium">Self-paced Course</p>
               </div>
             </div>
-            <Button 
-              variant="secondary" 
-              onClick={handleLeaveSession}
-              className="bg-red-500 hover:bg-red-600 text-white text-lg px-6 py-3 rounded-xl"
-            >
-              Leave Session
-            </Button>
+            <div className="flex items-center space-x-3">
+              <Button 
+                variant="outline" 
+                onClick={handleToggleFullscreen}
+                className="flex items-center space-x-2 text-neutral-dark hover:bg-teal-light border-teal-light"
+                title={isFullscreen ? "Exit Fullscreen" : "Maximize Screen"}
+              >
+                <Icon 
+                  name={isFullscreen ? "x" : "maximize"} 
+                  size="sm" 
+                  color={colors.neutral.dark}
+                />
+                <span className="text-sm">{isFullscreen ? "Exit" : "Maximize"}</span>
+              </Button>
+              <Button 
+                variant="secondary" 
+                onClick={handleLeaveSession}
+                className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-xl"
+              >
+                Leave Session
+              </Button>
+            </div>
           </div>
+
+          {/* Chapter Navigation in Header */}
+          {!isFullscreen && (
+            <div className="border-t border-neutral-light/50 pt-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 flex-1">
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowChapterDropdown(!showChapterDropdown)}
+                      className="flex items-center space-x-2 px-4 py-2 bg-teal-light/30 hover:bg-teal-light/50 rounded-xl transition-all duration-200 border-2 border-teal-light"
+                    >
+                      <div className="w-8 h-8 bg-gradient-to-br from-teal-primary to-teal-dark rounded-lg flex items-center justify-center">
+                        <Icon 
+                          name={getChapterIcon(activeChapterData?.content.type || 'text')} 
+                          size="sm" 
+                          color="white"
+                        />
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs font-semibold text-teal-primary">Course Navigation</div>
+                        <div className="text-sm font-bold text-neutral-dark">
+                          Chapter {currentChapterIndex + 1}: {activeChapterData?.title || 'Loading...'}
+                        </div>
+                      </div>
+                      <Icon 
+                        name={showChapterDropdown ? "chevronUp" : "chevronDown"} 
+                        size="sm" 
+                        color={colors.neutral.medium}
+                      />
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    {showChapterDropdown && (
+                      <>
+                        <div 
+                          className="fixed inset-0 z-40" 
+                          onClick={() => setShowChapterDropdown(false)}
+                        />
+                        <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-lg border-2 border-neutral-light/50 z-50 max-h-96 overflow-y-auto">
+                          <div className="p-4 bg-gradient-to-br from-teal-primary to-teal-dark">
+                            <h3 className="text-sm font-bold text-white mb-1">Chapters in this section</h3>
+                            <p className="text-xs text-teal-light">{chapters.length} chapters</p>
+                          </div>
+                          <div className="p-2 space-y-1">
+                            {chapters.map((chapter, index) => {
+                              const isActive = chapter.id === activeChapter
+                              const iconName = getChapterIcon(chapter.content.type)
+                              
+                              return (
+                                <button
+                                  key={chapter.id}
+                                  onClick={() => {
+                                    setActiveChapter(chapter.id)
+                                    setShowChapterDropdown(false)
+                                    window.scrollTo({ top: 0, behavior: 'smooth' })
+                                  }}
+                                  className={`w-full text-left p-3 rounded-xl transition-all duration-200 flex items-start space-x-3 group ${
+                                    isActive
+                                      ? 'bg-gradient-to-r from-teal-primary to-teal-dark text-white shadow-md'
+                                      : 'bg-neutral-light/50 hover:bg-teal-light/30'
+                                  }`}
+                                >
+                                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 ${
+                                    isActive 
+                                      ? 'bg-white/20' 
+                                      : 'bg-white group-hover:bg-teal-light'
+                                  }`}>
+                                    <Icon 
+                                      name={iconName} 
+                                      size="sm" 
+                                      color={isActive ? 'white' : colors.neutral.medium}
+                                    />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between mb-1">
+                                      <span className={`text-xs font-semibold ${isActive ? 'text-teal-light' : 'text-neutral-medium'}`}>
+                                        Chapter {index + 1}
+                                      </span>
+                                      {isActive && (
+                                        <span className="text-xs bg-white text-teal-primary px-2 py-0.5 rounded-full font-semibold">
+                                          Current
+                                        </span>
+                                      )}
+                                    </div>
+                                    <h3 className={`font-bold text-sm mb-1 ${isActive ? 'text-white' : 'text-neutral-dark'}`}>
+                                      {chapter.title}
+                                    </h3>
+                                    <p className={`text-xs line-clamp-2 ${isActive ? 'text-teal-light' : 'text-neutral-medium'}`}>
+                                      {chapter.description}
+                                    </p>
+                                  </div>
+                                </button>
+                              )
+                            })}
+                          </div>
+                          {/* Progress Indicator */}
+                          <div className="p-4 border-t border-neutral-light/50 bg-gradient-to-t from-neutral-light/20 to-transparent">
+                            <div className="flex items-center justify-between mb-2">
+                              <span className="text-xs font-semibold text-neutral-dark">Progress</span>
+                              <span className="text-xs font-bold text-teal-primary">
+                                {currentChapterIndex + 1} / {chapters.length}
+                              </span>
+                            </div>
+                            <div className="w-full bg-neutral-light rounded-full h-2">
+                              <div 
+                                className="bg-gradient-to-r from-teal-primary to-teal-dark h-2 rounded-full transition-all duration-300"
+                                style={{ width: `${((currentChapterIndex + 1) / chapters.length) * 100}%` }}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Progress Bar */}
+                  <div className="flex-1 max-w-md">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-semibold text-neutral-medium">Progress</span>
+                      <span className="text-xs font-bold text-teal-primary">
+                        {currentChapterIndex + 1} / {chapters.length}
+                      </span>
+                    </div>
+                    <div className="w-full bg-neutral-light rounded-full h-2">
+                      <div 
+                        className="bg-gradient-to-r from-teal-primary to-teal-dark h-2 rounded-full transition-all duration-300"
+                        style={{ width: `${((currentChapterIndex + 1) / chapters.length) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="flex h-[calc(100vh-100px)]">
-        {/* Left Navigation Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 shadow-lg flex flex-col">
-          {/* Sidebar Header */}
-          <div className="p-6 border-b border-gray-200 bg-gradient-to-r from-blue-500 to-blue-600">
-            <h2 className="text-2xl font-bold text-white mb-2">Course Navigation</h2>
-            <p className="text-blue-100 text-sm">Chapters in this section</p>
-          </div>
-
-          {/* Scrollable Chapter List */}
-          <div className="flex-1 overflow-y-auto">
-            <div className="p-4 space-y-2">
-              {chapters.map((chapter, index) => {
-                const isActive = chapter.id === activeChapter
-                const icon = getChapterIcon(chapter.content.type)
-                
-                return (
-                  <button
-                    key={chapter.id}
-                    onClick={() => setActiveChapter(chapter.id)}
-                    className={`w-full text-left p-4 rounded-xl transition-all duration-200 flex items-start space-x-3 ${
-                      isActive
-                        ? 'bg-blue-600 text-white shadow-lg border-2 border-blue-700'
-                        : 'bg-gray-50 hover:bg-blue-50 border-2 border-transparent hover:border-blue-200'
-                    }`}
-                  >
-                    <div className={`text-2xl ${isActive ? 'text-white' : 'text-gray-600'}`}>
-                      {icon}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between mb-1">
-                        <span className={`text-xs font-semibold ${isActive ? 'text-blue-100' : 'text-gray-500'}`}>
-                          Chapter {index + 1}
-                        </span>
-                        {isActive && (
-                          <span className="text-xs bg-white text-blue-600 px-2 py-1 rounded-full font-semibold">
-                            Current
-                          </span>
-                        )}
-                      </div>
-                      <h3 className={`font-bold text-sm mb-1 ${isActive ? 'text-white' : 'text-gray-800'}`}>
-                        {chapter.title}
-                      </h3>
-                      <p className={`text-xs line-clamp-2 ${isActive ? 'text-blue-100' : 'text-gray-600'}`}>
-                        {chapter.description}
-                      </p>
-                    </div>
-                  </button>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* Progress Indicator */}
-          <div className="p-6 border-t border-gray-200 bg-gray-50">
-            <div className="mb-3">
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-semibold text-gray-700">Progress</span>
-                <span className="text-sm font-bold text-blue-600">
-                  {chapters.findIndex(ch => ch.id === activeChapter) + 1} / {chapters.length}
-                </span>
-              </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div 
-                  className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300"
-                  style={{ width: `${((chapters.findIndex(ch => ch.id === activeChapter) + 1) / chapters.length) * 100}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto p-8">
+      {/* Main Content Area - Full Width */}
+      <div className="flex-1 overflow-y-auto bg-background">
+        <div className={`${isFullscreen ? 'w-full max-w-full px-6 lg:px-12 py-6 lg:py-8' : 'max-w-5xl mx-auto p-6 lg:p-8'}`}>
             {/* Chapter Header */}
             {activeChapterData && (
-              <div className="bg-white rounded-2xl shadow-lg p-6 mb-6 border-4 border-blue-200">
+              <div className="bg-white rounded-2xl shadow-md p-6 mb-6 border-2 border-teal-light/50">
                 <div className="flex items-start space-x-4 mb-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center shadow-lg">
-                    <span className="text-3xl">
-                      {getChapterIcon(activeChapterData.content.type)}
-                    </span>
+                  <div className="w-14 h-14 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
+                    <Icon 
+                      name={getChapterIcon(activeChapterData.content.type)} 
+                      size="lg" 
+                      color="white"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="mb-2">
-                      <span className="text-lg font-semibold text-gray-500">
-                        Chapter {chapters.findIndex(ch => ch.id === activeChapter) + 1} of {chapters.length}
+                      <span className="text-sm font-semibold text-teal-primary">
+                        Chapter {currentChapterIndex + 1} of {chapters.length}
                       </span>
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-2">
+                    <h2 className="text-2xl font-bold text-neutral-dark mb-2">
                       {activeChapterData.title}
                     </h2>
-                    <p className="text-xl text-gray-600 mb-4">
+                    <p className="text-sm text-neutral-medium mb-4">
                       {activeChapterData.description}
                     </p>
                   </div>
@@ -196,40 +384,41 @@ export default function CourseraStyleLayout({ chapters, sectionTitle, sectionDes
             )}
 
             {/* Chapter Content */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="bg-white rounded-2xl shadow-md p-6 lg:p-8 border border-neutral-light/50">
               {renderContent()}
             </div>
 
-            {/* Navigation Buttons */}
-            <div className="flex justify-between mt-8">
-              <Button
-                onClick={() => {
-                  const currentIndex = chapters.findIndex(ch => ch.id === activeChapter)
-                  if (currentIndex > 0) {
-                    setActiveChapter(chapters[currentIndex - 1].id)
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }
-                }}
-                disabled={chapters.findIndex(ch => ch.id === activeChapter) === 0}
-                className="bg-gray-500 hover:bg-gray-600 text-white text-lg px-8 py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                ← Previous Chapter
-              </Button>
+          {/* Navigation Buttons */}
+          <div className="flex justify-between mt-6 gap-4">
+            <Button
+              onClick={() => {
+                if (currentChapterIndex > 0) {
+                  setActiveChapter(chapters[currentChapterIndex - 1].id)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+              disabled={currentChapterIndex === 0}
+              variant="outline"
+              className="flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Icon name="chevronLeft" size="sm" color={colors.neutral.dark} />
+              <span>Previous Chapter</span>
+            </Button>
 
-              <Button
-                onClick={() => {
-                  const currentIndex = chapters.findIndex(ch => ch.id === activeChapter)
-                  if (currentIndex < chapters.length - 1) {
-                    setActiveChapter(chapters[currentIndex + 1].id)
-                    window.scrollTo({ top: 0, behavior: 'smooth' })
-                  }
-                }}
-                disabled={chapters.findIndex(ch => ch.id === activeChapter) === chapters.length - 1}
-                className="bg-blue-600 hover:bg-blue-700 text-white text-lg px-8 py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Next Chapter →
-              </Button>
-            </div>
+            <Button
+              onClick={() => {
+                if (currentChapterIndex < chapters.length - 1) {
+                  setActiveChapter(chapters[currentChapterIndex + 1].id)
+                  window.scrollTo({ top: 0, behavior: 'smooth' })
+                }
+              }}
+              disabled={currentChapterIndex === chapters.length - 1}
+              variant="primary"
+              className="flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <span>Next Chapter</span>
+              <Icon name="chevronRight" size="sm" color="white" />
+            </Button>
           </div>
         </div>
       </div>
