@@ -443,13 +443,13 @@ export default function Home() {
   }
 
   // Show demo class booking for new users who haven't booked a demo
-  if (user && !hasBookedDemo) {
-    return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <DemoClassBooking />
-      </div>
-    );
-  }
+  // if (user && !hasBookedDemo) {
+  //   return (
+  //     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  //       <DemoClassBooking />
+  //     </div>
+  //   );
+  // }
 
   // Show dashboard for authenticated users
   return (

@@ -4,6 +4,7 @@
 import { Button, Card, ProgressBar, Icon } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
 import DemoClassBooking from '@/components/DemoClassBooking';
+import DashboardTemplates from '@/modules/dashboard/templates';
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -11,7 +12,8 @@ export default function HomePage() {
   if (user) {
       return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <DemoClassBooking />
+          {/* <DemoClassBooking /> */}
+          <DashboardTemplates/>
         </div>
       );
     }
