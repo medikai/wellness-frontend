@@ -15,7 +15,7 @@ const LiveClassCard = () => {
           </p>
         </div>
         <Button variant="secondary" size="lg">
-          Start Class →
+          Start Live Class →
         </Button>
       </div>
     </Card>

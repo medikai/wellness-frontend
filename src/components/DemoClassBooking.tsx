@@ -172,9 +172,9 @@ const DemoClassBooking: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-3xl font-bold text-[#2C4A52] mb-2">Join a Demo Class</h2>
-        <p className="text-[#6B7280]">
-          Experience our health and waylness classes with a free demo session
+        <h2 className="text-3xl font-bold text-neutral-dark mb-2">Join a Demo Class</h2>
+        <p className="text-neutral-medium">
+          Experience our health and wellness classes with a free demo session
         </p>
       </div>
 
@@ -184,7 +184,7 @@ const DemoClassBooking: React.FC = () => {
           <Button variant="outline" size="sm" onClick={() => navigateMonth('prev')}>
             <Icon name="chevron-left" size="sm" className="mr-1" /> Previous
           </Button>
-          <h3 className="text-xl font-bold text-[#2C4A52]">{monthName}</h3>
+          <h3 className="text-xl font-bold text-neutral-dark">{monthName}</h3>
           <Button variant="outline" size="sm" onClick={() => navigateMonth('next')}>
             Next <Icon name="chevron-right" size="sm" className="ml-1" />
           </Button>
@@ -193,7 +193,7 @@ const DemoClassBooking: React.FC = () => {
         {/* Calendar */}
         <div className="grid grid-cols-7 gap-2 mb-6">
           {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-            <div key={d} className="text-center text-sm font-medium py-2 text-[#6B7280]">
+            <div key={d} className="text-center text-sm font-semibold py-2 text-neutral-medium">
               {d}
             </div>
           ))}
@@ -208,11 +208,11 @@ const DemoClassBooking: React.FC = () => {
                 key={dateKey}
                 onClick={() => handleDateClick(day)}
                 disabled={!hasSlots}
-                className={`h-10 rounded-lg text-sm font-medium transition-colors ${isSelected
-                  ? 'bg-[#4CAF9D] text-white'
+                className={`h-10 rounded-lg text-sm font-medium transition-all duration-200 ${isSelected
+                  ? 'bg-teal-primary text-white shadow-md'
                   : hasSlots
-                    ? 'bg-[#E6F7F5] text-[#2D7D6B] hover:bg-[#B2E5E0]'
-                    : 'bg-[#F8F9FA] text-[#9CA3AF] cursor-not-allowed'
+                    ? 'bg-teal-light text-teal-dark hover:bg-teal-primary/20 hover:shadow-sm'
+                    : 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
                   }`}
               >
                 {day.getDate()}
@@ -223,8 +223,8 @@ const DemoClassBooking: React.FC = () => {
 
         {/* Slots */}
         {selectedDate && availableSlots[selectedDate] && (
-          <div className="border-t pt-6">
-            <h4 className="text-lg font-semibold text-[#2C4A52] mb-4">
+          <div className="border-t border-neutral-light pt-6">
+            <h4 className="text-lg font-semibold text-neutral-dark mb-4">
               Available Slots for{' '}
               {new Date(selectedDate).toLocaleDateString('en-US', {
                 weekday: 'long',
@@ -242,11 +242,11 @@ const DemoClassBooking: React.FC = () => {
                     key={slot.id}
                     onClick={() => handleSlotClick(slot.id)}
                     disabled={isBookedByOther}
-                    className={`p-3 rounded-lg border text-center transition-colors ${isBookedByOther
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    className={`p-3 rounded-lg border-2 text-center transition-all duration-200 ${isBookedByOther
+                        ? 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
                         : selectedSlot === slot.id
-                          ? 'border-[#4CAF9D] bg-[#E6F7F5] text-[#2D7D6B]'
-                          : 'border-[#F8F9FA] hover:border-[#4CAF9D] hover:bg-[#E6F7F5]'
+                          ? 'border-teal-primary bg-teal-light text-teal-dark shadow-md'
+                          : 'border-neutral-light hover:border-teal-primary hover:bg-teal-light/50 hover:shadow-sm'
                       }`}
                   >
                     <div className="font-medium">
@@ -255,7 +255,7 @@ const DemoClassBooking: React.FC = () => {
                         minute: '2-digit',
                       })}
                     </div>
-                    <div className="text-xs text-[#6B7280]">
+                    <div className="text-xs text-neutral-medium">
                       {isMine
                         ? '✔ Booked by You'
                         : isBookedByOther

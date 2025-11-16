@@ -1,7 +1,7 @@
 //src/modules/layout/AppLayout.tsx
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import { Icon, TextSizeControl } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,19 +13,30 @@ interface AppLayoutProps {
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open
-  const { user, logout, isLoading } = useAuth();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Start with sidebar expanded
+  const previousCollapsedStateRef = useRef<boolean>(false); // Store previous state using ref
+  const previousPathnameRef = useRef<string | null>(null); // Track previous pathname
+  const { user, isLoading } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
   // Check if current path is auth page or homepage
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced';
   const isHomePage = pathname === '/';
+  
+  // Check if current path is a meeting page
+  const isMeetingPage = pathname?.startsWith('/meeting') || pathname === '/host' || pathname === '/join';
 
   useEffect(() => {
     const checkMobile = () => {
       const isMobileView = window.innerWidth < 1024;
       // Always show sidebar on desktop, hide on mobile by default
-      setSidebarOpen(!isMobileView);
+      // On meeting pages, hide sidebar on mobile
+      if (isMeetingPage && isMobileView) {
+        setSidebarOpen(false);
+      } else {
+        setSidebarOpen(!isMobileView);
+      }
     };
 
     // Initial check
@@ -35,7 +46,31 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     window.addEventListener('resize', checkMobile);
 
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [isMeetingPage]);
+
+  // Auto-collapse sidebar when entering meeting pages, restore when leaving
+  useEffect(() => {
+    // Only run when pathname actually changes
+    if (previousPathnameRef.current === pathname) {
+      return;
+    }
+
+    const wasMeetingPage = previousPathnameRef.current 
+      ? (previousPathnameRef.current.startsWith('/meeting') || previousPathnameRef.current === '/host' || previousPathnameRef.current === '/join')
+      : false;
+
+    if (isMeetingPage && !wasMeetingPage) {
+      // Entering meeting page - store current state and collapse
+      previousCollapsedStateRef.current = sidebarCollapsed;
+      setSidebarCollapsed(true);
+    } else if (!isMeetingPage && wasMeetingPage) {
+      // Leaving meeting page - restore previous state
+      setSidebarCollapsed(previousCollapsedStateRef.current);
+    }
+
+    // Update previous pathname
+    previousPathnameRef.current = pathname;
+  }, [pathname, isMeetingPage, sidebarCollapsed]);
 
   // Redirect to login if not authenticated and not on auth pages or homepage
   // Redirect authenticated users from / to /home
@@ -74,16 +109,22 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     setSidebarOpen(!sidebarOpen);
   };
 
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Sidebar */}
       <Sidebar
         isOpen={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
+        isCollapsed={sidebarCollapsed}
+        onToggleCollapse={toggleSidebarCollapse}
       />
 
       {/* Main Content */}
-      <div className="lg:pl-64 min-h-screen">
+      <div className={`min-h-screen transition-all duration-300 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"}`}>
         {/* Mobile Header */}
         <header className="bg-white/95 backdrop-blur-sm shadow border-b border-neutral-light/50 lg:hidden sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-3">
@@ -131,13 +172,6 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               
               <TextSizeControl variant="header" />
               
-              <button
-                onClick={logout}
-                className="flex items-center space-x-2 px-4 py-2.5 text-sm text-neutral-medium hover:text-white hover:bg-red-500 rounded-xl transition-all duration-200 group shadow-sm hover:shadow-md"
-              >
-                <Icon name="logOut" size="sm" />
-                <span className="font-medium">Logout</span>
-              </button>
               
               <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200">
                 <Icon name="user" size="md" color="white" />

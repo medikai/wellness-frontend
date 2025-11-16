@@ -91,14 +91,15 @@ const RegisterForm = () => {
 
       // router.push('/');
 
-      const r = await fetch('/api/auth/register', {
+      const r = await fetch('/api/auth/register-student', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone || undefined,
-          password: formData.password
+          password: formData.password,
+          // user_type: 'student'
         })
       });
       const json = await r.json();
@@ -264,7 +265,7 @@ const RegisterForm = () => {
           className="w-full py-3 text-base font-semibold rounded-lg"
           disabled={isLoading}
         >
-          {isLoading ? 'Creating Account...' : 'Create Account'}
+          {isLoading ? 'Submitting...' : 'Submit'}
         </Button>
       </form>
 

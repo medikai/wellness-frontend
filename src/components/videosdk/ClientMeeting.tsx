@@ -118,7 +118,7 @@ export default function ClientMeeting({ mode }: { mode: Mode }) {
   return (
     <div className="p-4 h-screen flex flex-col bg-[var(--background)]">
       <header className="flex items-center justify-between mb-4">
-        <h1 className="text-lg font-bold">{mode === "host" ? "Companion 1-1" : "Join"}</h1>
+        <h1 className="text-lg font-bold hidden">{mode === "host" ? "Companion 1-1" : "Join"}</h1>
 
         {mode === "host" ? (
           <div className="flex items-center gap-2">
@@ -165,7 +165,7 @@ export default function ClientMeeting({ mode }: { mode: Mode }) {
             </button>
           </div>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 hidden">
             {/* Required name for joinee */}
             <input
               className="px-2 py-1 border border-gray-300 rounded w-[180px]"

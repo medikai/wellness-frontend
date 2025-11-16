@@ -9,6 +9,7 @@ export default function VideoGrid({
   pinnedId,
   activeSpeakerId,
   onPin,
+  fullWidth = false,
 }: {
   participantIds: string[];
   localId: string;
@@ -16,16 +17,17 @@ export default function VideoGrid({
   pinnedId?: string | null;
   activeSpeakerId?: string;
   onPin?: (id: string | null) => void;
+  fullWidth?: boolean;
 }) {
   // --- Screen share: stage + LEFT vertical strip ---
   if (presenterId) {
-    const others = participantIds.filter((id) => id !== presenterId);
+    // const others = participantIds.filter((id) => id !== presenterId);
     return (
-      <div className="p-4">
-        <div className="flex gap-4">
+      <div className={fullWidth ? "h-full w-full" : "p-4"}>
+        <div className={`flex gap-4 ${fullWidth ? "h-full" : ""}`}>
           {/* Stage */}
           <div className="flex-1 min-w-0">
-            <div className="relative w-full h-[min(74vh,calc(100vh-260px))] rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white">
+            <div className={`relative w-full ${fullWidth ? "h-full" : "h-[min(74vh,calc(100vh-260px))]"} rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white`}>
               <div className="absolute inset-3 rounded-xl overflow-hidden bg-black">
                 <ScreenShareTile id={presenterId} />
               </div>
@@ -33,13 +35,13 @@ export default function VideoGrid({
           </div>
 
           {/* RIGHT vertical strip */}
-          <div className="flex-shrink-0 w-40 md:w-48 lg:w-56 flex flex-col gap-3 overflow-y-auto pl-1">
+          {/* <div className="flex-shrink-0 w-40 md:w-48 lg:w-56 flex flex-col gap-3 overflow-y-auto pl-1">
             {others.map((pid) => (
               <div key={pid} className="w-full h-24 md:h-28 rounded-xl overflow-hidden">
                 <ParticipantTile id={pid} isLocal={pid === localId} pinned={pinnedId === pid} onPin={onPin} compact />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
       </div>
@@ -53,8 +55,8 @@ export default function VideoGrid({
   if (all.length === 2 && others.length === 1) {
     const remoteId = others[0];
     return (
-      <div className="p-4">
-        <div className="relative mx-auto w-full max-w-6xl h-[min(74vh,calc(100vh-260px))] rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white">
+      <div className={fullWidth ? "h-full w-full" : "p-4"}>
+        <div className={`relative ${fullWidth ? "w-full h-full" : "mx-auto w-full max-w-6xl"} ${fullWidth ? "h-full" : "h-[min(74vh,calc(100vh-260px))]"} rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white`}>
           <div className="absolute inset-3 rounded-xl overflow-hidden bg-black">
             <ParticipantTile
               id={remoteId}
@@ -79,14 +81,14 @@ export default function VideoGrid({
       : (activeSpeakerId && all.includes(activeSpeakerId)) ? activeSpeakerId
         : others[0] || localId;
 
-  const rest = all.filter((id) => id !== candidateLarge);
+  // const rest = all.filter((id) => id !== candidateLarge);
 
   return (
-    <div className="p-4">
-      <div className="flex gap-4">
+    <div className={fullWidth ? "h-full w-full" : "p-4"}>
+      <div className={`flex gap-4 ${fullWidth ? "h-full" : ""}`}>
         {/* Stage */}
         <div className="flex-1 min-w-0">
-          <div className="relative w-full h-[min(74vh,calc(100vh-260px))] rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white">
+          <div className={`relative w-full ${fullWidth ? "h-full" : "h-[min(74vh,calc(100vh-260px))]"} rounded-2xl shadow-lg border border-gray-100 overflow-hidden bg-white`}>
             <div className="absolute inset-3 rounded-xl overflow-hidden bg-black">
               <ParticipantTile
                 id={candidateLarge}
@@ -99,13 +101,13 @@ export default function VideoGrid({
         </div>
 
         {/* RIGHT vertical strip */}
-        <div className="flex-shrink-0 w-40 md:w-48 lg:w-56 flex flex-col gap-3 overflow-y-auto pl-1">
+        {/* <div className="flex-shrink-0 w-40 md:w-48 lg:w-56 flex flex-col gap-3 overflow-y-auto pl-1">
           {rest.map((pid) => (
             <div key={pid} className="w-full h-24 md:h-28 rounded-xl overflow-hidden">
               <ParticipantTile id={pid} isLocal={pid === localId} pinned={pinnedId === pid} onPin={onPin} compact />
             </div>
           ))}
-        </div>
+        </div> */}
       </div>
 
     </div>

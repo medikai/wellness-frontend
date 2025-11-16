@@ -89,7 +89,6 @@ const Classes = () => {
       <Header />
       <UpcomingClasses 
         upcomingClasses={upcomingClasses} 
-        formatClassDate={formatClassDate} 
       />
       <CompletedClasses 
         completedClasses={completedClasses} 

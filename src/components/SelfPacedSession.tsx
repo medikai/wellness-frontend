@@ -6,6 +6,8 @@ import { Button } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 import FeedbackModal from './FeedbackModal';
 import MemoryMatchModal from './MemoryMatchModal';
+import CognitiveTestCard from '@/components/cognitive/CognitiveTestCard';
+import { quizToCognitiveTest } from '@/utils/cognitive-test-helpers';
 
 interface SelfPacedSessionProps {
   classData?: {
@@ -140,10 +142,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
     }
   ];
 
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [quizAnswer, setQuizAnswer] = useState<string | null>(null);
-  const [showResult, setShowResult] = useState(false);
-  const [score, setScore] = useState(0);
+  // Quiz state removed - now managed by CognitiveTestCard component
   const [selectedGame, setSelectedGame] = useState<typeof games[0] | null>(null);
   const [showGameModal, setShowGameModal] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
@@ -174,32 +173,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
     handleCloseFeedbackModal();
   };
 
-  const handleQuizAnswer = (optionId: string) => {
-    setQuizAnswer(optionId);
-    const currentQ = quizQuestions[currentQuestion];
-    const selectedOption = currentQ.options.find(opt => opt.id === optionId);
-    
-    if (selectedOption?.correct) {
-      setScore(score + 1);
-    }
-    
-    setShowResult(true);
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestion < quizQuestions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-      setQuizAnswer(null);
-      setShowResult(false);
-    } else {
-      // Quiz completed
-      alert(`Quiz completed! Your score: ${score + (quizAnswer && quizQuestions[currentQuestion].options.find(opt => opt.id === quizAnswer)?.correct ? 1 : 0)}/${quizQuestions.length}`);
-      setCurrentQuestion(0);
-      setQuizAnswer(null);
-      setShowResult(false);
-      setScore(0);
-    }
-  };
+  // Quiz handlers removed - now using CognitiveTestCard component
 
   const handleGameClick = (gameId: number) => {
     const game = games.find(g => g.id === gameId);
@@ -270,76 +244,27 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
               </div>
             </div>
 
-            {/* Games Section */}
-           
-
+            {/* Health Quiz - Using Unified Cognitive Test Architecture */}
             <div className="bg-white rounded-2xl shadow-lg p-6 min-h-80 flex flex-col">
-              <div className="flex items-center mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center mr-4">
-                  <span className="text-2xl">🧠</span>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-800">Health Quiz</h2>
-              </div>
-              <div className="flex-1 flex flex-col">
-                <div className="flex-1">
-                  <div className="bg-blue-50 rounded-xl p-4 mb-4">
-                    <p className="text-lg text-blue-800 font-semibold mb-2">
-                      Question {currentQuestion + 1} of {quizQuestions.length}
-                    </p>
-                    <p className="text-lg text-gray-800 font-medium">
-                      {quizQuestions[currentQuestion].question}
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-1 gap-3 mb-4">
-                    {quizQuestions[currentQuestion].options.map((option) => (
-                      <button
-                        key={option.id}
-                        onClick={() => handleQuizAnswer(option.id)}
-                        disabled={showResult}
-                        className={`p-4 rounded-xl font-bold text-lg transition-all duration-200 text-left border-2 ${
-                          showResult
-                            ? option.correct
-                              ? 'bg-green-500 text-white border-green-600'
-                              : quizAnswer === option.id
-                              ? 'bg-red-500 text-white border-red-600'
-                              : 'bg-gray-200 text-gray-600 border-gray-300'
-                            : quizAnswer === option.id
-                            ? 'bg-blue-600 text-white border-blue-700 shadow-lg'
-                            : 'bg-blue-50 text-blue-800 hover:bg-blue-100 border-blue-200 hover:border-blue-400'
-                        }`}
-                      >
-                        <span className="font-bold mr-3 text-xl">{option.id}.</span>
-                        {option.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                {showResult && (
-                  <div className="mt-4">
-                    <div className={`p-4 rounded-xl mb-4 ${
-                      quizAnswer && quizQuestions[currentQuestion].options.find(opt => opt.id === quizAnswer)?.correct
-                        ? 'bg-green-100 border-2 border-green-300'
-                        : 'bg-red-100 border-2 border-red-300'
-                    }`}>
-                      <p className={`text-lg font-bold ${
-                        quizAnswer && quizQuestions[currentQuestion].options.find(opt => opt.id === quizAnswer)?.correct
-                          ? 'text-green-800'
-                          : 'text-red-800'
-                      }`}>
-                        {quizAnswer && quizQuestions[currentQuestion].options.find(opt => opt.id === quizAnswer)?.correct
-                          ? '✓ Correct! Well done!'
-                          : '✗ Incorrect. The correct answer is highlighted in green.'}
-                      </p>
-                    </div>
-                    <Button
-                      onClick={handleNextQuestion}
-                      className="w-full bg-green-600 hover:bg-green-700 text-white text-lg py-4 rounded-xl font-bold"
-                    >
-                      {currentQuestion < quizQuestions.length - 1 ? 'Next Question' : 'Finish Quiz'}
-                    </Button>
-                  </div>
-                )}
-              </div>
+              <CognitiveTestCard
+                config={quizToCognitiveTest({
+                  type: 'quiz',
+                  title: 'Health Quiz',
+                  questions: quizQuestions.map(q => ({
+                    id: q.id.toString(),
+                    question: q.question,
+                    options: q.options.map(opt => ({
+                      id: opt.id,
+                      label: opt.label,
+                      correct: opt.correct
+                    }))
+                  }))
+                }, 'single-tap')}
+                onComplete={(result) => {
+                  console.log('Self-paced quiz completed:', result);
+                  // Quiz state is managed by CognitiveTestCard component
+                }}
+              />
             </div>
 
           </div>

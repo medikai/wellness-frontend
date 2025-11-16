@@ -1,9 +1,8 @@
 //src/app/page.tsx
 'use client';
 
-import { Button, Card, ProgressBar, Icon } from '@/components/ui';
+import { Button, Card } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
-import DemoClassBooking from '@/components/DemoClassBooking';
 import Navigation from '@/components/Navigation';
 import FeatureCard from '@/components/FeatureCard';
 import StepCard from '@/components/StepCard';
@@ -16,15 +15,31 @@ import { ArrowRight, Heart, GraduationCap, BarChart3, Users, CheckCircle2, Zap, 
 
 export default function Home() {
   const { user, isLoading } = useAuth();
-  const [hasBookedDemo, setHasBookedDemo] = useState(false);
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
+  const [hasUpcomingClasses, setHasUpcomingClasses] = useState(false);
   const observerRef = useRef<IntersectionObserver | null>(null);
 
+  // Fetch upcoming classes to check if there are any
   useEffect(() => {
-    // Check if user has already booked a demo class
-    const demoBookings = JSON.parse(localStorage.getItem('demoBookings') || '[]');
-    setHasBookedDemo(demoBookings.length > 0);
-  }, []);
+    if (!user) return;
+
+    async function checkUpcomingClasses() {
+      try {
+        const res = await fetch('/api/classes/upcoming', { cache: 'no-store' });
+        const json = await res.json();
+        if (json.ok && json.items && json.items.length > 0) {
+          setHasUpcomingClasses(true);
+        } else {
+          setHasUpcomingClasses(false);
+        }
+      } catch (error) {
+        console.error('Error fetching upcoming classes:', error);
+        setHasUpcomingClasses(false);
+      }
+    }
+
+    checkUpcomingClasses();
+  }, [user]);
 
   // Scroll reveal animation
   useEffect(() => {
@@ -459,20 +474,19 @@ export default function Home() {
         <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column - Main Content */}
-        <div className="lg:col-span-2 space-y-6">
-          {/* Welcome Section */}
-          <div>
-            <h2 className="text-3xl font-bold text-neutral-dark mb-2">
-              {`Good morning, ${user?.name ?? 'friend'} 👋`}
-            </h2>
-            <p className="text-neutral-medium">
-              Ready to start your health journey today?
-            </p>
-          </div>
+      <div className="space-y-6">
+        {/* Welcome Section */}
+        <div>
+          <h2 className="text-3xl font-bold text-neutral-dark mb-2">
+            {`Good morning, ${user?.name ?? 'friend'} 👋`}
+          </h2>
+          <p className="text-neutral-medium">
+            Ready to start your health journey today?
+          </p>
+        </div>
 
-          {/* Live Class Card */}
+        {/* Live Class Card */}
+        {hasUpcomingClasses && (
           <Card hover className="p-6 border-l-4 border-teal-primary">
             <div className="flex justify-between items-start mb-4">
               <div>
@@ -484,48 +498,76 @@ export default function Home() {
                   Today at 10:00 AM
                 </p>
               </div>
-              <Button variant="primary" size="lg">
-                Start Class →
-              </Button>
+              <Link href="/classes">
+                <Button variant="primary" size="lg">
+                  Start Class →
+                </Button>
+              </Link>
             </div>
           </Card>
+        )}
 
-          {/* Progress Card */}
-          <Card className="p-6">
-            <h3 className="text-xl font-bold text-neutral-dark mb-4">
-              Your Progress
-            </h3>
-            <p className="text-neutral-medium mb-4">
-              You&apos;ve completed 3 classes this week 💪
-            </p>
-            <p className="text-neutral-dark font-medium mb-4">
-              Keep going!
-            </p>
-            <ProgressBar
-              value={75}
-              showLabel
-              label="Weekly Goal"
-              color="teal"
-            />
+        {/* Activity Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Memory Challenge Card */}
+          <Card hover className="p-6 border-l-4 border-purple-500">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-neutral-dark mb-2">
+                Memory Challenge
+              </h3>
+              <p className="text-neutral-medium text-sm mb-4">
+                Test your memory with health-related cards
+              </p>
+              <p className="text-neutral-medium text-sm">
+                Match pairs of cards to improve your memory and earn points.
+              </p>
+            </div>
+            <Link href="/game">
+              <Button variant="primary" size="md" className="w-full">
+                Play Now
+              </Button>
+            </Link>
           </Card>
-        </div>
 
-        {/* Right Column - Sidebar */}
-        <div className="space-y-6">
-          {/* Action Buttons */}
-          <div className="space-y-3">
-            <Button variant="primary" size="lg" className="w-full">
-              Join a Class
-            </Button>
-            <Button variant="outline" size="lg" className="w-full">
-              <Icon name="phone" size="sm" className="mr-2" />
-              Get Help
-            </Button>
-            <Button variant="outline" size="lg" className="w-full">
-              <Icon name="settings" size="sm" className="mr-2" />
-              Settings
-            </Button>
-          </div>
+          {/* Health Quiz Card */}
+          <Card hover className="p-6 border-l-4 border-blue-500">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-neutral-dark mb-2">
+                Health Quiz
+              </h3>
+              <p className="text-neutral-medium text-sm mb-4">
+                Test your health knowledge
+              </p>
+              <p className="text-neutral-medium text-sm">
+                Answer questions about nutrition, exercise, and waylness.
+              </p>
+            </div>
+            <Link href="/game/quiz">
+              <Button variant="primary" size="md" className="w-full">
+                Start Quiz
+              </Button>
+            </Link>
+          </Card>
+
+          {/* Step Counter Card */}
+          <Card hover className="p-6 border-l-4 border-green-500">
+            <div className="mb-4">
+              <h3 className="text-xl font-bold text-neutral-dark mb-2">
+                Step Counter
+              </h3>
+              <p className="text-neutral-medium text-sm mb-4">
+                Track your daily steps
+              </p>
+              <p className="text-neutral-medium text-sm">
+                Complete daily step goals to unlock rewards and achievements.
+              </p>
+            </div>
+            <Link href="/progress">
+              <Button variant="primary" size="md" className="w-full">
+                Track Steps
+              </Button>
+            </Link>
+          </Card>
         </div>
       </div>
     </div>

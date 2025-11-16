@@ -1,14 +1,16 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState, useCallback, memo } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback, memo } from "react";
 import { useMeeting, usePubSub } from "@videosdk.live/react-sdk";
 import VideoGrid from "@/components/VideoGrid";
 import { useRoster } from "@/hooks/useRoster";
+import CognitiveTestCard from "@/components/cognitive/CognitiveTestCard";
+import { CognitiveTestConfig } from "@/types/cognitive-test";
 
 // Course Content Component
 const CourseContent = memo(function CourseContent() {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
+    <div className="bg-white border border-gray-200 rounded-lg p-4">
       <h3 className="text-lg font-semibold text-gray-800 mb-3">Course Content</h3>
       <ul className="space-y-2">
         <li className="flex items-center text-sm text-gray-700">
@@ -19,58 +21,88 @@ const CourseContent = memo(function CourseContent() {
           <div className="w-2 h-2 rounded-full mr-3" style={{ backgroundColor: '#4CAF9D' }}></div>
           Focus on slow movements
         </li>
+        <li className="flex items-center text-sm text-gray-700">
+          <div className="w-2 h-2 rounded-full mr-3" style={{ backgroundColor: '#4CAF9D' }}></div>
+          Focus on slow movements
+        </li>
+        <li className="flex items-center text-sm text-gray-700">
+          <div className="w-2 h-2 rounded-full mr-3" style={{ backgroundColor: '#4CAF9D' }}></div>
+          Focus on slow movements
+        </li>
+        <li className="flex items-center text-sm text-gray-700">
+          <div className="w-2 h-2 rounded-full mr-3" style={{ backgroundColor: '#4CAF9D' }}></div>
+          Focus on slow movements
+        </li>
+        <li className="flex items-center text-sm text-gray-700">
+          <div className="w-2 h-2 rounded-full mr-3" style={{ backgroundColor: '#4CAF9D' }}></div>
+          Focus on slow movements
+        </li>
       </ul>
     </div>
   );
 });
 
-// Quiz Component
+// Quiz Component - Using Unified Cognitive Test Architecture
 const QuizSection = memo(function QuizSection() {
-  const [selectedAnswer, setSelectedAnswer] = useState<string>("A. Chair yoga");
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = useCallback(() => {
-    if (selectedAnswer) {
-      setIsSubmitted(true);
+  // Create cognitive test config for live class quiz
+  const quizConfig: CognitiveTestConfig = {
+    id: 'live-class-quiz',
+    title: 'Daily Exercise Quiz',
+    description: 'Test your knowledge about exercises',
+    interactionMode: 'single-tap',
+    instruction: {
+      text: 'Welcome to Daily Exercise Quiz!\n\nYou will answer questions about exercises. First, you\'ll practice with example questions, then complete the full test.\n\nTap "Start Practice" when you\'re ready.',
+    },
+    practice: {
+      enabled: true,
+      items: [
+        {
+          id: 'practice-1',
+          stimulus: 'Which exercise helps joint flexibility?',
+          correctAnswer: 0, // Chair yoga
+          feedback: {
+            correct: 'Correct! Chair yoga is excellent for joint flexibility.',
+            incorrect: 'Incorrect. Chair yoga helps with joint flexibility. Try again!'
+          },
+          metadata: {
+            options: ['Chair yoga', 'Weightlifting', 'Running', 'Swimming'],
+            type: 'multiple-choice'
+          }
+        }
+      ],
+      requiredPass: false
+    },
+    test: {
+      items: [
+        {
+          id: 'test-1',
+          stimulus: 'Which exercise helps joint flexibility?',
+          correctAnswer: 0,
+          metadata: {
+            options: ['Chair yoga', 'Weightlifting', 'Running', 'Swimming'],
+            type: 'multiple-choice'
+          } as Record<string, unknown>
+        }
+      ],
+      duration: 300 // 5 minutes
+    },
+    stimulus: {
+      type: 'text',
     }
-  }, [selectedAnswer]);
+  };
+
+  const handleComplete = useCallback((result: { testId: string; responses: unknown[]; score?: number; accuracy?: number }) => {
+    console.log('Live class quiz completed:', result);
+    // You can add API call here to save results
+  }, []);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 mb-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-3">Quiz</h3>
-      <div className="space-y-3">
-        <p className="text-sm text-gray-700">Which exercise helps joint flexibility?</p>
-        <div className="space-y-2">
-          {["A. Chair yoga", "B. Weightlifting", "C. Running"].map((option) => (
-            <label
-              key={option}
-              className={`block p-3 rounded-lg border-2 cursor-pointer transition-colors ${
-                selectedAnswer === option
-                  ? "border-teal-500 bg-white"
-                  : "border-gray-200 hover:border-gray-300"
-              }`}
-            >
-              <input
-                type="radio"
-                name="quiz"
-                value={option}
-                checked={selectedAnswer === option}
-                onChange={(e) => setSelectedAnswer(e.target.value)}
-                className="sr-only"
-              />
-              <span className="text-sm text-gray-700">{option}</span>
-            </label>
-          ))}
-        </div>
-        <button
-          onClick={handleSubmit}
-          disabled={!selectedAnswer || isSubmitted}
-          className="w-full py-2 px-4 text-white rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium"
-          style={{ backgroundColor: '#2D7D6B' }}
-        >
-          {isSubmitted ? "Submitted" : "Submit"}
-        </button>
-      </div>
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-lg p-4 h-full flex flex-col overflow-y-auto">
+      <CognitiveTestCard
+        config={quizConfig}
+        onComplete={handleComplete}
+        className="h-full"
+      />
     </div>
   );
 });
@@ -78,9 +110,9 @@ const QuizSection = memo(function QuizSection() {
 // Game Component
 const GameSection = memo(function GameSection() {
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4">
+    <div className="bg-white border border-gray-200 rounded-lg p-4 flex-1 flex flex-col">
       <h3 className="text-lg font-semibold text-gray-800 mb-3">Game</h3>
-      <div className="space-y-3">
+      <div className="space-y-3 flex-1 flex flex-col">
         <p className="text-sm text-gray-700">Follow the Pose</p>
         <button 
           className="w-full py-2 px-4 text-white rounded-lg hover:opacity-90 text-sm font-medium"
@@ -89,6 +121,126 @@ const GameSection = memo(function GameSection() {
           Start
         </button>
       </div>
+    </div>
+  );
+});
+
+// Activity Component
+const ActivitySection = memo(function ActivitySection() {
+  const [isActivityStarted, setIsActivityStarted] = useState(false);
+  const [currentActivity, setCurrentActivity] = useState<string | null>(null);
+
+  const activities = [
+    { id: 'breathing', title: 'Breathing Exercises for Relaxation', description: 'Learn deep breathing techniques to reduce stress and improve focus' },
+    { id: 'stretching', title: 'Gentle Stretching Routine', description: 'Simple stretches to improve flexibility and reduce muscle tension' },
+    { id: 'movement', title: 'Movement Practice', description: 'Light movements to keep your body active during the session' }
+  ];
+
+  const handleStartActivity = (activityId: string) => {
+    setCurrentActivity(activityId);
+    setIsActivityStarted(true);
+  };
+
+  const handleStopActivity = () => {
+    setIsActivityStarted(false);
+    setCurrentActivity(null);
+  };
+
+  const selectedActivity = activities.find(a => a.id === currentActivity);
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-md p-6 h-full flex flex-col">
+      {!isActivityStarted ? (
+        <>
+          {/* Header */}
+          <div className="mb-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">Interactive Activities</h3>
+            <p className="text-sm text-gray-600">Choose an activity to practice during the session</p>
+          </div>
+
+          {/* Activity List */}
+          <div className="flex-1 space-y-3 overflow-y-auto">
+            {activities.map((activity) => (
+              <div
+                key={activity.id}
+                className="border-2 border-gray-200 rounded-xl p-4 hover:border-teal-300 hover:bg-teal-50 transition-all duration-200 cursor-pointer"
+                onClick={() => handleStartActivity(activity.id)}
+              >
+                <div className="flex items-start space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-teal-400 to-teal-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-gray-800 mb-1">{activity.title}</h4>
+                    <p className="text-sm text-gray-600">{activity.description}</p>
+                  </div>
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Activity Content View */}
+          <div className="flex-1 flex flex-col">
+            {/* Header with Back Button */}
+            <div className="mb-4 flex items-center justify-between">
+              <button
+                onClick={handleStopActivity}
+                className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                <span className="text-sm font-medium">Back to Activities</span>
+              </button>
+            </div>
+
+            {/* Activity Title */}
+            <div className="mb-6">
+              <h3 className="text-2xl font-bold text-gray-800 text-center mb-2">
+                {selectedActivity?.title}
+              </h3>
+              <p className="text-sm text-gray-600 text-center">{selectedActivity?.description}</p>
+            </div>
+
+            {/* Content Area */}
+            <div className="flex-1 bg-gray-100 rounded-xl flex items-center justify-center mb-4 min-h-[300px]">
+              <div className="text-center">
+                <div className="w-20 h-20 bg-gray-300 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <p className="text-gray-500 text-sm">Activity content will appear here</p>
+                <p className="text-gray-400 text-xs mt-2">Video, instructions, or interactive content</p>
+              </div>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-3">
+              <button
+                onClick={handleStopActivity}
+                className="flex-1 py-3 px-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+              >
+                Pause Activity
+              </button>
+              <button
+                className="flex-1 py-3 px-4 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all"
+              >
+                Complete Activity
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 });
@@ -414,6 +566,7 @@ export default function JoineeMeetingScreen() {
   const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(false);
   const [isScreenSharing, setIsScreenSharing] = useState(false);
+  const [activeTab, setActiveTab] = useState<'course' | 'quiz' | 'game' | 'activity'>('course');
 
   const joiningRef = useRef(false);
   const [showRejoin, setShowRejoin] = useState(false);
@@ -617,117 +770,141 @@ export default function JoineeMeetingScreen() {
   }
 
   return (
-    <div className={`h-full flex ${isFullscreen ? 'fixed inset-0 z-50' : ''}`} style={{ backgroundColor: '#2D7D6B' }}>
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col">
-        {/* Header with Progress Bar */}
-        <div className="bg-white border-b border-gray-200 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#4CAF9D' }}>
-                <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-              </div>
-              <span className="text-xl font-bold text-gray-800">Health Tech</span>
+    <div className={`h-full flex flex-col ${isFullscreen ? 'fixed inset-0 z-50' : ''}`}>
+      {/* Header with Progress Bar */}
+      <div className="bg-white border-b border-gray-200 px-6 py-4">
+        <div className="flex items-center justify-between">
+          {/* <div className="flex items-center space-x-3">
+            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#4CAF9D' }}>
+              <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+              </svg>
             </div>
-            
-            {/* Progress Bar - Show actual meeting progress */}
-            <div className="flex-1 mx-8">
-              <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
-                  className="h-2 rounded-full transition-all duration-300"
-                  style={{ 
-                    width: `${Math.min((elapsed / 3600) * 100, 100)}%`, // Show progress over 1 hour max
-                    backgroundColor: '#F58220'
-                  }}
-                ></div>
-              </div>
+            <span className="text-xl font-bold text-gray-800">Health Tech</span>
+          </div> */}
+          
+          {/* Progress Bar - Show actual meeting progress */}
+          {/* <div className="flex-1 mx-8">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="h-2 rounded-full transition-all duration-300"
+                style={{ 
+                  width: `${Math.min((elapsed / 3600) * 100, 100)}%`, // Show progress over 1 hour max
+                  backgroundColor: '#F58220'
+                }}
+              ></div>
             </div>
+          </div> */}
+           <div className="flex justify-between items-center px-6 pt-6 pb-4 gap-4">
+            <h2 className="text-2xl font-bold text-gray-800">Live Class</h2>
+            <div className="text-lg font-semibold text-gray-700">
+              {formatTime(elapsed)}
+            </div>
+          </div>
 
-            {/* Header Controls */}
-            <div className="flex items-center space-x-3">
-              {/* <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
-                <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                </svg>
-              </button>
-              <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
-                <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
-                </svg>
-              </button>
-              <button className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200">
-                <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                </svg>
-              </button>
-              <button className="w-8 h-8 rounded-full flex items-center justify-center hover:opacity-90" style={{ backgroundColor: '#F58220' }}>
-                <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                </svg>
-              </button> */}
-              <InteractiveControls 
-                onFullscreen={toggleFullscreen}
-                onMuteToggle={handleMuteToggle}
-                onVideoToggle={handleVideoToggle}
-                onScreenShare={handleScreenShare}
-                onEndCall={handleEndCall}
-                onChatToggle={() => setShowChat(!showChat)}
-                isMuted={isMuted}
-                isVideoOff={isVideoOff}
-                isScreenSharing={isScreenSharing}
-                showChat={showChat}
-              />
-            </div>
+          {/* Header Controls */}
+          <div className="flex items-center space-x-3">
+          
+            <InteractiveControls 
+              onFullscreen={toggleFullscreen}
+              onMuteToggle={handleMuteToggle}
+              onVideoToggle={handleVideoToggle}
+              onScreenShare={handleScreenShare}
+              onEndCall={handleEndCall}
+              onChatToggle={() => setShowChat(!showChat)}
+              isMuted={isMuted}
+              isVideoOff={isVideoOff}
+              isScreenSharing={isScreenSharing}
+              showChat={showChat}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Main Content Area - Split into two equal parts */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* Left Side - Meeting/Video Content (50% width) */}
+        <div className="w-1/2 flex flex-col bg-white border-r border-gray-200 overflow-hidden">
+          {/* Title and Timer */}
+         
+
+          {/* Video Grid */}
+          <div className="flex-1 relative min-h-0 w-full overflow-hidden">
+            <VideoGrid
+              participantIds={Array.from(participants.keys())}
+              localId={localParticipant.id}
+              activeSpeakerId={activeSpeakerId || undefined}
+              pinnedId={pinnedId}
+              presenterId={presenterId}
+              fullWidth={true}
+            />
+            
+            {/* Speech Bubble Overlay */}
+            <SpeechBubble message={speechMessage} isVisible={showSpeechBubble} />
           </div>
         </div>
 
-        {/* Main Video Area */}
-        <div className="flex-1 p-6">
-          <div className="bg-white rounded-2xl p-6 h-full flex">
-            {/* Left Side - Video Content */}
-            <div className="flex-1 flex flex-col">
-              {/* Title and Timer */}
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold text-gray-800">Live Chair Yoga</h2>
-                <div className="text-lg font-semibold text-gray-700">
-                  {formatTime(elapsed)}
-                </div>
+        {/* Right Side - Activities/Quiz/Game (50% width) */}
+        <div className="w-1/2 flex flex-col bg-gray-50 p-6 overflow-y-auto">
+          {showChat ? (
+            <div className="h-full">
+              <ChatPanel />
+            </div>
+          ) : (
+            <div className="flex flex-col h-full">
+              {/* Tabs Navigation */}
+              <div className="flex items-center space-x-2 mb-4 border-b border-gray-200 pb-2">
+                <button
+                  onClick={() => setActiveTab('course')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    activeTab === 'course'
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Course Content
+                </button>
+                <button
+                  onClick={() => setActiveTab('quiz')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    activeTab === 'quiz'
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Quiz
+                </button>
+                <button
+                  onClick={() => setActiveTab('game')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    activeTab === 'game'
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Game
+                </button>
+                <button
+                  onClick={() => setActiveTab('activity')}
+                  className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 ${
+                    activeTab === 'activity'
+                      ? 'bg-gradient-to-r from-teal-500 to-teal-600 text-white shadow-md'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  }`}
+                >
+                  Activity
+                </button>
               </div>
 
-              {/* Video Grid */}
-              <div className="flex-1 relative">
-                <VideoGrid
-                  participantIds={Array.from(participants.keys())}
-                  localId={localParticipant.id}
-                  activeSpeakerId={activeSpeakerId || undefined}
-                  pinnedId={pinnedId}
-                  presenterId={presenterId}
-                />
-                
-                {/* Speech Bubble Overlay */}
-                <SpeechBubble message={speechMessage} isVisible={showSpeechBubble} />
+              {/* Tab Content */}
+              <div className="flex-1 overflow-y-auto">
+                {activeTab === 'course' && <CourseContent />}
+                {activeTab === 'quiz' && <QuizSection />}
+                {activeTab === 'game' && <GameSection />}
+                {activeTab === 'activity' && <ActivitySection />}
               </div>
-
-             
             </div>
-
-            {/* Right Sidebar - Show in fullscreen with different layout */}
-            <div className={`${isFullscreen ? 'w-96 ml-6' : 'w-80 ml-6'} ${showChat ? 'flex flex-col h-full' : 'space-y-4'}`}>
-              {showChat ? (
-                <div className="flex-1">
-                  <ChatPanel />
-                </div>
-              ) : (
-                <>
-                  <CourseContent />
-                  <QuizSection />
-                  <GameSection />
-                </>
-              )}
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

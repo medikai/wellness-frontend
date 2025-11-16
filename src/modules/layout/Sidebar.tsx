@@ -13,6 +13,8 @@ import { useAuth } from "@/contexts/AuthContext";
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
+  isCollapsed?: boolean;
+  onToggleCollapse?: () => void;
 }
 
 interface NavItem {
@@ -26,7 +28,7 @@ interface NavItem {
   roles?: string[]; // Roles that can see this item
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, isCollapsed = false, onToggleCollapse }) => {
   const pathname = usePathname();
   const { logout } = useAuth();
   // Get user and role from Redux store
@@ -50,14 +52,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       isActive: pathname === "/classes",
       roles: ["student"], // Only for students
     },
-    {
-      name: "Upcoming Classes",
-      href: "/classes",
-      icon: "heart",
-      badge: "Live",
-      isActive: pathname === "/classes",
-      roles: ["student"], // Only for students
-    },
+    // {
+    //   name: "Upcoming Classes",
+    //   href: "/classes",
+    //   icon: "heart",
+    //   badge: "Live",
+    //   isActive: pathname === "/classes",
+    //   roles: ["student"], // Only for students
+    // },
     // {
     //   name: "Upcoming Classes",
     //   href: "/coach/classes",
@@ -146,50 +148,71 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       {/* Sidebar */}
       <div
         className={`
-    fixed top-0 left-0 z-50 h-screen w-64 bg-white/95 backdrop-blur-sm shadow-lg border-r border-neutral-light/50
+    fixed top-0 left-0 z-50 h-screen bg-white/95 backdrop-blur-sm shadow-lg border-r border-neutral-light/50
     transform transition-all duration-300 ease-in-out flex flex-col
     ${isOpen ? "translate-x-0" : "-translate-x-full"}
     lg:translate-x-0
+    ${isCollapsed ? "w-20" : "w-64"}
   `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-neutral-light/50 flex-shrink-0 bg-gradient-to-r from-teal-light/10 to-blue-50">
-          <div className="flex items-center space-x-4">
+        <div className={`flex items-center ${isCollapsed ? "flex-col justify-center space-y-2" : "justify-between"} p-4 border-b border-neutral-light/50 flex-shrink-0`}>
+          <div className={`flex items-center ${isCollapsed ? "flex-col space-y-2" : "space-x-4"}`}>
             <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
               <Icon name="heart" size="lg" color="white" />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-neutral-dark">waylness</h1>
-              <p className="text-sm text-teal-primary font-medium">
-                Health Companion
-              </p>
-            </div>
+            {!isCollapsed && (
+              <div>
+                <h1 className="text-xl font-bold text-neutral-dark">waylness</h1>
+                <p className="text-sm text-teal-primary font-medium">
+                  Health Companion
+                </p>
+              </div>
+            )}
           </div>
-          <button
-            onClick={onClose}
-            className="lg:hidden p-2.5 rounded-xl hover:bg-red-100 hover:text-red-600 transition-all duration-200"
-          >
-            <Icon name="x" size="md" color="#6B7280" />
-          </button>
+          <div className={`flex items-center ${isCollapsed ? "flex-col space-y-2" : "space-x-2"}`}>
+            {/* Collapse/Expand Button - Desktop Only */}
+            {onToggleCollapse && (
+              <button
+                onClick={onToggleCollapse}
+                className="hidden lg:flex p-2 rounded-xl hover:bg-neutral-light/50 transition-all duration-200"
+                aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                <Icon 
+                  name={isCollapsed ? "chevronRight" : "chevronLeft"} 
+                  size="sm" 
+                  color={colors.neutral.medium} 
+                />
+              </button>
+            )}
+            {/* Close Button - Mobile Only */}
+            <button
+              onClick={onClose}
+              className="lg:hidden p-2.5 rounded-xl hover:bg-red-100 hover:text-red-600 transition-all duration-200"
+            >
+              <Icon name="x" size="md" color="#6B7280" />
+            </button>
+          </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+        <nav className={`flex-1 py-6 space-y-1 overflow-y-auto ${isCollapsed ? "px-2" : "px-4"}`}>
           {navigationItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
               onClick={handleItemClick}
               className={`
-                flex items-center justify-between px-4 py-3.5 rounded-2xl transition-all duration-200 group relative
+                flex items-center ${isCollapsed ? "justify-center flex-col" : "justify-between"} px-4 py-3.5 rounded-2xl transition-all duration-200 group relative
                 ${
                   item.isActive
                     ? "bg-gradient-to-r from-teal-light to-blue-50 text-teal-primary font-semibold shadow-md border border-teal-light/50"
                     : "text-neutral-dark hover:bg-neutral-light/50 hover:text-teal-primary hover:shadow-sm"
                 }
               `}
+              title={isCollapsed ? item.name : undefined}
             >
-              <div className="flex items-center space-x-3">
+              <div className={`flex items-center ${isCollapsed ? "flex-col space-y-1" : "space-x-3"}`}>
                 <div
                   className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all duration-200 ${
                     item.isActive
@@ -203,13 +226,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     color={item.isActive ? "white" : colors.neutral.medium}
                   />
                 </div>
-                <span className="text-base font-medium">{item.name}</span>
+                {!isCollapsed && (
+                  <span className="text-base font-medium">{item.name}</span>
+                )}
               </div>
 
-              {item.badge && (
+              {!isCollapsed && item.badge && (
                 <span className="px-2.5 py-1 text-xs font-bold bg-gradient-to-r from-orange-primary to-red-500 text-white rounded-full animate-pulse shadow-sm">
                   {item.badge}
                 </span>
+              )}
+              {isCollapsed && item.badge && (
+                <span className="absolute top-1 right-1 w-2 h-2 bg-gradient-to-r from-orange-primary to-red-500 rounded-full animate-pulse"></span>
               )}
             </Link>
           ))}
@@ -221,28 +249,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
         </nav>
 
         {/* Footer - Fixed at bottom */}
-        <div className="p-4 border-t border-neutral-light/50 flex-shrink-0 bg-gradient-to-t from-neutral-light/20 to-transparent">
-          <div className="flex items-center space-x-3 p-4 rounded-2xl bg-gradient-to-r from-teal-light/30 to-blue-50/50 mb-4 shadow-sm border border-teal-light/20">
-            <div className="w-11 h-11 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-md">
-              <Icon name="user" size="sm" color="white" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-base font-bold text-neutral-dark truncate">
-                {user?.name || "User"}
-              </p>
-              <p className="text-xs text-teal-primary font-semibold truncate">
-                Premium Member
-              </p>
-            </div>
-          </div>
-
+        <div className={`border-t border-neutral-light/50 flex-shrink-0 bg-gradient-to-t from-neutral-light/20 to-transparent ${isCollapsed ? "p-2" : "p-4"}`}>
           {/* Bottom Actions - Aligned with navigation */}
           <div className="space-y-1">
             {bottomActions.map((item) => (
               <button
                 key={item.name}
                 onClick={item.onClick}
-                className="w-full flex items-center space-x-3 px-4 py-3.5 text-sm text-neutral-medium hover:text-white hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md"
+                className={`w-full flex items-center ${isCollapsed ? "justify-center flex-col" : "space-x-3"} px-4 py-3.5 text-sm text-neutral-medium hover:text-white hover:bg-gradient-to-r from-teal-light/10 to-blue-50 rounded-2xl transition-all duration-200 group shadow-sm hover:shadow-md`}
+                title={isCollapsed ? item.name : undefined}
               >
                 <div className="w-9 h-9 rounded-xl flex items-center justify-center bg-neutral-light group-hover:bg-white/20 transition-all duration-200">
                   <Icon
@@ -251,7 +266,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                     color={colors.neutral.medium}
                   />
                 </div>
-                <span className="font-semibold">{item.name}</span>
+                {!isCollapsed && (
+                  <span className="font-semibold">{item.name}</span>
+                )}
               </button>
             ))}
           </div>
