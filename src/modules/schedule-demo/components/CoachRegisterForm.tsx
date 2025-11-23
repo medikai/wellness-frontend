@@ -1,26 +1,13 @@
-//src/modules/register/components/RegisterForm.tsx
+//src/modules/register-coach/components/CoachRegisterForm.tsx
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Icon } from '@/components/ui';
 import Link from 'next/link';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { setUser } from '@/store/slices/authSlice';
 
-
-interface User {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  role?: string;
-  isAuthenticated: boolean;
-}
-
-const RegisterForm = () => {
+const CoachRegisterForm = () => {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -91,112 +78,34 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      setIsLoading(true);
-      const USE_FAKE_API = false;
-
-      // If flag is ON, skip real API completely
-      if (USE_FAKE_API) {
-        setTimeout(() => {
-          setIsLoading(false);
-          router.push('/schedule-demo');
-        }, 500);
-        return;
-      }
-
-      // Real API call
-      // const r = await fetch('/api/auth/register-student', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     name: formData.name,
-      //     email: formData.email,
-      //     phone: formData.phone || undefined,
-      //     password: formData.password
-      //   })
-      // });
-
-      // const json = await r.json();
-      // if (!json.ok) {
-      //   setErrors({ general: json.error || 'Registration failed' });
-      //   return;
-      // }
-
-      // router.push('/');
-
-      //       const r = await fetch('/api/auth/register-student', {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     name: formData.name,
-      //     email: formData.email,
-      //     phone: formData.phone || undefined,
-      //     password: formData.password
-      //   }),
-      // });
-
-
-      //       if (!json.ok) {
-      //         setErrors({ general: json.error || 'Registration failed' });
-      //         return;
-      //       }
-
-      //       // Store the newly created user so booking page has user.id
-      //       dispatch(setUser({
-      //         id: json.profile.id,
-      //         name: json.profile.fullname,
-      //         email: json.profile.email,
-      //         role: json.role,
-      //         isAuthenticated: true
-      //       }));
-
-      //       router.push('/schedule-demo');
-
-
-      const r = await fetch('/api/auth/register-student', {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const r = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone || undefined,
-          password: formData.password
-        }),
+          password: formData.password,
+          user_type: 'coach' // Add coach type to distinguish from regular users
+        })
       });
-
       const json = await r.json();
+      if (!json.ok) { setErrors({ general: json.error || 'Registration failed' }); return; }
 
-      if (!json.ok) {
-        setErrors({ general: json.error || "Registration failed" });
-        return;
-      }
-
-      // Save user so demo booking has user id
-      dispatch(setUser({
-        id: json.profile.id,
-        name: json.profile.fullname,
-        email: json.profile.email,
-        role: json.role,
-        isAuthenticated: true
-      }));
-
-      router.push('/schedule-demo');
-
-
-
+      router.push('/');
 
     } catch {
       setErrors({ general: 'Registration failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
-
   };
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-neutral-dark mb-1">Get Started Now</h2>
-        <p className="text-sm text-neutral-medium">Enter your credentials to access your account</p>
+        <h2 className="text-2xl font-bold text-neutral-dark mb-1">Join as a Coach</h2>
+        <p className="text-sm text-neutral-medium">Enter your credentials to start your coaching journey</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -343,7 +252,7 @@ const RegisterForm = () => {
           className="w-full py-3 text-base font-semibold rounded-lg"
           disabled={isLoading}
         >
-          {isLoading ? 'Submitting...' : 'Submit'}
+          {isLoading ? 'Creating Coach Account...' : 'Create Coach Account'}
         </Button>
       </form>
 
@@ -359,4 +268,4 @@ const RegisterForm = () => {
   );
 };
 
-export default RegisterForm;
+export default CoachRegisterForm;

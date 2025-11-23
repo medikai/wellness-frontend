@@ -3,7 +3,7 @@
 
 // import { Button, Card, ProgressBar, Icon } from '@/components/ui';
 import { useAuth } from '@/contexts/AuthContext';
-// import DemoClassBooking from '@/components/DemoClassBooking';
+import DemoClassBooking from '@/components/DemoClassBooking';
 import DashboardTemplates from '@/modules/dashboard/templates';
 
 export default function HomePage() {

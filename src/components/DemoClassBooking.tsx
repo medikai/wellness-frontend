@@ -1,6 +1,6 @@
 //src/components/DemoClassBooking.tsx
 'use client';
-
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Card, Button, Icon } from '@/components/ui';
 
@@ -30,6 +30,7 @@ const DemoClassBooking: React.FC = () => {
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+  const router = useRouter();
 
 
   const fmt = (d: Date) => d.toLocaleDateString('en-CA');
@@ -127,7 +128,8 @@ const DemoClassBooking: React.FC = () => {
       });
 
       setAvailableSlots(grouped);
-      setIsBookingConfirmed(true);
+      // setIsBookingConfirmed(false);
+      router.push('/classes');
     } catch (err) {
       console.error(err);
       alert('Booking failed. Try again.');
@@ -171,6 +173,17 @@ const DemoClassBooking: React.FC = () => {
 
   return (
     <div className="space-y-6">
+      {/* Skip Demo button */}
+      <div className="flex justify-end mb-4">
+        <Button
+          variant="outline"
+          size="sm"
+          type="button"
+          onClick={() => router.push('/dashboard')}
+        >
+          Skip Demo
+        </Button>
+      </div>
       <div className="text-center">
         <h2 className="text-3xl font-bold text-neutral-dark mb-2">Join a Demo Class</h2>
         <p className="text-neutral-medium">
@@ -243,10 +256,10 @@ const DemoClassBooking: React.FC = () => {
                     onClick={() => handleSlotClick(slot.id)}
                     disabled={isBookedByOther}
                     className={`p-3 rounded-lg border-2 text-center transition-all duration-200 ${isBookedByOther
-                        ? 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
-                        : selectedSlot === slot.id
-                          ? 'border-teal-primary bg-teal-light text-teal-dark shadow-md'
-                          : 'border-neutral-light hover:border-teal-primary hover:bg-teal-light/50 hover:shadow-sm'
+                      ? 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
+                      : selectedSlot === slot.id
+                        ? 'border-teal-primary bg-teal-light text-teal-dark shadow-md'
+                        : 'border-neutral-light hover:border-teal-primary hover:bg-teal-light/50 hover:shadow-sm'
                       }`}
                   >
                     <div className="font-medium">

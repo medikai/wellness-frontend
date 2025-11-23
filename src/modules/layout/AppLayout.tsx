@@ -21,7 +21,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const pathname = usePathname();
 
   // Check if current path is auth page or homepage
-  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced';
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced' || pathname === '/schedule-demo';
   const isHomePage = pathname === '/';
   
   // Check if current path is a meeting page
