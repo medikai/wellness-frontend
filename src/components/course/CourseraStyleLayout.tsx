@@ -1,3 +1,4 @@
+// src/components/course/CourseraStyleLayout.tsx
 'use client'
 
 import React, { useState } from 'react'
@@ -42,11 +43,16 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [internalFullscreen, setInternalFullscreen] = useState(false)
   const containerRef = React.useRef<HTMLDivElement>(null)
-  
+
   // Use external fullscreen state if provided, otherwise use internal
   const isFullscreen = externalIsFullscreen !== undefined ? externalIsFullscreen : internalFullscreen
 
-  const activeChapterData = chapters.find(ch => ch.id === activeChapter) || chapters[0]
+  // const activeChapterData = chapters.find(ch => ch.id === activeChapter) || chapters[0]
+  const activeChapterData =
+    chapters.find(ch => ch.id === activeChapter) ||
+    chapters[0] ||
+    { id: '', title: 'No content', description: '', content: { type: 'text', body: '' } }
+
   const currentChapterIndex = chapters.findIndex(ch => ch.id === activeChapter)
 
   const getChapterIcon = (contentType: string) => {
@@ -63,7 +69,7 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
 
   const renderContent = () => {
     if (!activeChapterData) return null
-    
+
     switch (activeChapterData.content.type) {
       case 'video':
         return <VideoContent content={activeChapterData.content} />
@@ -183,31 +189,33 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
         <div className="max-w-full mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
-             
+
               <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
                 <Icon name="heart" size="md" color="white" />
               </div>
               <div>
                 <h1 className="text-xl lg:text-2xl font-bold text-neutral-dark">{activeChapterData?.title}</h1>
-                <p className="text-sm text-teal-primary font-medium">{activeChapterData.description}</p>
+                <p className="text-sm text-teal-primary font-medium">
+                  {activeChapterData?.description || ""}
+                </p>
               </div>
             </div>
             <div className="flex items-center space-x-3">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 onClick={handleToggleFullscreen}
                 className="flex items-center space-x-2 text-neutral-dark hover:bg-teal-light border-teal-light"
                 title={isFullscreen ? "Exit Fullscreen" : "Maximize Screen"}
               >
-                <Icon 
-                  name={isFullscreen ? "x" : "maximize"} 
-                  size="sm" 
+                <Icon
+                  name={isFullscreen ? "x" : "maximize"}
+                  size="sm"
                   color={colors.neutral.dark}
                 />
                 <span className="text-sm">{isFullscreen ? "Exit" : "Maximize"}</span>
               </Button>
-              <Button 
-                variant="secondary" 
+              <Button
+                variant="secondary"
                 onClick={handleLeaveSession}
                 className="bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-xl"
               >
@@ -225,7 +233,7 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
                   {chapters.map((chapter, index) => {
                     const isActive = chapter.id === activeChapter
                     const iconName = getChapterIcon(chapter.content.type)
-                    
+
                     return (
                       <button
                         key={chapter.id}
@@ -233,20 +241,18 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
                           setActiveChapter(chapter.id)
                           window.scrollTo({ top: 0, behavior: 'smooth' })
                         }}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap flex-shrink-0 ${
-                          isActive
-                            ? 'bg-gradient-to-r from-teal-primary to-teal-dark text-white shadow-md'
-                            : 'bg-teal-light/30 hover:bg-teal-light/50 text-neutral-dark border-2 border-teal-light'
-                        }`}
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap flex-shrink-0 ${isActive
+                          ? 'bg-gradient-to-r from-teal-primary to-teal-dark text-white shadow-md'
+                          : 'bg-teal-light/30 hover:bg-teal-light/50 text-neutral-dark border-2 border-teal-light'
+                          }`}
                       >
-                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                          isActive 
-                            ? 'bg-white/20' 
-                            : 'bg-white'
-                        }`}>
-                          <Icon 
-                            name={iconName} 
-                            size="sm" 
+                        <div className={`w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0 ${isActive
+                          ? 'bg-white/20'
+                          : 'bg-white'
+                          }`}>
+                          <Icon
+                            name={iconName}
+                            size="sm"
                             color={isActive ? 'white' : colors.neutral.medium}
                           />
                         </div>
@@ -272,7 +278,7 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
                     </span>
                   </div>
                   <div className="w-full bg-neutral-light rounded-full h-2">
-                    <div 
+                    <div
                       className="bg-gradient-to-r from-teal-primary to-teal-dark h-2 rounded-full transition-all duration-300"
                       style={{ width: `${((currentChapterIndex + 1) / chapters.length) * 100}%` }}
                     />
@@ -287,13 +293,13 @@ export default function CourseraStyleLayout({ chapters, onFullscreenChange, onTo
       {/* Main Content Area - Full Width */}
       <div className="flex-1 overflow-y-auto bg-background">
         <div className={`${isFullscreen ? 'w-full max-w-full px-6 lg:px-12 py-6 lg:py-8' : 'max-w-5xl mx-auto p-6 lg:p-8'}`}>
-            {/* Chapter Header */}
-            
+          {/* Chapter Header */}
 
-            {/* Chapter Content */}
-            <div className="bg-white rounded-2xl shadow-md p-6 lg:p-8 border border-neutral-light/50">
-              {renderContent()}
-            </div>
+
+          {/* Chapter Content */}
+          <div className="bg-white rounded-2xl shadow-md p-6 lg:p-8 border border-neutral-light/50">
+            {renderContent()}
+          </div>
 
           {/* Navigation Buttons */}
           <div className="flex justify-between mt-6 gap-4">

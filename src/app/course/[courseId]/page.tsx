@@ -1,3 +1,4 @@
+// src/app/course/[courseId]/page.tsx
 import React from 'react'
 import UnifiedCourseLayout from '@/components/course/UnifiedCourseLayout'
 import { dummyCourse } from '@/data/dummyCourseData'

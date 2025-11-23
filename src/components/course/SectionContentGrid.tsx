@@ -1,3 +1,4 @@
+// src/components/course/SectionContentGrid.tsx
 'use client'
 
 import React, { useState } from 'react'
