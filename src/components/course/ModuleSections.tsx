@@ -1,3 +1,4 @@
+// src/components/course/ModuleSections.tsx
 'use client'
 
 import React from 'react'

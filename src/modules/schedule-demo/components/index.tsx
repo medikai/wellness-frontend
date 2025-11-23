@@ -1,6 +1,6 @@
 import React from 'react'
 import Logo from '../../register/components/Logo'
-import CoachRegisterForm from './CoachRegisterForm'
+// import CoachRegisterForm from './CoachRegisterForm'
 import HealthPreview from '../../register/components/HealthPreview'
 import DemoClassBooking from '@/components/DemoClassBooking'
 

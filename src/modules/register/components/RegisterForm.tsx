@@ -5,18 +5,18 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, Icon } from '@/components/ui';
 import Link from 'next/link';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
+import { useAppDispatch } from '@/store/hooks';
 import { setUser } from '@/store/slices/authSlice';
 
 
-interface User {
-  id: string;
-  name: string;
-  email?: string;
-  phone?: string;
-  role?: string;
-  isAuthenticated: boolean;
-}
+// interface User {
+//   id: string;
+//   name: string;
+//   email?: string;
+//   phone?: string;
+//   role?: string;
+//   isAuthenticated: boolean;
+// }
 
 const RegisterForm = () => {
   const router = useRouter();
