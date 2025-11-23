@@ -1,3 +1,4 @@
+// src/app/api/auth/lib/registerWithRole.ts
 import { NextResponse } from 'next/server';
 import { supabaseAdmin, supabaseAnon } from '../../../../lib/supabaseServer';
 
