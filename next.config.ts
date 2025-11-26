@@ -10,10 +10,10 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
       // allow VideoSDK HTTPS + WebSocket endpoints
-      "connect-src 'self' https://api.videosdk.live https://*.videosdk.live wss://*.videosdk.live",
+      "connect-src 'self' https://api.videosdk.live https://*.youtube.com https://*.videosdk.live wss://*.videosdk.live",
       "font-src 'self' data:",
       "media-src 'self' blob:",
-      "frame-src 'self' https://*.videosdk.live",
+      "frame-src 'self' https://*.videosdk.live https://*.youtube.com",
     ].join("; "),
   },
   {

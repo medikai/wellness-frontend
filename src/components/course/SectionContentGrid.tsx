@@ -20,18 +20,30 @@ interface SectionContentGridProps {
   title: string
 }
 
+// Chapter where content is guaranteed to be CourseContent (not RawChapterContent[])
+type StaticChapter = Chapter & { content: CourseContent }
+
+function isStaticChapter(chapter: Chapter): chapter is StaticChapter {
+  // content is union CourseContent | RawChapterContent[]
+  const content = (chapter as { content: CourseContent | unknown[] }).content
+  return !Array.isArray(content)
+}
+
 export default function SectionContentGrid({ chapters, title }: SectionContentGridProps) {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [currentQuiz] = useState(0)
   const [currentVideo, setCurrentVideo] = useState(0)
 
+  // Only work with chapters whose content is CourseContent
+  const staticChapters = chapters.filter(isStaticChapter)
+
   // Filter content by type
-  const videoChapters = chapters.filter(ch => ch.content.type === 'video')
-  const quizChapters = chapters.filter(ch => ch.content.type === 'quiz')
-  const surveyChapters = chapters.filter(ch => ch.content.type === 'survey')
-  const textChapters = chapters.filter(ch => ch.content.type === 'text')
-  const gameChapters = chapters.filter(ch => ch.content.type === 'games')
-  const activityChapters = chapters.filter(ch => ch.content.type === 'activities')
+  const videoChapters = staticChapters.filter(ch => ch.content.type === 'video')
+  const quizChapters = staticChapters.filter(ch => ch.content.type === 'quiz')
+  const surveyChapters = staticChapters.filter(ch => ch.content.type === 'survey')
+  const textChapters = staticChapters.filter(ch => ch.content.type === 'text')
+  const gameChapters = staticChapters.filter(ch => ch.content.type === 'games')
+  const activityChapters = staticChapters.filter(ch => ch.content.type === 'activities')
 
   const renderContent = (content: CourseContent) => {
     switch (content.type) {
@@ -79,8 +91,8 @@ export default function SectionContentGrid({ chapters, title }: SectionContentGr
                 <p className="text-lg text-gray-600">Self-paced Session</p>
               </div>
             </div>
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="secondary"
               onClick={handleLeaveSession}
               className="bg-red-500 hover:bg-red-600 text-white text-lg px-6 py-3 rounded-xl"
             >
@@ -135,7 +147,7 @@ export default function SectionContentGrid({ chapters, title }: SectionContentGr
                   <div className="w-12 h-12 bg-gradient-to-r from-indigo-500 to-indigo-600 rounded-xl flex items-center justify-center mr-4">
                     <span className="text-2xl">📄</span>
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-800">Reading Materials</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Reading Materials</h2>
                 </div>
                 <div className="space-y-4">
                   {textChapters.map((chapter) => (
@@ -201,7 +213,7 @@ export default function SectionContentGrid({ chapters, title }: SectionContentGr
                       { icon: '🎲', name: 'Puzzle Game', description: 'Brain teasers', color: 'from-teal-500 to-teal-600', bgColor: 'bg-teal-50', hoverColor: 'hover:bg-teal-100' }
                     ]
                     const gameInfo = gamesData[index % gamesData.length]
-                    
+
                     return (
                       <div
                         key={chapter.id}

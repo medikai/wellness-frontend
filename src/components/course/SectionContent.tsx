@@ -57,8 +57,41 @@ export default function SectionContent({ chapters }: SectionContentProps) {
             </div>
 
             <div className="mt-4 pt-4 border-t border-gray-200">
-              {renderContent(chapter.content, index)}
+              {/* Case 1: Static content */}
+              {!Array.isArray(chapter.content) &&
+                renderContent(chapter.content, index)}
+
+              {/* Case 2: Dynamic content array */}
+              {Array.isArray(chapter.content) &&
+                chapter.content.map((item, idx) => {
+                  const data = item.content_data || {}
+
+                  const normalized: CourseContent = {
+                    type: item.content_type as CourseContent['type'],
+                    title: data.title ?? '',
+                    content: data.html || data.body || '',
+                    html: data.html,
+                    body: data.body,
+                    embed_link: data.embed_link,
+                    embedUrl: data.embedUrl,
+                    embed_url: data.embed_url,
+                    url: data.url,
+                    game_id: data.game_id,
+                    description: data.description,
+                    activity_type: data.activity_type,
+                    options: data.options,
+                    questions: data.questions,
+                  } as CourseContent
+
+                  return (
+                    <div key={item.id} className="mb-4">
+                      {renderContent(normalized, idx)}
+                    </div>
+                  )
+                })}
             </div>
+
+
           </div>
         ))}
       </div>

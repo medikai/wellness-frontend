@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Chapter } from '@/types/course'
+import { Chapter, CourseContent } from '@/types/course'
 import { Button } from '@/components/ui'
 import VideoContent from './content/VideoContent'
 import SurveyContent from './content/SurveyContent'
@@ -15,6 +15,13 @@ interface SeniorFriendlySectionContentProps {
   chapters: Chapter[]
   title: string
 }
+
+function isStaticContent(
+  content: Chapter['content']
+): content is CourseContent {
+  return !Array.isArray(content)
+}
+
 
 export default function SeniorFriendlySectionContent({ chapters, title }: SeniorFriendlySectionContentProps) {
   const [showFeedbackModal, setShowFeedbackModal] = useState(false)
@@ -46,8 +53,8 @@ export default function SeniorFriendlySectionContent({ chapters, title }: Senior
                 <p className="text-2xl text-gray-600">Self-paced Session</p>
               </div>
             </div>
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="secondary"
               onClick={handleLeaveSession}
               className="bg-red-500 hover:bg-red-600 text-white text-xl px-8 py-4 rounded-2xl shadow-lg"
             >
@@ -59,18 +66,24 @@ export default function SeniorFriendlySectionContent({ chapters, title }: Senior
         {/* Simple Card-Based Layout for Seniors */}
         <div className="space-y-6">
           {chapters.map((chapter, index) => {
-            const isVideo = chapter.content.type === 'video'
-            const isQuiz = chapter.content.type === 'quiz'
-            const isSurvey = chapter.content.type === 'survey'
-            const isActivity = chapter.content.type === 'activities'
-            const isGame = chapter.content.type === 'games'
-            const isText = chapter.content.type === 'text'
+            if (!isStaticContent(chapter.content)) {
+              // Skip dynamic multi-item content until normalized (same as Coursera layout)
+              return null
+            }
 
-            // Determine icon and color based on content type
+            const content = chapter.content
+
+            const isVideo = content.type === 'video'
+            const isQuiz = content.type === 'quiz'
+            const isSurvey = content.type === 'survey'
+            const isActivity = content.type === 'activities'
+            const isGame = content.type === 'games'
+            const isText = content.type === 'text'
+
             let icon = '📚'
             let bgColor = 'from-blue-500 to-blue-600'
             let cardBgColor = 'bg-blue-50'
-            
+
             if (isVideo) {
               icon = '🎥'
               bgColor = 'from-red-500 to-red-600'
@@ -108,25 +121,31 @@ export default function SeniorFriendlySectionContent({ chapters, title }: Senior
                   </div>
                   <div className="flex-1">
                     <div className="mb-3">
-                      <span className="text-xl font-semibold text-gray-500">Chapter {index + 1}</span>
+                      <span className="text-xl font-semibold text-gray-500">
+                        Chapter {index + 1}
+                      </span>
                     </div>
-                    <h2 className="text-3xl font-bold text-gray-800 mb-3">{chapter.title}</h2>
-                    <p className="text-xl text-gray-600 mb-4">{chapter.description}</p>
+                    <h2 className="text-3xl font-bold text-gray-800 mb-3">
+                      {chapter.title}
+                    </h2>
+                    <p className="text-xl text-gray-600 mb-4">
+                      {chapter.description}
+                    </p>
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className={`${cardBgColor} rounded-2xl p-6 mt-6`}>
-                  {chapter.content.type === 'video' && <VideoContent content={chapter.content} />}
-                  {chapter.content.type === 'quiz' && <QuizContent content={chapter.content} />}
-                  {chapter.content.type === 'survey' && <SurveyContent content={chapter.content} />}
-                  {chapter.content.type === 'activities' && <ActivityContent content={chapter.content} />}
-                  {chapter.content.type === 'games' && <GameContent content={chapter.content} />}
-                  {chapter.content.type === 'text' && <TextContent content={chapter.content} />}
+                  {content.type === 'video' && <VideoContent content={content} />}
+                  {content.type === 'quiz' && <QuizContent content={content} />}
+                  {content.type === 'survey' && <SurveyContent content={content} />}
+                  {content.type === 'activities' && <ActivityContent content={content} />}
+                  {content.type === 'games' && <GameContent content={content} />}
+                  {content.type === 'text' && <TextContent content={content} />}
                 </div>
               </div>
             )
           })}
+
         </div>
       </div>
 

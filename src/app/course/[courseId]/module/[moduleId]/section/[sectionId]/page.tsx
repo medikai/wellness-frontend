@@ -21,10 +21,16 @@ export default async function SectionPage({ params }: SectionPageProps) {
   }
 
   return (
-    <CourseraStyleLayout 
-      chapters={section.chapters}
+    // <CourseraStyleLayout 
+    //   chapters={section.chapters}
+    //   sectionTitle={section.title}
+    //   sectionDescription={section.description}
+    // />
+    <CourseraStyleLayout
+      chapters={section.chapters ?? []}
       sectionTitle={section.title}
       sectionDescription={section.description}
     />
+
   )
 }
