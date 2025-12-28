@@ -14,9 +14,12 @@ interface AppLayoutProps {
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   const [sidebarOpen, setSidebarOpen] = useState(true); // Start with sidebar open
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); // Start with sidebar expanded
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false); // User dropdown state
   const previousCollapsedStateRef = useRef<boolean>(false); // Store previous state using ref
   const previousPathnameRef = useRef<string | null>(null); // Track previous pathname
-  const { user, isLoading } = useAuth();
+  const userDropdownDesktopRef = useRef<HTMLDivElement>(null); // Ref for desktop user dropdown
+  const userDropdownMobileRef = useRef<HTMLDivElement>(null); // Ref for mobile user dropdown
+  const { user, isLoading, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -83,6 +86,32 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
     }
   }, [user, isLoading, isAuthPage, isHomePage, router]);
 
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+      const isOutsideDesktop = userDropdownDesktopRef.current ? !userDropdownDesktopRef.current.contains(target) : true;
+      const isOutsideMobile = userDropdownMobileRef.current ? !userDropdownMobileRef.current.contains(target) : true;
+      
+      if (isOutsideDesktop && isOutsideMobile) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    if (userDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [userDropdownOpen]);
+
+  const handleLogout = async () => {
+    await logout();
+    router.push('/login');
+  };
+
   // Show loading state
   if (isLoading) {
     return (
@@ -147,8 +176,45 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
             
             <div className="flex items-center space-x-2">
               <TextSizeControl variant="header" />
-              <div className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md">
-                <Icon name="user" size="sm" color="white" />
+              <div className="relative" ref={userDropdownMobileRef}>
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+                >
+                  <Icon name="user" size="sm" color="white" />
+                </button>
+
+                {userDropdownOpen && (
+                  <>
+                    {/* Backdrop */}
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setUserDropdownOpen(false)}
+                    />
+                    
+                    {/* Dropdown */}
+                    <div className="absolute right-0 top-full mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-2 overflow-hidden">
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push('/profile');
+                        }}
+                        className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-teal-light/50 transition-colors duration-200 text-neutral-dark"
+                      >
+                        <Icon name="user" size="sm" color="#059669" />
+                        <span className="font-medium">Profile</span>
+                      </button>
+                      
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-red-50 transition-colors duration-200 text-neutral-dark"
+                      >
+                        <Icon name="logOut" size="sm" color="#DC2626" />
+                        <span className="font-medium text-red-600">Logout</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -173,8 +239,45 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
               <TextSizeControl variant="header" />
               
               
-              <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200">
-                <Icon name="user" size="md" color="white" />
+              <div className="relative" ref={userDropdownDesktopRef}>
+                <button
+                  onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                  className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200 cursor-pointer"
+                >
+                  <Icon name="user" size="md" color="white" />
+                </button>
+
+                {userDropdownOpen && (
+                  <>
+                    {/* Backdrop */}
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setUserDropdownOpen(false)}
+                    />
+                    
+                    {/* Dropdown */}
+                    <div className="absolute right-0 top-full mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-2 overflow-hidden">
+                      <button
+                        onClick={() => {
+                          setUserDropdownOpen(false);
+                          router.push('/profile');
+                        }}
+                        className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-teal-light/50 transition-colors duration-200 text-neutral-dark"
+                      >
+                        <Icon name="user" size="sm" color="#059669" />
+                        <span className="font-medium">Profile</span>
+                      </button>
+                      
+                      <button
+                        onClick={handleLogout}
+                        className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-red-50 transition-colors duration-200 text-neutral-dark"
+                      >
+                        <Icon name="logOut" size="sm" color="#DC2626" />
+                        <span className="font-medium text-red-600">Logout</span>
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>

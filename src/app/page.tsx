@@ -124,7 +124,7 @@ export default function Home() {
                 Join live wellness classes, play fun games, and stay active—all from the comfort of your home.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Link href="/register">
+                <Link href="/schedule-demo">
                   <Button variant="hero" size="xl">
                     Join a Demo Class
                     <ArrowRight className="w-5 h-5 ml-2" />
@@ -392,7 +392,7 @@ export default function Home() {
               Join our community and discover a healthier, happier you
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/register">
+              <Link href="/schedule-demo">
                 <Button variant="secondary" size="xl" className="shadow-lg hover:shadow-xl transition-shadow">
                   Book a Demo
                   <ArrowRight className="w-5 h-5 ml-2" />

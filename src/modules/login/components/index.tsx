@@ -8,7 +8,7 @@ const Login = () => {
     <div className="h-screen bg-gradient-to-br from-teal-50 to-blue-50 flex overflow-hidden">
       {/* Left Side - Form */}
       <div className="flex-1 flex items-center justify-center px-4 py-4 md:px-1 md:py-1 md:w-auto w-full">
-        <div className="w-full md:w-3/4 max-w-4xl">
+        <div className="w-full md:w-3/4 max-w-3xl">
           <Logo />
           <LoginForm />
         </div>

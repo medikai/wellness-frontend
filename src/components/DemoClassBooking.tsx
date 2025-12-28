@@ -24,12 +24,24 @@ async function fetchAvailableSlots(from: string, to: string) {
 }
 
 const DemoClassBooking: React.FC = () => {
-  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [currentWeekStart, setCurrentWeekStart] = useState(() => {
+    // Start of current week (Saturday)
+    const today = new Date();
+    const day = today.getDay();
+    // Calculate days to subtract to get to Saturday (0 = Sunday, 6 = Saturday)
+    const daysToSaturday = day === 6 ? 0 : (day === 0 ? 1 : 7 - day);
+    const saturday = new Date(today);
+    saturday.setDate(today.getDate() - daysToSaturday);
+    saturday.setHours(0, 0, 0, 0);
+    return saturday;
+  });
   const [availableSlots, setAvailableSlots] = useState<Record<string, Slot[]>>({});
   const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [selectedSlot, setSelectedSlot] = useState<string | null>(null);
   const [isBookingConfirmed, setIsBookingConfirmed] = useState(false);
   const [currentUser, setCurrentUser] = useState<{ id: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isBooking, setIsBooking] = useState(false);
   const router = useRouter();
 
 
@@ -44,12 +56,15 @@ const DemoClassBooking: React.FC = () => {
       .catch(() => setCurrentUser(null));
   }, []);
 
-  // Fetch available slots for the current month
+  // Fetch available slots for the current week
   useEffect(() => {
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const from = fmt(new Date(year, month, 1));
-    const to = fmt(new Date(year, month + 1, 0));
+    setIsLoading(true);
+    const weekStart = new Date(currentWeekStart);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6); // 7 days (Saturday to Friday)
+    
+    const from = fmt(weekStart);
+    const to = fmt(weekEnd);
 
     fetchAvailableSlots(from, to).then((slots) => {
       const grouped: Record<string, Slot[]> = {};
@@ -61,23 +76,24 @@ const DemoClassBooking: React.FC = () => {
         grouped[dateKey].push(s);
       });
       setAvailableSlots(grouped);
+      setIsLoading(false);
+    }).catch(() => {
+      setIsLoading(false);
     });
-  }, [currentMonth]);
+  }, [currentWeekStart]);
 
-  // Calendar generation
-  const generateCalendarDays = () => {
-    const year = currentMonth.getFullYear();
-    const month = currentMonth.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const days: (Date | null)[] = [];
-    for (let i = 0; i < firstDay.getDay(); i++) days.push(null);
-    for (let d = 1; d <= lastDay.getDate(); d++) days.push(new Date(year, month, d));
+  // Generate week days (Saturday to Friday)
+  const generateWeekDays = () => {
+    const days: Date[] = [];
+    for (let i = 0; i < 7; i++) {
+      const day = new Date(currentWeekStart);
+      day.setDate(currentWeekStart.getDate() + i);
+      days.push(day);
+    }
     return days;
   };
 
-  const calendarDays = generateCalendarDays();
-  const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const weekDays = generateWeekDays();
 
   // Handle interactions
   const handleDateClick = (date: Date) => {
@@ -90,6 +106,7 @@ const DemoClassBooking: React.FC = () => {
   const handleBookDemo = async () => {
     if (!selectedDate || !selectedSlot) return;
 
+    setIsBooking(true);
     try {
       const selected = Object.values(availableSlots)
         .flat()
@@ -114,10 +131,11 @@ const DemoClassBooking: React.FC = () => {
       if (!res.ok || !data.ok) throw new Error(data.error || 'Booking failed');
 
       // Refresh slots after booking
-      const year = currentMonth.getFullYear();
-      const month = currentMonth.getMonth();
-      const from = fmt(new Date(year, month, 1));
-      const to = fmt(new Date(year, month + 1, 0));
+      const weekStart = new Date(currentWeekStart);
+      const weekEnd = new Date(weekStart);
+      weekEnd.setDate(weekStart.getDate() + 6);
+      const from = fmt(weekStart);
+      const to = fmt(weekEnd);
       const refreshed = await fetchAvailableSlots(from, to);
 
       const grouped: Record<string, Slot[]> = {};
@@ -129,10 +147,12 @@ const DemoClassBooking: React.FC = () => {
 
       setAvailableSlots(grouped);
       // setIsBookingConfirmed(false);
-      router.push('/classes');
+      // Redirect to home page after successfully booking a demo
+      router.push('/home');
     } catch (err) {
       console.error(err);
       alert('Booking failed. Try again.');
+      setIsBooking(false);
     }
   };
 
@@ -140,15 +160,6 @@ const DemoClassBooking: React.FC = () => {
 
 
 
-  const navigateMonth = (dir: 'prev' | 'next') => {
-    setCurrentMonth((prev) => {
-      const n = new Date(prev);
-      n.setMonth(prev.getMonth() + (dir === 'prev' ? -1 : 1));
-      return n;
-    });
-    setSelectedDate(null);
-    setSelectedSlot(null);
-  };
 
   // UI rendering
   if (isBookingConfirmed) {
@@ -172,124 +183,175 @@ const DemoClassBooking: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Skip Demo button */}
-      <div className="flex justify-end mb-4">
-        <Button
-          variant="outline"
-          size="sm"
-          type="button"
-          onClick={() => router.push('/dashboard')}
-        >
-          Skip Demo
-        </Button>
-      </div>
-      <div className="text-center">
-        <h2 className="text-3xl font-bold text-neutral-dark mb-2">Join a Demo Class</h2>
-        <p className="text-neutral-medium">
-          Experience our health and wellness classes with a free demo session
-        </p>
-      </div>
+    <div className="min-h-screen bg-blue-50"> 
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 sm:py-8">
 
-      <Card className="p-6">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <Button variant="outline" size="sm" onClick={() => navigateMonth('prev')}>
-            <Icon name="chevron-left" size="sm" className="mr-1" /> Previous
-          </Button>
-          <h3 className="text-xl font-bold text-neutral-dark">{monthName}</h3>
-          <Button variant="outline" size="sm" onClick={() => navigateMonth('next')}>
-            Next <Icon name="chevron-right" size="sm" className="ml-1" />
-          </Button>
+        <Card className="p-4 sm:p-6 bg-white rounded-lg shadow-md">
+        <div className="mb-6 sm:mb-8">
+          <h1 className="text-2xl sm:text-3xl font-bold text-blue-900 text-center mb-2 sm:mb-3">Join a Demo Class</h1>
+          <p className="text-sm sm:text-base text-gray-600 text-center max-w-3xl mx-auto">
+            Experience our health and wellness classes with a free demo session. Select a date and time that works best for you.
+          </p>
         </div>
 
-        {/* Calendar */}
-        <div className="grid grid-cols-7 gap-2 mb-6">
-          {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-            <div key={d} className="text-center text-sm font-semibold py-2 text-neutral-medium">
-              {d}
-            </div>
-          ))}
-          {calendarDays.map((day, i) => {
-            if (!day) return <div key={i} className="h-10" />;
-            const dateKey = fmt(day);
-            const hasSlots = availableSlots[dateKey]?.length > 0;
-            const isSelected = selectedDate === dateKey;
+          {/* Calendar Section */}
+          <div className="mb-4 sm:mb-6">
+            <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-3 sm:mb-4">Select a Date</h3>
+            {isLoading ? (
+              <div className="flex items-center justify-center py-8 sm:py-12">
+                <div className="animate-spin rounded-full h-6 w-6 sm:h-8 sm:w-8 border-b-2 border-blue-600"></div>
+                <span className="ml-3 text-sm sm:text-base text-gray-600">Loading available dates...</span>
+              </div>
+            ) : (
+              <div className="flex gap-1.5 sm:gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+                {weekDays.map((day) => {
+                  const dateKey = fmt(day);
+                  const hasSlots = availableSlots[dateKey]?.length > 0;
+                  const isSelected = selectedDate === dateKey;
+                  const isToday = fmt(new Date()) === dateKey;
+                  const dayAbbr = day.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase();
+                  const dayNumber = day.getDate();
+                  const monthAbbr = day.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
 
-            return (
-              <button
-                key={dateKey}
-                onClick={() => handleDateClick(day)}
-                disabled={!hasSlots}
-                className={`h-10 rounded-lg text-sm font-medium transition-all duration-200 ${isSelected
-                  ? 'bg-teal-primary text-white shadow-md'
-                  : hasSlots
-                    ? 'bg-teal-light text-teal-dark hover:bg-teal-primary/20 hover:shadow-sm'
-                    : 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
-                  }`}
-              >
-                {day.getDate()}
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Slots */}
-        {selectedDate && availableSlots[selectedDate] && (
-          <div className="border-t border-neutral-light pt-6">
-            <h4 className="text-lg font-semibold text-neutral-dark mb-4">
-              Available Slots for{' '}
-              {new Date(selectedDate).toLocaleDateString('en-US', {
-                weekday: 'long',
-                month: 'long',
-                day: 'numeric',
-              })}
-            </h4>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-              {availableSlots[selectedDate].map((slot) => {
-                const isMine = slot.student_id === currentUser?.id;
-                const isBookedByOther = slot.is_booked && !isMine;
-
-                return (
-                  <button
-                    key={slot.id}
-                    onClick={() => handleSlotClick(slot.id)}
-                    disabled={isBookedByOther}
-                    className={`p-3 rounded-lg border-2 text-center transition-all duration-200 ${isBookedByOther
-                      ? 'bg-neutral-light text-neutral-medium cursor-not-allowed opacity-50'
-                      : selectedSlot === slot.id
-                        ? 'border-teal-primary bg-teal-light text-teal-dark shadow-md'
-                        : 'border-neutral-light hover:border-teal-primary hover:bg-teal-light/50 hover:shadow-sm'
+                  return (
+                    <button
+                      key={dateKey}
+                      onClick={() => hasSlots && handleDateClick(day)}
+                      disabled={!hasSlots}
+                      className={`flex flex-col items-center justify-center min-w-[70px] sm:min-w-[85px] px-2 sm:px-3 py-2.5 sm:py-3 rounded-lg transition-all shrink-0 ${
+                        isSelected
+                          ? 'bg-teal-primary text-white shadow-md'
+                          : hasSlots
+                            ? 'bg-gray-100 text-gray-700 border border-gray-300 hover:bg-gray-200'
+                            : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50 border border-gray-200'
                       }`}
-                  >
-                    <div className="font-medium">
-                      {new Date(slot.slot_start).toLocaleTimeString([], {
-                        hour: 'numeric',
-                        minute: '2-digit',
-                      })}
-                    </div>
-                    <div className="text-xs text-neutral-medium">
-                      {isMine
-                        ? '✔ Booked by You'
-                        : isBookedByOther
-                          ? 'Booked by another student'
-                          : `Coach: ${slot.coach_name ?? 'Unknown'}`}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-
-            {selectedSlot && (
-              <div className="mt-6 text-center">
-                <Button variant="primary" size="lg" onClick={handleBookDemo} className="px-8">
-                  Book Demo Class
-                </Button>
+                    >
+                      <span className={`text-[10px] sm:text-xs font-medium mb-0.5 sm:mb-1 ${isSelected ? 'text-white' : 'text-gray-700'}`}>
+                        {dayAbbr}
+                      </span>
+                      <span className={`text-base sm:text-lg font-bold mb-0.5 sm:mb-1 ${isSelected ? 'text-white' : 'text-gray-800'}`}>
+                        {dayNumber}
+                      </span>
+                      <span className={`text-[10px] sm:text-xs ${isSelected ? 'text-white' : 'text-gray-500'}`}>
+                        {monthAbbr}
+                      </span>
+                      {isToday && !isSelected && (
+                        <span className="text-[9px] sm:text-[10px] text-gray-500 mt-0.5">TODAY</span>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
-        )}
-      </Card>
+
+          {/* Slots Section */}
+          {!selectedDate && !isLoading && (
+            <div className="text-center py-6 sm:py-8 border-t border-gray-200">
+              <p className="text-sm sm:text-base text-gray-500">Please select a date to view available time slots</p>
+            </div>
+          )}
+
+          {selectedDate && availableSlots[selectedDate] && (
+            <div className="border-t border-gray-200 pt-4 sm:pt-6">
+              <div className="mb-3 sm:mb-4">
+                <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1 text-center sm:text-left">
+                  Available Time Slots
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 text-center sm:text-left">
+                  {new Date(selectedDate).toLocaleDateString('en-US', {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    year: 'numeric',
+                  })}
+                </p>
+              </div>
+
+              {availableSlots[selectedDate].length === 0 ? (
+                <div className="text-center py-6 sm:py-8 text-gray-500">
+                  <p className="text-sm sm:text-base">No available slots for this date. Please select another date.</p>
+                </div>
+              ) : (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
+                    {availableSlots[selectedDate].map((slot) => {
+                      const isMine = slot.student_id === currentUser?.id;
+                      const isBookedByOther = slot.is_booked && !isMine;
+                      const slotTime = new Date(slot.slot_start);
+                      const slotEnd = new Date(slot.slot_end);
+
+                      return (
+                        <button
+                          key={slot.id}
+                          onClick={() => !isBookedByOther && handleSlotClick(slot.id)}
+                          disabled={isBookedByOther}
+                          className={`p-2.5 sm:p-3 rounded-lg border text-left transition-all w-full ${
+                            isBookedByOther
+                              ? 'bg-gray-100 text-gray-400 cursor-not-allowed opacity-60 border-gray-200'
+                              : selectedSlot === slot.id
+                                ? 'border-red-600 bg-red-50 text-red-700'
+                                : 'border-gray-200 bg-white hover:border-red-400 hover:bg-red-50'
+                          }`}
+                        >
+                          <div className="text-sm sm:text-base font-medium text-gray-800 mb-0.5 sm:mb-1">
+                            {slotTime.toLocaleTimeString([], {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            })}
+                          </div>
+                          <div className="text-xs text-gray-500 mb-1">
+                            {slotEnd.toLocaleTimeString([], {
+                              hour: 'numeric',
+                              minute: '2-digit',
+                            })}
+                          </div>
+                          <div className={`text-xs ${
+                            isMine
+                              ? 'text-green-600'
+                              : isBookedByOther
+                                ? 'text-gray-400'
+                                : 'text-gray-600'
+                          }`}>
+                            {isMine
+                              ? '✓ Your Booking'
+                              : isBookedByOther
+                                ? 'Unavailable'
+                                : slot.coach_name ? `Coach ${slot.coach_name}` : 'Available'}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {selectedSlot && (
+                    <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200">
+                      <div className="text-center">
+                        <Button 
+                          variant="primary" 
+                          size="lg" 
+                          onClick={handleBookDemo} 
+                          className="w-full sm:w-auto px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                          disabled={isBooking}
+                        >
+                          {isBooking ? (
+                            <span className="flex items-center justify-center">
+                              <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white mr-2"></div>
+                              Booking...
+                            </span>
+                          ) : (
+                            'Book Demo Class'
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+        </Card>
+      </div>
     </div>
   );
 };

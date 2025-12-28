@@ -7,6 +7,7 @@ import { Button, Icon } from '@/components/ui';
 import Link from 'next/link';
 import { useAppDispatch } from '@/store/hooks';
 import { setUser } from '@/store/slices/authSlice';
+import { useAuth } from '@/contexts/AuthContext';
 
 
 // interface User {
@@ -21,6 +22,7 @@ import { setUser } from '@/store/slices/authSlice';
 const RegisterForm = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -30,6 +32,8 @@ const RegisterForm = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -170,16 +174,23 @@ const RegisterForm = () => {
         return;
       }
 
-      // Save user so demo booking has user id
-      dispatch(setUser({
+      // Save user to Redux
+      const userData = {
         id: json.profile.id,
         name: json.profile.fullname,
         email: json.profile.email,
         role: json.role,
         isAuthenticated: true
-      }));
+      };
+      
+      dispatch(setUser(userData));
+      
+      // Update AuthContext state
+      login(userData);
 
-      router.push('/schedule-demo');
+      // Use window.location.href to ensure cookies are properly set before navigation
+      // Redirect to schedule-demo page after registration
+      window.location.href = '/schedule-demo';
 
 
 
@@ -269,7 +280,7 @@ const RegisterForm = () => {
           </label>
           <div className="relative">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
@@ -280,9 +291,11 @@ const RegisterForm = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-teal-primary transition-colors duration-200"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              <Icon name="eye" size="sm" />
+              <Icon name={showPassword ? 'eyeOff' : 'eye'} size="sm" />
             </button>
           </div>
           {errors.password && (
@@ -296,7 +309,7 @@ const RegisterForm = () => {
           </label>
           <div className="relative">
             <input
-              type="password"
+              type={showConfirmPassword ? 'text' : 'password'}
               id="confirmPassword"
               name="confirmPassword"
               value={formData.confirmPassword}
@@ -307,9 +320,11 @@ const RegisterForm = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-teal-primary transition-colors duration-200"
+              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
             >
-              <Icon name="eye" size="sm" />
+              <Icon name={showConfirmPassword ? 'eyeOff' : 'eye'} size="sm" />
             </button>
           </div>
           {errors.confirmPassword && (

@@ -14,6 +14,7 @@ const LoginForm = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -116,7 +117,7 @@ const LoginForm = () => {
           </label>
           <div className="relative">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               name="password"
               value={formData.password}
@@ -127,9 +128,11 @@ const LoginForm = () => {
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-teal-primary transition-colors duration-200"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              <Icon name="eye" size="sm" />
+              <Icon name={showPassword ? 'eyeOff' : 'eye'} size="sm" />
             </button>
           </div>
           {errors.password && (

@@ -16,7 +16,7 @@ const ScheduleDemo = () => {
       </div>
 
       {/* Right Side - Health Dashboard Preview */}
-      <HealthPreview />
+      {/* <HealthPreview /> */}
     </div>
   )
 }
