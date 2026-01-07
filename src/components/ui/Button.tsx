@@ -59,7 +59,8 @@ const Button: React.FC<ButtonProps> = ({
     `,
     hero: `
       bg-white text-teal-primary
-      hover:bg-teal-light
+      border-2 border-teal-primary
+      hover:bg-teal-light hover:border-teal-dark
       focus:ring-teal-primary
       shadow-lg hover:shadow-xl
     `,

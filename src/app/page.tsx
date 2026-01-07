@@ -113,8 +113,8 @@ export default function Home() {
         <Navigation />
 
         {/* Hero Section */}
-        <section className="gradient-subtle py-20 px-4">
-          <div className="max-w-7xl mx-auto">
+        <section className="gradient-subtle py-20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center max-w-4xl mx-auto mb-12">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-foreground mb-6">
                 Wellness & Care for the Elderly,{' '}
@@ -131,15 +131,19 @@ export default function Home() {
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button variant="outline" size="xl">
+                  <Button 
+                    variant="outline" 
+                    size="xl"
+                    className="bg-white/90 text-neutral-dark border-neutral-medium hover:bg-neutral-medium hover:text-white hover:border-neutral-medium"
+                  >
                     Try the Platform
                   </Button>
                 </Link>
               </div>
             </div>
 
-            <div className="max-w-5xl mx-auto reveal-on-scroll">
-              <div className="relative rounded-2xl shadow-2xl overflow-hidden">
+            <div className="reveal-on-scroll">
+              <div className="relative rounded-2xl shadow-2xl overflow-hidden mx-5">
                 <Image 
                   src={"/images/hero.jpg"} 
                   alt="Elderly people participating in wellness activities" 
