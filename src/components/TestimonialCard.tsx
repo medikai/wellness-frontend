@@ -17,7 +17,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ name, role, content, 
           <Star
             key={i}
             className={`w-5 h-5 ${
-              i < rating ? 'fill-orange-primary text-orange-primary' : 'text-neutral-light'
+              i < rating ? 'fill-teal-primary text-teal-primary' : 'text-neutral-light'
             }`}
           />
         ))}

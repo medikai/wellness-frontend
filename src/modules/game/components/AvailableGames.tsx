@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 const AvailableGames = () => {
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <Card hover className="p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
@@ -29,8 +29,8 @@ const AvailableGames = () => {
             <h3 className="text-xl font-bold text-neutral-dark">Health Quiz</h3>
             <p className="text-neutral-medium mt-1">Test your health knowledge</p>
           </div>
-          <div className="w-12 h-12 bg-orange-light rounded-lg flex items-center justify-center">
-            <Icon name="heart" size="lg" color="#F58220" />
+          <div className="w-12 h-12 bg-teal-light rounded-lg flex items-center justify-center">
+            <Icon name="heart" size="lg" color="#4CAF9D" />
           </div>
         </div>
         <p className="text-sm text-neutral-medium mb-4">

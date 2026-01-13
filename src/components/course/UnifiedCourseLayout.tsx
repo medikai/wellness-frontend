@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Course,
@@ -8,10 +8,8 @@ import {
   Chapter,
 } from '@/types/course'
 
-// import { Icon, Button } from '@/components/ui'
-import { Icon } from '@/components/ui'
-// import { colors } from '@/design-tokens'
 import CourseraStyleLayout from './CourseraStyleLayout'
+import CourseNavbar from './CourseNavbar'
 
 interface SectionWithChapters extends Section {
   chapters: Chapter[]
@@ -87,6 +85,7 @@ export default function UnifiedCourseLayout({
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [sectionLoading, setSectionLoading] = useState(false)
   const [sectionError, setSectionError] = useState<string | null>(null)
+  const [completedSections, setCompletedSections] = useState<Set<string>>(new Set())
 
   const checkFullscreen = (): boolean => {
     const doc = document as DocumentWithFS
@@ -140,6 +139,45 @@ export default function UnifiedCourseLayout({
     setExpandedModules(newSet)
   }
 
+  // Helper function to get next section
+  const getNextSection = useCallback((currentModuleId: string, currentSectionId: string): { moduleId: string; section: Section } | null => {
+    // Flatten all sections
+    const allSections: Array<{ moduleId: string; section: Section }> = []
+    course.modules.forEach((module) => {
+      module.sections.forEach((section) => {
+        allSections.push({ moduleId: module.id, section })
+      })
+    })
+
+    const currentIndex = allSections.findIndex(
+      (item) => item.moduleId === currentModuleId && item.section.id === currentSectionId
+    )
+
+    if (currentIndex >= 0 && currentIndex < allSections.length - 1) {
+      return allSections[currentIndex + 1]
+    }
+
+    return null
+  }, [course])
+
+  // Handle auto-progression to next section
+  const handleSectionComplete = useCallback(async () => {
+    if (!selectedSection) return
+
+    const nextSection = getNextSection(selectedSection.moduleId, selectedSection.sectionId)
+    
+    if (nextSection) {
+      // Mark current section as completed
+      setCompletedSections(prev => new Set(prev).add(selectedSection.sectionId))
+      
+      // Auto-progress to next section
+      await handleSectionClick(nextSection.moduleId, nextSection.section)
+    } else {
+      // Mark current section as completed (last section)
+      setCompletedSections(prev => new Set(prev).add(selectedSection.sectionId))
+    }
+  }, [selectedSection, getNextSection])
+
   // ----------------------------------------------------------
   // Section click: fetch real chapters from API (Option A)
   // ----------------------------------------------------------
@@ -149,8 +187,12 @@ export default function UnifiedCourseLayout({
     setSelectedSection(null)
 
     try {
-      const res = await fetch(`/api/section/${section.id}/contents`, {
+      // Clean section ID - remove any trailing commas or whitespace
+      const cleanSectionId = section.id.trim().replace(/,$/, '')
+      
+      const res = await fetch(`/api/section/${encodeURIComponent(cleanSectionId)}/contents`, {
         cache: 'no-store',
+        credentials: 'include',
       })
       const json = await res.json()
 
@@ -193,20 +235,32 @@ export default function UnifiedCourseLayout({
   const renderRightPanel = () => {
     if (sectionLoading) {
       return (
-        <div className="h-full flex items-center justify-center bg-background">
-          <p className="text-neutral-medium text-sm">Loading section…</p>
+        <div className="h-full flex items-center justify-center bg-transparent">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-teal-600 mb-4"></div>
+            <p className="text-teal-700 font-medium">Loading section…</p>
+          </div>
         </div>
       )
     }
 
     if (sectionError) {
       return (
-        <div className="h-full flex items-center justify-center bg-background">
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-2 text-neutral-dark">
+        <div className="h-full flex items-center justify-center bg-transparent ">
+          <div className="mt-2 text-center max-w-5xl mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border-2 border-red-200 ">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">⚠️</span>
+            </div>
+            <h3 className="text-xl font-bold mb-2 text-red-700">
               Could not load section
             </h3>
-            <p className="text-xs text-red-500">{sectionError}</p>
+            <p className="text-sm text-red-600 mb-4">{sectionError}</p>
+            <button
+              onClick={() => selectedSection && handleSectionClick(selectedSection.moduleId, selectedSection.section)}
+              className="px-4 py-2 bg-teal-600 text-white rounded-lg hover:bg-teal-700 transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         </div>
       )
@@ -214,13 +268,16 @@ export default function UnifiedCourseLayout({
 
     if (!selectedSection) {
       return (
-        <div className="h-full flex items-center justify-center bg-background">
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-2 text-neutral-dark">
+        <div className="h-full flex items-center justify-center bg-transparent">
+          <div className="text-center max-w-md mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border-2 border-teal-200">
+            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">📚</span>
+            </div>
+            <h3 className="text-xl font-bold mb-2 text-teal-800">
               Select a section to begin
             </h3>
-            <p className="text-neutral-medium text-sm">
-              Choose a section from the left sidebar
+            <p className="text-teal-600 text-sm">
+              Choose a section from the navigation bar above
             </p>
           </div>
         </div>
@@ -233,12 +290,15 @@ export default function UnifiedCourseLayout({
 
     if (!hasChapters) {
       return (
-        <div className="h-full flex items-center justify-center bg-background">
-          <div className="text-center">
-            <h3 className="text-xl font-bold mb-2 text-neutral-dark">
+        <div className="h-full flex items-center justify-center bg-transparent">
+          <div className="text-center max-w-md mx-auto p-6 bg-white/80 backdrop-blur-sm rounded-xl shadow-lg border-2 border-teal-200">
+            <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">⏳</span>
+            </div>
+            <h3 className="text-xl font-bold mb-2 text-teal-800">
               Content coming soon
             </h3>
-            <p className="text-neutral-medium text-sm">
+            <p className="text-teal-600 text-sm">
               This section has no chapters yet.
             </p>
           </div>
@@ -251,78 +311,39 @@ export default function UnifiedCourseLayout({
         chapters={selectedSection.section.chapters}
         sectionTitle={selectedSection.section.title}
         sectionDescription={selectedSection.section.description || ''}
+        courseId={courseId}
         onFullscreenChange={setIsFullscreen}
         onToggleFullscreen={toggleFullscreen}
         isFullscreen={isFullscreen}
+        onSectionComplete={handleSectionComplete}
       />
     )
   }
 
+  // Auto-select first section if none selected
+  useEffect(() => {
+    if (!selectedSection && course.modules.length > 0) {
+      const firstModule = course.modules[0]
+      if (firstModule.sections.length > 0) {
+        handleSectionClick(firstModule.id, firstModule.sections[0])
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSection, course.modules.length])
+
   return (
-    <div ref={containerRef} className="min-h-screen bg-background flex">
-      {/* Left Sidebar */}
-      <div className="w-80 bg-white border-r border-neutral-light/50 shadow-sm">
-        <div className="p-4 border-b bg-gradient-to-br from-teal-primary to-teal-dark text-white">
-          <button
-            onClick={() => router.push('/classes')}
-            className="flex items-center space-x-2 text-sm mb-1"
-          >
-            <Icon name="chevronLeft" size="sm" color="white" />
-            <span>Back</span>
-          </button>
-          <h2 className="font-bold">{course.title}</h2>
-        </div>
+    <div ref={containerRef} className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 flex flex-col">
+      {/* Navbar Navigation */}
+      <CourseNavbar
+        course={course}
+        selectedModuleId={selectedSection?.moduleId}
+        selectedSectionId={selectedSection?.sectionId}
+        onSectionSelect={handleSectionClick}
+        canGoBack={!!selectedSection}
+        onBack={() => router.push('/classes')}
+      />
 
-        <div className="p-2 overflow-y-auto">
-          {course.modules.map((module) => {
-            const isExpanded = expandedModules.has(module.id)
-
-            return (
-              <div key={module.id} className="mb-3 border rounded-xl">
-                <button
-                  onClick={() => toggleModule(module.id)}
-                  className="w-full text-left p-3 flex items-center justify-between"
-                >
-                  <span className="font-semibold">{module.title}</span>
-                  <Icon
-                    name={isExpanded ? 'chevronUp' : 'chevronDown'}
-                    size="sm"
-                  />
-                </button>
-
-                {isExpanded && (
-                  <div className="border-t bg-neutral-light/20">
-                    {module.sections.map((sec) => {
-                      const selected = selectedSection?.sectionId === sec.id
-
-                      return (
-                        <button
-                          key={sec.id}
-                          onClick={() => void handleSectionClick(module.id, sec)}
-                          className={`w-full text-left p-3 block ${
-                            selected
-                              ? 'bg-teal-light/30'
-                              : 'hover:bg-neutral-light/40'
-                          }`}
-                        >
-                          <div className="font-semibold text-sm">
-                            {sec.title}
-                          </div>
-                          <div className="text-xs text-neutral-medium line-clamp-1">
-                            {sec.description}
-                          </div>
-                        </button>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Right Content Panel */}
+      {/* Main Content Panel */}
       <div className="flex-1 overflow-hidden">{renderRightPanel()}</div>
     </div>
   )

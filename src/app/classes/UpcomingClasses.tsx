@@ -47,24 +47,31 @@ export default function UpcomingClasses() {
 
     if (loading)
         return (
-            <section className="mt-6">
-                <h2 className="text-xl font-semibold text-[#2C4A52]">Upcoming Classes</h2>
-                <div className="mt-3 text-[#6B7280]">Loading…</div>
+            <section className="mt-8">
+                <h2 className="text-2xl font-semibold text-[#2C4A52] mb-8">Upcoming Classes</h2>
+                <div className="text-[#6B7280]">Loading…</div>
             </section>
         );
 
     if (items.length === 0)
         return (
-            <section className="mt-6">
-                <h2 className="text-xl font-semibold text-[#2C4A52]">Upcoming Classes</h2>
-                <div className="mt-3 text-[#6B7280]">No upcoming classes.</div>
+            <section className="mt-8">
+                <h2 className="text-2xl font-semibold text-[#2C4A52] mb-8">Upcoming Classes</h2>
+                <div className="text-[#6B7280]">No upcoming classes.</div>
             </section>
         );
 
+    // Create blurred placeholder boxes for upcoming/locked content
+    const placeholderCount = Math.max(0, 3 - items.length);
+    const placeholderItems = Array.from({ length: placeholderCount }, (_, i) => ({
+        id: `placeholder-${i}`,
+        isPlaceholder: true,
+    }));
+
     return (
-        <section className="mt-6">
-            <h2 className="text-xl font-semibold text-[#2C4A52]">Upcoming Classes</h2>
-            <ul className="mt-4 grid gap-4 md:grid-cols-2">
+        <section className="mt-8">
+            <h2 className="text-2xl font-semibold text-[#2C4A52] mb-8">Upcoming Classes</h2>
+            <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {items.map((lesson) => {
                     const start = new Date(lesson.starts_at);
                     const when = start.toLocaleString(undefined, {
@@ -93,31 +100,31 @@ export default function UpcomingClasses() {
                         canJoin && (ALLOW_EARLY_JOIN || diffMinutes <= JOIN_BEFORE_MINUTES);
 
                     return (
-                        <li key={lesson.id} className="rounded-lg border border-gray-200 p-4">
-                            <div className="text-sm text-[#6B7280]">{when}</div>
+                        <li key={lesson.id} className="rounded-lg border border-gray-200 bg-white p-6 shadow-md">
+                            <div className="text-sm text-[#6B7280] mb-3">{when}</div>
 
-                            <div className="mt-1 text-base font-medium">
+                            <div className="mt-2 mb-2 text-lg font-semibold text-[#2C4A52]">
                                 {lesson.title ?? 'Demo class'}
                             </div>
 
-                            <div className="text-sm text-[#4B5563] mt-1">
+                            <div className="text-sm text-[#4B5563] mt-2 mb-4">
                                 {isCoach
                                     ? `With: ${lesson.student_name ?? 'Student'}`
                                     : `Coach: ${lesson.coach_name ?? 'Coach'}`}
                             </div>
 
-                            <div className="mt-3 flex items-center gap-3">
+                            <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
                                 {canJoinNow ? (
                                     <Link
                                         href={href}
-                                        className="rounded bg-[#22C7A3] px-3 py-2 text-sm text-white hover:opacity-90"
+                                        className="rounded bg-[#22C7A3] px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
                                     >
                                         {isCoach ? 'Start Class' : 'Join Class'}
                                     </Link>
                                 ) : (
                                     <button
                                         disabled
-                                        className="cursor-not-allowed rounded bg-gray-300 px-3 py-2 text-sm text-white"
+                                        className="cursor-not-allowed rounded bg-gray-300 px-4 py-2 text-sm text-white"
                                     >
                                         {canJoin ? 'Join Disabled' : 'Meeting Pending'}
                                     </button>
@@ -130,6 +137,53 @@ export default function UpcomingClasses() {
                         </li>
                     );
                 })}
+                
+                {/* Blurred/Subdued placeholder boxes for upcoming/locked content */}
+                {placeholderItems.map((placeholder) => (
+                    <li 
+                        key={placeholder.id} 
+                        className="rounded-lg border border-gray-200 bg-white p-6 shadow-md opacity-40 blur-[1px] pointer-events-none relative overflow-hidden"
+                    >
+                        {/* Lock icon overlay */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-gray-50/80">
+                            <div className="text-center">
+                                <svg 
+                                    className="w-8 h-8 text-gray-400 mx-auto mb-2" 
+                                    fill="none" 
+                                    stroke="currentColor" 
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        strokeWidth={2} 
+                                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" 
+                                    />
+                                </svg>
+                                <p className="text-xs text-gray-500 font-medium">Coming Soon</p>
+                            </div>
+                        </div>
+                        
+                        <div className="text-sm text-[#6B7280] mb-3">Upcoming session</div>
+                        <div className="mt-2 mb-2 text-lg font-semibold text-[#2C4A52]">
+                            New Class Available Soon
+                        </div>
+                        <div className="text-sm text-[#4B5563] mt-2 mb-4">
+                            Additional wellness classes coming your way
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between gap-3">
+                            <button
+                                disabled
+                                className="rounded bg-gray-300 px-4 py-2 text-sm text-white cursor-not-allowed"
+                            >
+                                Locked
+                            </button>
+                            <span className="text-xs text-[#6B7280]">
+                                Available soon
+                            </span>
+                        </div>
+                    </li>
+                ))}
             </ul>
         </section>
     );

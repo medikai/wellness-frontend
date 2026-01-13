@@ -12,7 +12,7 @@ interface FeatureCardProps {
 const FeatureCard: React.FC<FeatureCardProps> = ({ icon: Icon, title, description, color }) => {
   const colorClasses = {
     primary: 'bg-teal-primary/10 text-teal-primary',
-    secondary: 'bg-orange-primary/10 text-orange-primary',
+    secondary: 'bg-teal-light text-teal-dark',
   };
 
   return (

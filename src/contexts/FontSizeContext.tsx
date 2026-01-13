@@ -11,9 +11,9 @@ type FontSizeContextValue = {
   decrease: () => void;
 };
 
-const DEFAULT_FONT_SIZE_PX = 16;
-const MIN_FONT_SIZE_PX = 12;
-const MAX_FONT_SIZE_PX = 24;
+const DEFAULT_FONT_SIZE_PX = 20;
+const MIN_FONT_SIZE_PX = 16;
+const MAX_FONT_SIZE_PX = 32;
 const STORAGE_KEY = "app_font_size_px";
 
 const FontSizeContext = createContext<FontSizeContextValue | undefined>(undefined);

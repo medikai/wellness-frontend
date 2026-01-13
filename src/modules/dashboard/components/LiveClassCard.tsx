@@ -14,7 +14,7 @@ const LiveClassCard = () => {
             Today at 10:00 AM
           </p>
         </div>
-        <Button variant="secondary" size="lg">
+        <Button variant="primary" size="lg">
           Start Live Class →
         </Button>
       </div>

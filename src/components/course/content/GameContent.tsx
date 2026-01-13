@@ -7,9 +7,10 @@ import { createMemoryMatchTest } from '@/utils/cognitive-test-helpers'
 
 interface GameContentProps {
   content: GameContentType
+  onComplete?: () => void
 }
 
-export default function GameContent({ content }: GameContentProps) {
+export default function GameContent({ content, onComplete }: GameContentProps) {
   // Convert game to unified cognitive test format
   let cognitiveTestConfig
   
@@ -41,6 +42,12 @@ export default function GameContent({ content }: GameContentProps) {
 
   const handleComplete = (result: { testId: string; responses: unknown[]; score?: number; accuracy?: number }) => {
     console.log('Game completed:', result)
+    // Auto-progress after game completion
+    if (onComplete) {
+      setTimeout(() => {
+        onComplete()
+      }, 500)
+    }
   }
 
   return (

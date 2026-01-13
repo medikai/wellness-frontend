@@ -6,14 +6,21 @@ import { Button } from '@/components/ui'
 
 interface ActivityContentProps {
   content: ActivityContentType
+  onComplete?: () => void
 }
 
-export default function ActivityContent({ content }: ActivityContentProps) {
+export default function ActivityContent({ content, onComplete }: ActivityContentProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null)
 
   const handleSubmit = () => {
     alert(`${content.title} completed!`)
     setSelectedAnswer(null)
+    // Auto-progress after activity completion
+    if (onComplete) {
+      setTimeout(() => {
+        onComplete()
+      }, 500)
+    }
   }
 
   if (content.activity_type === 'hydration') {

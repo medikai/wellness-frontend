@@ -20,7 +20,7 @@ const SelfPacedCard = () => {
             Start your self-paced class today
           </p>
         </div>
-        <Button variant="secondary" size="lg" onClick={handleStartClass}>
+        <Button variant="primary" size="lg" onClick={handleStartClass}>
           Start Class →
         </Button>
       </div>

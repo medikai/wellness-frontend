@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import {
   Chapter,
   RawChapterContent,
@@ -23,6 +23,7 @@ import ActivityContent from './content/ActivityContent'
 import { Button, Icon } from '@/components/ui'
 import { colors } from '@/design-tokens'
 import FeedbackModal from '@/components/FeedbackModal'
+import { markContentComplete } from '@/utils/courseCompletion'
 
 interface ApiContentResponse {
   content_type?: string
@@ -272,18 +273,22 @@ interface CourseraStyleLayoutProps {
   chapters: Chapter[]
   sectionTitle: string
   sectionDescription: string
+  courseId?: string
   onFullscreenChange?: (isFullscreen: boolean) => void
   onToggleFullscreen?: () => void
   isFullscreen?: boolean
+  onSectionComplete?: () => void
 }
 
 export default function CourseraStyleLayout({
   chapters,
   sectionTitle,
   sectionDescription,
+  courseId,
   onFullscreenChange,
   onToggleFullscreen,
   isFullscreen: externalIsFullscreen,
+  onSectionComplete,
 }: CourseraStyleLayoutProps) {
   const [activeChapterId, setActiveChapterId] = useState<string>(
     chapters[0]?.id || '',
@@ -437,6 +442,49 @@ export default function CourseraStyleLayout({
     }
   }, [activeContentId])
 
+  // Handle content completion - mark as complete and auto-progress
+  const handleContentComplete = useCallback(async () => {
+    if (chapters.length === 0) return
+
+    // Mark current content as complete via API
+    if (activeContentId && courseId) {
+      try {
+        await markContentComplete(activeContentId, courseId)
+      } catch (error) {
+        console.error('Error marking content complete:', error)
+        // Continue with progression even if API call fails
+      }
+    }
+
+    const isLastChapter = currentChapterIndex === chapters.length - 1
+    const isLastContent = chapterContents.length > 0 && 
+      activeContentId === chapterContents[chapterContents.length - 1]?.id
+
+    if (isLastChapter && isLastContent) {
+      // Last chapter and last content - complete section and auto-progress
+      if (onSectionComplete) {
+        onSectionComplete()
+      }
+    } else if (isLastChapter) {
+      // Last chapter but more content items - progress through content
+      const currentContentIndex = chapterContents.findIndex(
+        (c) => c.id === activeContentId
+      )
+      if (currentContentIndex >= 0 && currentContentIndex < chapterContents.length - 1) {
+        const nextContentId = chapterContents[currentContentIndex + 1].id
+        setActiveContentId(nextContentId)
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+      } else if (onSectionComplete) {
+        // No more content items - complete section
+        onSectionComplete()
+      }
+    } else {
+      // Not last chapter - progress to next chapter
+      setActiveChapterId(chapters[currentChapterIndex + 1].id)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }, [chapters, currentChapterIndex, chapterContents, activeContentId, courseId, onSectionComplete])
+
   const renderContent = () => {
     if (chapters.length === 0) {
       return (
@@ -472,20 +520,18 @@ export default function CourseraStyleLayout({
 
     switch (activeContent.type) {
       case 'video':
-        return <VideoContent content={activeContent} />
+        return <VideoContent content={activeContent} onComplete={handleContentComplete} />
       case 'survey':
-        return <SurveyContent content={activeContent} />
+        return <SurveyContent content={activeContent} onComplete={handleContentComplete} />
       case 'quiz':
-        return <QuizContent content={activeContent} />
+        return <QuizContent content={activeContent} onComplete={handleContentComplete} />
       case 'games':
-      // case 'game':
-        return <GameContent content={activeContent} />
+        return <GameContent content={activeContent} onComplete={handleContentComplete} />
       case 'activities':
-      // case 'activity':
-        return <ActivityContent content={activeContent} />
+        return <ActivityContent content={activeContent} onComplete={handleContentComplete} />
       case 'text':
       default:
-        return <TextContent content={activeContent} />
+        return <TextContent content={activeContent} onComplete={handleContentComplete} />
     }
   }
 
@@ -563,10 +609,10 @@ export default function CourseraStyleLayout({
   return (
     <div
       ref={containerRef}
-      className="min-h-screen bg-background flex flex-col h-full"
+      className="min-h-screen bg-gradient-to-br from-teal-50 via-white to-blue-50 flex flex-col h-full"
     >
       {/* Header */}
-      <div className="bg-white shadow-sm border-b border-neutral-light/50 sticky top-0 z-30">
+      <div className="bg-white shadow-lg border-2 border-neutral-light/80 border-b-4 border-b-neutral-light sticky top-0 z-30">
         <div className="max-w-full mx-auto px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
@@ -611,7 +657,7 @@ export default function CourseraStyleLayout({
 
           {/* Chapter Tabs */}
           {!isFullscreen && chapters.length > 0 && (
-            <div className="border-t border-neutral-light/50 pt-4">
+            <div className="border-t-2 border-neutral-light/70 pt-4">
               <div className="flex items-center justify-between gap-4">
                 <div className="flex items-center space-x-2 flex-1 overflow-x-auto pb-2 scrollbar-hide">
                   {chapters.map((chapter, index) => {
@@ -626,9 +672,9 @@ export default function CourseraStyleLayout({
                           setActiveChapterId(chapter.id)
                           window.scrollTo({ top: 0, behavior: 'smooth' })
                         }}
-                        className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap flex-shrink-0 ${isActive
-                          ? 'bg-gradient-to-r from-teal-primary to-teal-dark text-white shadow-md'
-                          : 'bg-teal-light/30 hover:bg-teal-light/50 text-neutral-dark border-2 border-teal-light'
+                        className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-200 whitespace-nowrap flex-shrink-0 border-2 ${isActive
+                          ? 'bg-gradient-to-r from-teal-primary to-teal-dark text-white shadow-lg border-teal-700'
+                          : 'bg-white hover:bg-teal-light/30 text-neutral-dark border-teal-200 hover:border-teal-300'
                           }`}
                       >
                         <div
@@ -692,7 +738,7 @@ export default function CourseraStyleLayout({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 overflow-y-auto bg-background">
+      <div className="flex-1 overflow-y-auto bg-transparent">
         <div
           className={
             isFullscreen
@@ -700,7 +746,7 @@ export default function CourseraStyleLayout({
               : 'max-w-5xl mx-auto p-6 lg:p-8'
           }
         >
-          <div className="bg-white rounded-2xl shadow-md p-6 lg:p-8 border border-neutral-light/50">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg p-6 lg:p-8 border-2 border-teal-200/50">
             {/* Content tabs (Coursera style) */}
             {!isStaticChapter && chapterContents.length > 0 && (
               <div className="mb-4 border-b border-neutral-light/60 pb-2 flex flex-wrap gap-2">
@@ -750,23 +796,47 @@ export default function CourseraStyleLayout({
             </Button>
 
             <Button
-              onClick={() => {
+              onClick={async () => {
                 if (
                   chapters.length > 0 &&
                   currentChapterIndex < chapters.length - 1
                 ) {
+                  // Mark current content as complete before moving to next chapter
+                  if (activeContentId && courseId) {
+                    try {
+                      await markContentComplete(activeContentId, courseId)
+                    } catch (error) {
+                      console.error('Error marking content complete:', error)
+                    }
+                  }
                   setActiveChapterId(chapters[currentChapterIndex + 1].id)
                   window.scrollTo({ top: 0, behavior: 'smooth' })
+                } else if (
+                  chapters.length > 0 &&
+                  currentChapterIndex === chapters.length - 1 &&
+                  onSectionComplete
+                ) {
+                  // Mark current content as complete before completing section
+                  if (activeContentId && courseId) {
+                    try {
+                      await markContentComplete(activeContentId, courseId)
+                    } catch (error) {
+                      console.error('Error marking content complete:', error)
+                    }
+                  }
+                  // Auto-progress to next section when last chapter is completed
+                  onSectionComplete()
                 }
               }}
-              disabled={
-                chapters.length === 0 ||
-                currentChapterIndex === chapters.length - 1
-              }
+              disabled={chapters.length === 0}
               variant="primary"
               className="flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <span>Next Chapter</span>
+              <span>
+                {currentChapterIndex === chapters.length - 1
+                  ? 'Complete Section'
+                  : 'Next Chapter'}
+              </span>
               <Icon name="chevronRight" size="sm" color="white" />
             </Button>
           </div>

@@ -7,10 +7,10 @@ const WelcomeSection = () => {
   const { user } = useAuth();
 
   return (
-    <div>
-      <h2 className="text-3xl font-bold text-neutral-dark mb-2">
+    <div className="mb-6">
+      <h1 className="text-3xl font-bold text-neutral-dark mb-2">
         {`Good morning, ${user?.name ?? 'friend'} 👋`}
-      </h2>
+      </h1>
       <p className="text-neutral-medium">
         Ready to start your health journey today?
       </p>

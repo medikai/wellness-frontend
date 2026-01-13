@@ -7,15 +7,21 @@ import { quizToCognitiveTest } from '@/utils/cognitive-test-helpers'
 
 interface QuizContentProps {
   content: QuizContentType
+  onComplete?: () => void
 }
 
-export default function QuizContent({ content }: QuizContentProps) {
+export default function QuizContent({ content, onComplete }: QuizContentProps) {
   // Convert quiz to unified cognitive test format
   const cognitiveTestConfig = quizToCognitiveTest(content, 'single-tap')
 
   const handleComplete = (result: { testId: string; responses: unknown[]; score?: number; accuracy?: number }) => {
     console.log('Quiz completed:', result)
-    // You can add additional handling here (e.g., save to backend)
+    // Auto-progress after quiz completion
+    if (onComplete) {
+      setTimeout(() => {
+        onComplete()
+      }, 500)
+    }
   }
 
   return (

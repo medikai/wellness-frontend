@@ -6,15 +6,22 @@ import { Button } from '@/components/ui'
 
 interface SurveyContentProps {
   content: SurveyContentType
+  onComplete?: () => void
 }
 
-export default function SurveyContent({ content }: SurveyContentProps) {
+export default function SurveyContent({ content, onComplete }: SurveyContentProps) {
   const [answers, setAnswers] = useState<Record<string, string | string[]>>({})
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     alert('Survey submitted successfully!')
     console.log('Survey answers:', answers)
+    // Auto-progress after survey submission
+    if (onComplete) {
+      setTimeout(() => {
+        onComplete()
+      }, 500)
+    }
   }
 
   const handleChange = (questionId: string, value: string | string[]) => {

@@ -113,9 +113,9 @@ export default function Home() {
         <Navigation />
 
         {/* Hero Section */}
-        <section className="gradient-subtle py-20">
+        <section className="gradient-subtle py-12 lg:py-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-4xl mx-auto mb-12">
+            <div className="text-center max-w-4xl mx-auto mb-8">
               <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-foreground mb-6">
                 Wellness & Care for the Elderly,{' '}
                 <span className="text-teal-primary">Made Simple</span>
@@ -143,7 +143,7 @@ export default function Home() {
             </div>
 
             <div className="reveal-on-scroll">
-              <div className="relative rounded-2xl shadow-2xl overflow-hidden mx-5">
+              <div className="relative rounded-lg shadow-2xl overflow-hidden mx-5">
                 <Image 
                   src={"/images/hero.jpg"} 
                   alt="Elderly people participating in wellness activities" 
@@ -161,9 +161,9 @@ export default function Home() {
         </section>
 
         {/* Statistics Section */}
-        <section className="py-16 px-4 bg-white">
+        <section className="py-12 px-4 bg-white">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 reveal-on-scroll">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 reveal-on-scroll">
               <StatCard number="10K+" label="Active Members" />
               <StatCard number="500+" label="Live Classes" />
               <StatCard number="98%" label="Satisfaction Rate" />
@@ -173,9 +173,9 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-20 px-4 bg-background">
+        <section id="features" className="py-12 lg:py-16 px-4 bg-background">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16 reveal-on-scroll">
+            <div className="text-center mb-10 reveal-on-scroll">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 Everything You Need to Stay Active & Healthy
               </h2>
@@ -184,7 +184,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
               <div className="reveal-on-scroll">
                 <FeatureCard
                   icon={Heart}
@@ -222,9 +222,9 @@ export default function Home() {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 px-4 gradient-subtle">
+        <section className="py-12 lg:py-16 px-4 gradient-subtle">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16 reveal-on-scroll">
+            <div className="text-center mb-10 reveal-on-scroll">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 Loved by Thousands
               </h2>
@@ -232,7 +232,7 @@ export default function Home() {
                 See what our community has to say
               </p>
             </div>
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-3 gap-6">
               <div className="reveal-on-scroll">
                 <TestimonialCard
                   name="Margaret Thompson"
@@ -262,9 +262,9 @@ export default function Home() {
         </section>
 
         {/* How It Works Section */}
-        <section id="how-it-works" className="py-20 px-4 gradient-subtle">
+        <section id="how-it-works" className="py-12 lg:py-16 px-4 gradient-subtle">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16 reveal-on-scroll">
+            <div className="text-center mb-10 reveal-on-scroll">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">How It Works</h2>
               <p className="text-xl text-muted-foreground">
                 Getting started is easy—just four simple steps
@@ -305,9 +305,9 @@ export default function Home() {
         </section>
 
         {/* Why Choose Us Section */}
-        <section id="why-us" className="py-20 px-4 bg-background">
+        <section id="why-us" className="py-12 lg:py-16 px-4 bg-background">
           <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-16 reveal-on-scroll">
+            <div className="text-center mb-10 reveal-on-scroll">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 Why Choose Us
               </h2>
@@ -316,7 +316,7 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="text-center p-6 reveal-on-scroll">
                 <div className="inline-flex p-4 rounded-full bg-teal-light mb-4">
                   <CheckCircle2 className="w-8 h-8 text-teal-primary" />
@@ -350,9 +350,9 @@ export default function Home() {
         </section>
 
         {/* FAQ Section */}
-        <section className="py-20 px-4 bg-background">
+        <section className="py-12 lg:py-16 px-4 bg-background">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16 reveal-on-scroll">
+            <div className="text-center mb-10 reveal-on-scroll">
               <h2 className="text-4xl lg:text-5xl font-bold mb-4">
                 Frequently Asked Questions
               </h2>
@@ -387,7 +387,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-4 gradient-hero">
+        <section className="py-12 lg:py-16 px-4 gradient-hero">
           <div className="max-w-4xl mx-auto text-center text-white reveal-on-scroll">
             <h2 className="text-4xl lg:text-5xl font-bold mb-6">
               Ready to Start Your Wellness Journey?
@@ -472,22 +472,17 @@ export default function Home() {
 
   // Show dashboard for authenticated users
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-neutral-dark mb-2">Welcome to Waylness</h1>
-        <p className="text-neutral-medium">Your personal health companion for a better tomorrow</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="mb-6">
+        <h1 className="text-3xl font-bold text-neutral-dark mb-2">
+          {`Good morning, ${user?.name ?? 'friend'} 👋`}
+        </h1>
+        <p className="text-neutral-medium">
+          Ready to start your health journey today?
+        </p>
       </div>
 
-      <div className="space-y-6">
-        {/* Welcome Section */}
-        <div>
-          <h2 className="text-3xl font-bold text-neutral-dark mb-2">
-            {`Good morning, ${user?.name ?? 'friend'} 👋`}
-          </h2>
-          <p className="text-neutral-medium">
-            Ready to start your health journey today?
-          </p>
-        </div>
+      <div className="space-y-5">
 
         {/* Live Class Card */}
         {hasUpcomingClasses && (
