@@ -11,11 +11,11 @@ interface QuizFormProps {
   isEditing?: boolean;
 }
 
-const QuizForm: React.FC<QuizFormProps> = ({ 
-  onSubmit, 
-  onCancel, 
+const QuizForm: React.FC<QuizFormProps> = ({
+  onSubmit,
+  onCancel,
   initialData,
-  isEditing = false 
+  isEditing = false
 }) => {
   const [formData, setFormData] = useState({
     title: initialData?.title || '',
@@ -59,7 +59,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit({
         ...formData,
@@ -81,7 +81,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
       <h2 className="text-xl font-bold text-neutral-dark mb-6">
         {isEditing ? 'Edit Quiz' : 'Create New Quiz'}
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div>
@@ -92,9 +92,8 @@ const QuizForm: React.FC<QuizFormProps> = ({
             type="text"
             value={formData.title}
             onChange={(e) => handleInputChange('title', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-              errors.title ? 'border-red-500' : 'border-neutral-light'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.title ? 'border-red-500' : 'border-neutral-light'
+              }`}
             placeholder="Enter quiz title"
           />
           {errors.title && <p className="text-red-500 text-sm mt-1">{errors.title}</p>}
@@ -108,9 +107,8 @@ const QuizForm: React.FC<QuizFormProps> = ({
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
             rows={3}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-              errors.description ? 'border-red-500' : 'border-neutral-light'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.description ? 'border-red-500' : 'border-neutral-light'
+              }`}
             placeholder="Describe what this quiz covers"
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -124,9 +122,8 @@ const QuizForm: React.FC<QuizFormProps> = ({
             type="text"
             value={formData.createdBy}
             onChange={(e) => handleInputChange('createdBy', e.target.value)}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-              errors.createdBy ? 'border-red-500' : 'border-neutral-light'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.createdBy ? 'border-red-500' : 'border-neutral-light'
+              }`}
             placeholder="Enter creator name"
           />
           {errors.createdBy && <p className="text-red-500 text-sm mt-1">{errors.createdBy}</p>}
@@ -194,9 +191,8 @@ const QuizForm: React.FC<QuizFormProps> = ({
               max="180"
               value={formData.timeLimit || ''}
               onChange={(e) => handleInputChange('timeLimit', e.target.value ? parseInt(e.target.value) : undefined)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.timeLimit ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.timeLimit ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="No time limit"
             />
             {errors.timeLimit && <p className="text-red-500 text-sm mt-1">{errors.timeLimit}</p>}
@@ -212,9 +208,8 @@ const QuizForm: React.FC<QuizFormProps> = ({
               max="10"
               value={formData.maxAttempts || ''}
               onChange={(e) => handleInputChange('maxAttempts', e.target.value ? parseInt(e.target.value) : undefined)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.maxAttempts ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.maxAttempts ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="Unlimited attempts"
             />
             {errors.maxAttempts && <p className="text-red-500 text-sm mt-1">{errors.maxAttempts}</p>}
@@ -232,7 +227,7 @@ const QuizForm: React.FC<QuizFormProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
+            variant="default"
           >
             {isEditing ? 'Update Quiz' : 'Create Quiz'}
           </Button>

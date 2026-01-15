@@ -11,11 +11,11 @@ interface CreateClassFormProps {
   isEditing?: boolean;
 }
 
-const CreateClassForm: React.FC<CreateClassFormProps> = ({ 
-  onSubmit, 
-  onCancel, 
+const CreateClassForm: React.FC<CreateClassFormProps> = ({
+  onSubmit,
+  onCancel,
   initialData,
-  isEditing = false 
+  isEditing = false
 }) => {
   const [formData, setFormData] = useState({
     name: initialData?.name || '',
@@ -92,7 +92,7 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (validateForm()) {
       onSubmit(formData);
     }
@@ -111,7 +111,7 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
       <h2 className="text-xl font-bold text-neutral-dark mb-6">
         {isEditing ? 'Edit Class' : 'Create New Class'}
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Basic Information */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -123,9 +123,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="text"
               value={formData.name}
               onChange={(e) => handleInputChange('name', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.name ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.name ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="Enter class name"
             />
             {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
@@ -139,9 +138,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="text"
               value={formData.instructor}
               onChange={(e) => handleInputChange('instructor', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.instructor ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.instructor ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="Enter instructor name"
             />
             {errors.instructor && <p className="text-red-500 text-sm mt-1">{errors.instructor}</p>}
@@ -156,9 +154,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
             value={formData.description}
             onChange={(e) => handleInputChange('description', e.target.value)}
             rows={3}
-            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-              errors.description ? 'border-red-500' : 'border-neutral-light'
-            }`}
+            className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.description ? 'border-red-500' : 'border-neutral-light'
+              }`}
             placeholder="Describe the class content and benefits"
           />
           {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
@@ -174,9 +171,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="date"
               value={formData.date}
               onChange={(e) => handleInputChange('date', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.date ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.date ? 'border-red-500' : 'border-neutral-light'
+                }`}
             />
             {errors.date && <p className="text-red-500 text-sm mt-1">{errors.date}</p>}
           </div>
@@ -189,9 +185,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="time"
               value={formData.time}
               onChange={(e) => handleInputChange('time', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.time ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.time ? 'border-red-500' : 'border-neutral-light'
+                }`}
             />
             {errors.time && <p className="text-red-500 text-sm mt-1">{errors.time}</p>}
           </div>
@@ -206,9 +201,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               max="180"
               value={formData.duration}
               onChange={(e) => handleInputChange('duration', parseInt(e.target.value) || 0)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.duration ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.duration ? 'border-red-500' : 'border-neutral-light'
+                }`}
             />
             {errors.duration && <p className="text-red-500 text-sm mt-1">{errors.duration}</p>}
           </div>
@@ -258,9 +252,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               max="100"
               value={formData.maxParticipants}
               onChange={(e) => handleInputChange('maxParticipants', parseInt(e.target.value) || 0)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.maxParticipants ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.maxParticipants ? 'border-red-500' : 'border-neutral-light'
+                }`}
             />
             {errors.maxParticipants && <p className="text-red-500 text-sm mt-1">{errors.maxParticipants}</p>}
           </div>
@@ -304,9 +297,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="url"
               value={formData.meetingLink}
               onChange={(e) => handleInputChange('meetingLink', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.meetingLink ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.meetingLink ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="https://zoom.us/j/..."
             />
             {errors.meetingLink && <p className="text-red-500 text-sm mt-1">{errors.meetingLink}</p>}
@@ -322,9 +314,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               type="text"
               value={formData.address}
               onChange={(e) => handleInputChange('address', e.target.value)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.address ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.address ? 'border-red-500' : 'border-neutral-light'
+                }`}
               placeholder="Enter full address"
             />
             {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
@@ -343,9 +334,8 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
               step="0.01"
               value={formData.price}
               onChange={(e) => handleInputChange('price', parseFloat(e.target.value) || 0)}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${
-                errors.price ? 'border-red-500' : 'border-neutral-light'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-primary ${errors.price ? 'border-red-500' : 'border-neutral-light'
+                }`}
             />
             {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
           </div>
@@ -377,7 +367,7 @@ const CreateClassForm: React.FC<CreateClassFormProps> = ({
           </Button>
           <Button
             type="submit"
-            variant="primary"
+            variant="default"
           >
             {isEditing ? 'Update Class' : 'Create Class'}
           </Button>

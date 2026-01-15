@@ -201,6 +201,7 @@ export type NormalizedContent =
 // shape from `outline.course.modules[].sections[].chapters[].content[]`
 export interface RawChapterContent {
   id: string
+  chapter_id?: string
   content_type: string
   content_data: DynamicContentData
 }
@@ -248,4 +249,48 @@ export interface Course {
   instructor: string
   category: string
   modules: Module[]
+}
+
+export interface ApiOutlineResponse {
+  ok: boolean
+  outline: {
+    course: Course & {
+      cost: number
+      logo: string
+      slug: string
+      type: string
+      status: string
+      version: string
+      currency: string
+      group_id: string
+      metadata: any
+      created_at: string
+      updated_at: string
+      is_template: boolean
+      banner_image: string | null
+      is_published: boolean
+    }
+    modules: Module[]
+  }
+}
+
+export interface ApiContentResponse {
+  ok: boolean
+  content: RawChapterContent
+}
+
+export interface ApiProgressResponse {
+  ok: boolean
+  progress: {
+    percent: number
+    course_id: string
+    profile_id: string
+    total_items: number
+    completed_items: number
+  }
+}
+
+export interface ApiNextResponse {
+  ok: boolean
+  next: RawChapterContent
 }

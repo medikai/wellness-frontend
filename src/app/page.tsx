@@ -113,28 +113,32 @@ export default function Home() {
         <Navigation />
 
         {/* Hero Section */}
-        <section className="gradient-subtle py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-4xl mx-auto mb-12">
-              <h1 className="text-5xl lg:text-6xl font-bold leading-tight text-foreground mb-6">
+        <section className="gradient-subtle py-12 lg:py-16">
+          <div className="max-w-[90rem] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-5xl mx-auto mb-12">
+              <h1 className="text-5xl lg:text-7xl font-bold leading-tight text-foreground mb-6">
                 Wellness & Care for the Elderly,{' '}
                 <span className="text-teal-primary">Made Simple</span>
               </h1>
-              <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+              <p className="text-2xl text-muted-foreground leading-relaxed mb-10 max-w-3xl mx-auto">
                 Join live wellness classes, play fun games, and stay active—all from the comfort of your home.
               </p>
-              <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex flex-wrap justify-center gap-6">
                 <Link href="/schedule-demo">
-                  <Button variant="hero" size="xl">
+                  <Button
+                    variant="hero"
+                    size="lg"
+                    className="border-4 border-teal-primary/30 hover:border-teal-primary transition-all duration-300 shadow-xl hover:shadow-2xl scale-105"
+                  >
                     Join a Demo Class
-                    <ArrowRight className="w-5 h-5 ml-2" />
+                    <ArrowRight className="w-6 h-6 ml-3" />
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button 
-                    variant="outline" 
-                    size="xl"
-                    className="bg-white/90 text-neutral-dark border-neutral-medium hover:bg-neutral-medium hover:text-white hover:border-neutral-medium"
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="bg-white text-neutral-dark border-2 border-neutral-200 hover:border-neutral-800 hover:bg-neutral-50"
                   >
                     Try the Platform
                   </Button>
@@ -143,15 +147,15 @@ export default function Home() {
             </div>
 
             <div className="reveal-on-scroll">
-              <div className="relative rounded-2xl shadow-2xl overflow-hidden mx-5">
-                <Image 
-                  src={"/images/hero.jpg"} 
-                  alt="Elderly people participating in wellness activities" 
+              <div className="relative rounded-3xl shadow-2xl overflow-hidden mx-auto max-w-[95%]">
+                <Image
+                  src={"/images/hero.jpg"}
+                  alt="Elderly people participating in wellness activities"
                   width={1920}
                   height={1080}
                   className="w-full h-auto object-cover"
                   priority
-                  style={{ aspectRatio: '16/9' }}
+                  style={{ aspectRatio: '21/9', minHeight: '500px' }}
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none"></div>
@@ -397,7 +401,7 @@ export default function Home() {
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/schedule-demo">
-                <Button variant="secondary" size="xl" className="shadow-lg hover:shadow-xl transition-shadow">
+                <Button variant="secondary" size="lg" className="shadow-lg hover:shadow-xl transition-shadow">
                   Book a Demo
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
@@ -405,7 +409,7 @@ export default function Home() {
               <Link href="/register">
                 <Button
                   variant="ghost"
-                  size="xl"
+                  size="lg"
                   className="text-white hover:bg-white/20 border-2 border-white/50"
                 >
                   Get Started Free
@@ -503,7 +507,7 @@ export default function Home() {
                 </p>
               </div>
               <Link href="/classes">
-                <Button variant="primary" size="lg">
+                <Button variant="default" size="lg">
                   Start Class →
                 </Button>
               </Link>
@@ -527,7 +531,7 @@ export default function Home() {
               </p>
             </div>
             <Link href="/game">
-              <Button variant="primary" size="md" className="w-full">
+              <Button variant="default" size="default" className="w-full">
                 Play Now
               </Button>
             </Link>
@@ -547,7 +551,7 @@ export default function Home() {
               </p>
             </div>
             <Link href="/game/quiz">
-              <Button variant="primary" size="md" className="w-full">
+              <Button variant="default" size="default" className="w-full">
                 Start Quiz
               </Button>
             </Link>
@@ -567,7 +571,7 @@ export default function Home() {
               </p>
             </div>
             <Link href="/progress">
-              <Button variant="primary" size="md" className="w-full">
+              <Button variant="default" size="default" className="w-full">
                 Track Steps
               </Button>
             </Link>

@@ -177,7 +177,7 @@ const QuestionEditor: React.FC<QuestionEditorProps> = ({ question, onSave, onCan
 
         <div className="flex justify-end space-x-3 pt-4 border-t border-neutral-light">
           <Button type="button" variant="outline" onClick={onCancel}>Cancel</Button>
-          <Button type="submit" variant="primary">Save Question</Button>
+          <Button type="submit" variant="default">Save Question</Button>
         </div>
       </form>
     </Card>

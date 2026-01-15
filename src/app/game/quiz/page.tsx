@@ -47,7 +47,7 @@ export default function QuizManagementPage() {
             </div>
             <div className="space-x-2">
               <Button variant="outline">Save as Draft</Button>
-              <Button variant="primary">Next Step</Button>
+              <Button variant="default">Next Step</Button>
             </div>
           </div>
 
@@ -65,7 +65,7 @@ export default function QuizManagementPage() {
               </div>
 
               <div className="space-y-4">
-                {activeQuiz.questions.sort((a,b) => a.order - b.order).map((q) => (
+                {activeQuiz.questions.sort((a, b) => a.order - b.order).map((q) => (
                   <Card key={q.id} className="p-4">
                     <div className="flex items-start justify-between">
                       <div>
@@ -84,7 +84,7 @@ export default function QuizManagementPage() {
                   </Card>
                 ))}
 
-                <Button variant="primary" onClick={() => setShowQuestionEditor(true)}>+ Add Question</Button>
+                <Button variant="default" onClick={() => setShowQuestionEditor(true)}>+ Add Question</Button>
               </div>
             </Card>
           ) : (
@@ -92,7 +92,7 @@ export default function QuizManagementPage() {
               <Icon name="activity" size="xl" color="#6B7280" className="mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-neutral-dark mb-2">No quiz selected</h3>
               <p className="text-neutral-medium mb-6">Create a quiz or select one from the list.</p>
-              <Button variant="primary" onClick={() => setShowCreateForm(true)}>Create Quiz</Button>
+              <Button variant="default" onClick={() => setShowCreateForm(true)}>Create Quiz</Button>
             </Card>
           )}
         </div>

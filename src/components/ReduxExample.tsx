@@ -3,17 +3,17 @@
 
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { 
-  loginUser, 
-  registerUser, 
-  logoutUser, 
+import {
+  loginUser,
+  registerUser,
+  logoutUser,
   checkAuthStatus,
-  clearError 
+  clearError
 } from '@/store/slices/authSlice';
-import { 
-  fetchClasses, 
-  joinClass, 
-  setSelectedClass 
+import {
+  fetchClasses,
+  joinClass,
+  setSelectedClass
 } from '@/store/slices/classSlice';
 import { Button } from '@/components/ui';
 
@@ -38,10 +38,10 @@ interface ClassItem {
 
 const ReduxExample: React.FC = () => {
   const dispatch = useAppDispatch();
-  
+
   // Auth state
   const { user, isLoading, error, isAuthenticated } = useAppSelector((state) => state.auth);
-  
+
   // Classes state
   const { classes, upcomingClasses, liveClasses, selectedClass } = useAppSelector((state) => state.classes);
 
@@ -56,9 +56,9 @@ const ReduxExample: React.FC = () => {
   }, [dispatch]);
 
   const handleLogin = () => {
-    dispatch(loginUser({ 
-      email: 'test@example.com', 
-      password: 'password123' 
+    dispatch(loginUser({
+      email: 'test@example.com',
+      password: 'password123'
     }));
   };
 
@@ -91,20 +91,20 @@ const ReduxExample: React.FC = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Redux Example Component</h1>
-      
+
       {/* Auth Section */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Authentication State</h2>
-        
+
         {isLoading && (
           <div className="text-blue-600 mb-4">Loading...</div>
         )}
-        
+
         {error && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
             <div className="flex justify-between items-center">
               <span>{error}</span>
-              <button 
+              <button
                 onClick={clearAuthError}
                 className="text-red-500 hover:text-red-700"
               >
@@ -113,7 +113,7 @@ const ReduxExample: React.FC = () => {
             </div>
           </div>
         )}
-        
+
         {isAuthenticated && user ? (
           <div className="space-y-4">
             <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
@@ -127,7 +127,7 @@ const ReduxExample: React.FC = () => {
           </div>
         ) : (
           <div className="space-x-4">
-            <Button onClick={handleLogin} variant="primary">
+            <Button onClick={handleLogin} variant="default">
               Login
             </Button>
             <Button onClick={handleRegister} variant="secondary">
@@ -140,7 +140,7 @@ const ReduxExample: React.FC = () => {
       {/* Classes Section */}
       <div className="bg-white rounded-lg shadow-md p-6 mb-6">
         <h2 className="text-xl font-semibold mb-4">Classes State</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-blue-50 p-4 rounded-lg">
             <h3 className="font-semibold text-blue-800">Total Classes</h3>
@@ -161,8 +161,8 @@ const ReduxExample: React.FC = () => {
             <h3 className="font-semibold mb-3">Available Classes</h3>
             <div className="space-y-2">
               {classes.slice(0, 3).map((classItem) => (
-                <div 
-                  key={classItem.id} 
+                <div
+                  key={classItem.id}
                   className="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-50"
                 >
                   <div>
@@ -172,17 +172,17 @@ const ReduxExample: React.FC = () => {
                     </p>
                   </div>
                   <div className="flex space-x-2">
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       onClick={() => handleSelectClass(classItem)}
                       variant="outline"
                     >
                       Select
                     </Button>
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       onClick={() => handleJoinClass(classItem.id)}
-                      variant="primary"
+                      variant="default"
                     >
                       Join
                     </Button>

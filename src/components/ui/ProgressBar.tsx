@@ -35,7 +35,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   };
 
   const bgColorStyles = {
-    teal: 'bg-teal-light',
+    teal: 'bg-neutral-200',
     orange: 'bg-orange-light',
     primary: 'bg-neutral-light',
   };

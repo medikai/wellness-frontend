@@ -9,9 +9,9 @@ interface TextSizeControlProps {
   className?: string;
 }
 
-const TextSizeControl: React.FC<TextSizeControlProps> = ({ 
-  variant = 'header', 
-  className = '' 
+const TextSizeControl: React.FC<TextSizeControlProps> = ({
+  variant = 'header',
+  className = ''
 }) => {
   const { fontSizePx, setFontSizePx } = useFontSize();
   const [isOpen, setIsOpen] = useState(false);
@@ -46,10 +46,10 @@ const TextSizeControl: React.FC<TextSizeControlProps> = ({
               <p className="text-xs text-teal-primary font-medium">{currentOption.description}</p>
             </div>
           </div>
-          <Icon 
-            name={isOpen ? "chevronUp" : "chevronDown"} 
-            size="sm" 
-            color="#059669" 
+          <Icon
+            name={isOpen ? "chevronUp" : "chevronDown"}
+            size="sm"
+            color="#059669"
           />
         </button>
 
@@ -59,16 +59,14 @@ const TextSizeControl: React.FC<TextSizeControlProps> = ({
               <button
                 key={option.value}
                 onClick={() => handleFontSizeChange(option.value)}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all duration-200 ${
-                  fontSizePx === option.value
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl text-sm transition-all duration-200 ${fontSizePx === option.value
                     ? 'bg-gradient-to-r from-teal-light to-blue-50 text-teal-primary font-semibold shadow-sm'
                     : 'text-neutral-dark hover:bg-white/50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center space-x-2">
-                  <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${
-                    fontSizePx === option.value ? 'bg-teal-primary' : 'bg-neutral-light'
-                  }`} />
+                  <div className={`w-2.5 h-2.5 rounded-full transition-all duration-200 ${fontSizePx === option.value ? 'bg-teal-primary' : 'bg-neutral-light'
+                    }`} />
                   <span className="font-medium">{option.label}</span>
                 </div>
                 <span className="text-xs text-neutral-medium font-medium">{option.description}</span>
@@ -85,50 +83,48 @@ const TextSizeControl: React.FC<TextSizeControlProps> = ({
     <div className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-2.5 text-sm text-neutral-medium hover:text-teal-primary hover:bg-teal-light/50 rounded-xl transition-all duration-200 group shadow-sm hover:shadow-md"
+        className="flex items-center space-x-2 px-4 py-2.5 text-sm text-white/90 hover:text-white hover:bg-white/10 rounded-xl transition-all duration-200 group shadow-sm hover:shadow-md border border-white/10"
         title="Adjust text size"
       >
-        <Icon name="type" size="sm" color="#059669" />
+        <Icon name="type" size="sm" color="white" />
         <span className="font-semibold">{currentOption.description}</span>
-        <Icon 
-          name={isOpen ? "chevronUp" : "chevronDown"} 
-          size="sm" 
-          color="#059669" 
+        <Icon
+          name={isOpen ? "chevronUp" : "chevronDown"}
+          size="sm"
+          color="white"
         />
       </button>
 
       {isOpen && (
         <>
           {/* Backdrop */}
-          <div 
-            className="fixed inset-0 z-10" 
+          <div
+            className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          
+
           {/* Dropdown */}
           <div className="absolute right-0 top-full mt-3 w-56 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-3 overflow-hidden">
             <div className="px-4 py-3 border-b border-neutral-light/50 bg-gradient-to-r from-teal-light/20 to-blue-50">
               <p className="text-sm font-semibold text-neutral-dark">Text Size</p>
               <p className="text-xs text-teal-primary font-medium">Adjust the app&apos;s text size</p>
             </div>
-            
+
             <div className="py-2">
               {fontSizeOptions.map((option) => (
                 <button
                   key={option.value}
                   onClick={() => handleFontSizeChange(option.value)}
-                  className={`w-full flex items-center justify-between px-4 py-3 text-sm transition-all duration-200 ${
-                    fontSizePx === option.value
+                  className={`w-full flex items-center justify-between px-4 py-3 text-sm transition-all duration-200 ${fontSizePx === option.value
                       ? 'bg-gradient-to-r from-teal-light to-blue-50 text-teal-primary font-semibold shadow-sm'
                       : 'text-neutral-dark hover:bg-neutral-light/50'
-                  }`}
+                    }`}
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      fontSizePx === option.value 
-                        ? 'bg-teal-primary shadow-sm' 
+                    <div className={`w-3 h-3 rounded-full transition-all duration-200 ${fontSizePx === option.value
+                        ? 'bg-teal-primary shadow-sm'
                         : 'bg-neutral-light group-hover:bg-teal-light'
-                    }`} />
+                      }`} />
                     <span className="font-medium">{option.label}</span>
                   </div>
                   <span className="text-xs text-neutral-medium font-medium">{option.description}</span>

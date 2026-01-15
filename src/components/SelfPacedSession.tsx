@@ -19,7 +19,7 @@ interface SelfPacedSessionProps {
   };
 }
 
-const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({ 
+const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
   classData = {
     id: '1',
     title: 'Health & waylness Session',
@@ -53,59 +53,65 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
   ];
 
   const games = [
-    { 
-      id: 1, 
-      icon: '🧠', 
-      name: 'Memory Game', 
+    {
+      id: 1,
+      icon: '🧠',
+      name: 'Memory Game',
       description: 'Test your memory skills',
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'bg-purple-50',
-      hoverColor: 'hover:bg-purple-100'
-    },
-    { 
-      id: 2, 
-      icon: '🎯', 
-      name: 'Focus Game', 
-      description: 'Improve concentration',
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'bg-blue-50',
-      hoverColor: 'hover:bg-blue-100'
-    },
-    { 
-      id: 3, 
-      icon: '🔍', 
-      name: 'Pattern Game', 
-      description: 'Find the pattern',
-      color: 'from-green-500 to-green-600',
-      bgColor: 'bg-green-50',
-      hoverColor: 'hover:bg-green-100'
-    },
-    { 
-      id: 4, 
-      icon: '⚡', 
-      name: 'Speed Game', 
-      description: 'Quick reactions',
-      color: 'from-red-500 to-red-600',
-      bgColor: 'bg-red-50',
-      hoverColor: 'hover:bg-red-100'
-    },
-    { 
-      id: 5, 
-      icon: '🧩', 
-      name: 'Logic Game', 
-      description: 'Solve puzzles',
-      color: 'from-orange-500 to-orange-600',
-      bgColor: 'bg-orange-50',
-      hoverColor: 'hover:bg-orange-100'
-    },
-    { 
-      id: 6, 
-      icon: '🎲', 
-      name: 'Puzzle Game', 
-      description: 'Brain teasers',
-      color: 'from-teal-500 to-teal-600',
+      color: 'from-teal-400 to-teal-500',
       bgColor: 'bg-teal-50',
-      hoverColor: 'hover:bg-teal-100'
+      hoverColor: 'hover:bg-teal-100',
+      borderColor: 'border-teal-200'
+    },
+    {
+      id: 2,
+      icon: '🎯',
+      name: 'Focus Game',
+      description: 'Improve concentration',
+      color: 'from-blue-400 to-blue-500',
+      bgColor: 'bg-blue-50',
+      hoverColor: 'hover:bg-blue-100',
+      borderColor: 'border-blue-200'
+    },
+    {
+      id: 3,
+      icon: '🔍',
+      name: 'Pattern Game',
+      description: 'Find the pattern',
+      color: 'from-indigo-400 to-indigo-500',
+      bgColor: 'bg-indigo-50',
+      hoverColor: 'hover:bg-indigo-100',
+      borderColor: 'border-indigo-200'
+    },
+    {
+      id: 4,
+      icon: '⚡',
+      name: 'Speed Game',
+      description: 'Quick reactions',
+      color: 'from-rose-400 to-rose-500',
+      bgColor: 'bg-rose-50',
+      hoverColor: 'hover:bg-rose-100',
+      borderColor: 'border-rose-200'
+    },
+    {
+      id: 5,
+      icon: '🧩',
+      name: 'Logic Game',
+      description: 'Solve puzzles',
+      color: 'from-amber-400 to-amber-500',
+      bgColor: 'bg-amber-50',
+      hoverColor: 'hover:bg-amber-100',
+      borderColor: 'border-amber-200'
+    },
+    {
+      id: 6,
+      icon: '🎲',
+      name: 'Puzzle Game',
+      description: 'Brain teasers',
+      color: 'from-cyan-400 to-cyan-500',
+      bgColor: 'bg-cyan-50',
+      hoverColor: 'hover:bg-cyan-100',
+      borderColor: 'border-cyan-200'
     }
   ];
 
@@ -167,7 +173,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
   const handleSubmitFeedback = (feedback: { rating: string | null; note: string; tags: string[] }) => {
     // Handle feedback submission
     console.log('Feedback submitted:', feedback);
-    
+
     // You can add API call here
     alert('Thank you for your feedback!');
     handleCloseFeedbackModal();
@@ -194,26 +200,26 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 p-4">
+    <div className="min-h-screen bg-slate-50 p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+        <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center">
-                <span className="text-3xl">🏥</span>
+              <div className="w-14 h-14 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center border border-teal-100">
+                <span className="text-2xl">🌱</span>
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-gray-800">{classData.title}</h1>
-                <p className="text-lg text-gray-600">Self-paced Session</p>
+                <h1 className="text-2xl font-bold text-slate-800">{classData.title}</h1>
+                <p className="text-slate-500">Self-paced Session</p>
               </div>
             </div>
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="outline"
               onClick={handleLeaveSession}
-              className="bg-red-500 hover:bg-red-600 text-white text-lg px-6 py-3 rounded-xl"
+              className="border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 px-6"
             >
-              Leave Session
+              End Session
             </Button>
           </div>
         </div>
@@ -222,7 +228,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
           {/* Left Column */}
           <div className="space-y-6">
             {/* Demo Class Content */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 min-h-80 flex flex-col">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-80 flex flex-col">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center mr-4">
                   <span className="text-2xl">📚</span>
@@ -245,7 +251,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
             </div>
 
             {/* Health Quiz - Using Unified Cognitive Test Architecture */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 min-h-80 flex flex-col">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-80 flex flex-col">
               <CognitiveTestCard
                 config={quizToCognitiveTest({
                   type: 'quiz',
@@ -272,7 +278,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
           {/* Right Column */}
           <div className="space-y-6">
             {/* Games Section */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 min-h-80 flex flex-col">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-80 flex flex-col">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center mr-4">
                   <span className="text-2xl">🎮</span>
@@ -284,15 +290,15 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
                   <button
                     key={game.id}
                     onClick={() => handleGameClick(game.id)}
-                    className={`${game.bgColor} ${game.hoverColor} p-4 rounded-2xl border-2 border-transparent hover:border-gray-300 transition-all duration-200 group flex flex-col items-center justify-center text-center`}
+                    className={`${game.bgColor} ${game.hoverColor} ${game.borderColor || ''} p-4 rounded-xl border-2 transition-all duration-200 group flex flex-col items-center justify-center text-center`}
                   >
-                    <div className={`w-16 h-16 bg-gradient-to-r ${game.color} rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-200 mb-3 shadow-lg`}>
+                    <div className={`w-16 h-16 bg-gradient-to-r ${game.color} rounded-xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-200 mb-3 shadow-md`}>
                       {game.icon}
                     </div>
-                    <h3 className="font-bold text-gray-800 text-sm group-hover:text-gray-900 mb-1">
+                    <h3 className="font-bold text-slate-800 text-sm group-hover:text-slate-900 mb-1">
                       {game.name}
                     </h3>
-                    <p className="text-xs text-gray-600 group-hover:text-gray-700 leading-tight">
+                    <p className="text-xs text-slate-600 group-hover:text-slate-700 leading-tight">
                       {game.description}
                     </p>
                   </button>
@@ -301,7 +307,7 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
             </div>
 
             {/* Activity Section - Hydration */}
-            <div className="bg-white rounded-2xl shadow-lg p-6 min-h-80 flex flex-col">
+            <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6 min-h-80 flex flex-col">
               <div className="flex items-center mb-6">
                 <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-xl flex items-center justify-center mr-4">
                   <span className="text-2xl">💧</span>
@@ -317,18 +323,17 @@ const SelfPacedSession: React.FC<SelfPacedSessionProps> = ({
                     <button
                       key={option.id}
                       onClick={() => handleHydrationSelect(option.id)}
-                      className={`p-6 rounded-2xl font-bold text-2xl transition-all duration-200 border-2 ${
-                        selectedAnswer === option.id
-                          ? 'bg-cyan-600 text-white border-cyan-700 shadow-lg'
-                          : 'bg-cyan-50 text-cyan-800 hover:bg-cyan-100 border-cyan-200 hover:border-cyan-400'
-                      }`}
+                      className={`p-6 rounded-2xl font-bold text-2xl transition-all duration-200 border-2 ${selectedAnswer === option.id
+                        ? 'bg-cyan-600 text-white border-cyan-700 shadow-lg'
+                        : 'bg-cyan-50 text-cyan-800 hover:bg-cyan-100 border-cyan-200 hover:border-cyan-400'
+                        }`}
                     >
                       {option.label}
                     </button>
                   ))}
                 </div>
                 <div className="mt-auto">
-                  <Button 
+                  <Button
                     className="w-full bg-green-500 hover:bg-green-600 text-white text-lg py-4 rounded-xl font-bold"
                     disabled={!selectedAnswer}
                   >

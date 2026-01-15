@@ -6,17 +6,16 @@ import DemoClassBooking from '@/components/DemoClassBooking'
 
 const ScheduleDemo = () => {
   return (
-    <div className="h-screen bg-gradient-to-br from-teal-50 to-blue-50 flex overflow-hidden">
-      {/* Left Side - Form */}
-      <div className="flex-1 flex items-center justify-center px-1 py-1">
-        <div className="w-3/4 max-w-4xl">
-          <Logo />
-          <DemoClassBooking />
-        </div>
+    <div className="min-h-screen bg-white flex flex-col items-center py-12 px-4 sm:px-6 lg:px-8">
+      {/* Header Area */}
+      <div className="w-full max-w-5xl mb-8 flex flex-col items-center text-center">
+        <Logo className="mb-8 scale-110" />
       </div>
 
-      {/* Right Side - Health Dashboard Preview */}
-      {/* <HealthPreview /> */}
+      {/* Main Content - Centered */}
+      <div className="w-full max-w-6xl">
+        <DemoClassBooking />
+      </div>
     </div>
   )
 }

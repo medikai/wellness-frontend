@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { Button } from '@/components/ui';
 import { Icon } from '@/components/ui';
+import Image from 'next/image';
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -26,12 +27,24 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md">
-              <Icon name="heart" size="sm" color="white" />
+          <div className="flex items-center gap-2">
+            <div className="relative h-10 w-10">
+              <Image
+                src="/images/logo.png"
+                alt="Waylness Icon"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-neutral-dark">Waylness</h1>
+            <div className="relative h-7 w-28">
+              <Image
+                src="/images/logo_text.png"
+                alt="Waylness"
+                fill
+                className="object-contain object-left"
+                priority
+              />
             </div>
           </div>
 
@@ -42,11 +55,10 @@ export default function Navigation() {
                 key={item.name}
                 href={item.href}
                 onClick={handleNavClick}
-                className={`text-base font-medium transition-colors duration-200 ${
-                  pathname === item.href
-                    ? 'text-teal-primary'
-                    : 'text-neutral-dark hover:text-teal-primary'
-                }`}
+                className={`text-base font-medium transition-colors duration-200 ${pathname === item.href
+                  ? 'text-teal-primary'
+                  : 'text-neutral-dark hover:text-teal-primary'
+                  }`}
               >
                 {item.name}
               </Link>
@@ -56,12 +68,12 @@ export default function Navigation() {
           {/* Desktop CTA Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Link href="/login">
-              <Button variant="outline" size="md">
+              <Button variant="outline" size="default">
                 Login
               </Button>
             </Link>
             <Link href="/register">
-              <Button variant="primary" size="md">
+              <Button variant="default" size="default">
                 Get Started
               </Button>
             </Link>
@@ -85,23 +97,22 @@ export default function Navigation() {
                   key={item.name}
                   href={item.href}
                   onClick={handleNavClick}
-                  className={`text-base font-medium transition-colors duration-200 px-4 py-2 rounded-lg ${
-                    pathname === item.href
-                      ? 'text-teal-primary bg-teal-light/30'
-                      : 'text-neutral-dark hover:text-teal-primary hover:bg-neutral-light/50'
-                  }`}
+                  className={`text-base font-medium transition-colors duration-200 px-4 py-2 rounded-lg ${pathname === item.href
+                    ? 'text-teal-primary bg-teal-light/30'
+                    : 'text-neutral-dark hover:text-teal-primary hover:bg-neutral-light/50'
+                    }`}
                 >
                   {item.name}
                 </Link>
               ))}
               <div className="flex flex-col space-y-2 px-4 pt-4 border-t border-neutral-light/50">
                 <Link href="/login" onClick={handleNavClick}>
-                  <Button variant="outline" size="md" className="w-full">
+                  <Button variant="outline" size="default" className="w-full">
                     Login
                   </Button>
                 </Link>
                 <Link href="/register" onClick={handleNavClick}>
-                  <Button variant="primary" size="md" className="w-full">
+                  <Button variant="default" size="default" className="w-full">
                     Get Started
                   </Button>
                 </Link>

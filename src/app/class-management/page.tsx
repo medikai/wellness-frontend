@@ -16,7 +16,7 @@ const ClassManagementPage = () => {
   const filteredClasses = classes.filter(cls => {
     const matchesStatus = filterStatus === 'all' || cls.status === filterStatus;
     const matchesSearch = cls.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         cls.instructor.toLowerCase().includes(searchTerm.toLowerCase());
+      cls.instructor.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesSearch;
   });
 
@@ -79,7 +79,7 @@ const ClassManagementPage = () => {
           <p className="text-neutral-medium mt-2">Create and manage your waylness classes</p>
         </div>
         <Button
-          variant="primary"
+          variant="default"
           onClick={() => setShowCreateForm(true)}
           className="mt-4 sm:mt-0"
         >
@@ -104,11 +104,10 @@ const ClassManagementPage = () => {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                filterStatus === status
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${filterStatus === status
                   ? 'bg-teal-primary text-white'
                   : 'bg-neutral-light text-neutral-medium hover:bg-neutral-medium hover:text-white'
-              }`}
+                }`}
             >
               {status.charAt(0).toUpperCase() + status.slice(1)}
             </button>
@@ -179,13 +178,13 @@ const ClassManagementPage = () => {
           <Icon name="activity" size="xl" color="#6B7280" className="mx-auto mb-4" />
           <h3 className="text-lg font-semibold text-neutral-dark mb-2">No classes found</h3>
           <p className="text-neutral-medium mb-6">
-            {searchTerm || filterStatus !== 'all' 
+            {searchTerm || filterStatus !== 'all'
               ? 'Try adjusting your search or filter criteria.'
               : 'Get started by creating your first class.'
             }
           </p>
           {!searchTerm && filterStatus === 'all' && (
-            <Button variant="primary" onClick={() => setShowCreateForm(true)}>
+            <Button variant="default" onClick={() => setShowCreateForm(true)}>
               Create Your First Class
             </Button>
           )}
@@ -194,7 +193,7 @@ const ClassManagementPage = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredClasses.map((cls) => {
             const bookings = getBookingsByClassId(cls.id);
-            const attendanceRate = cls.maxParticipants > 0 
+            const attendanceRate = cls.maxParticipants > 0
               ? Math.round((bookings.length / cls.maxParticipants) * 100)
               : 0;
 
@@ -241,8 +240,8 @@ const ClassManagementPage = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     <div className="w-16 bg-neutral-light rounded-full h-2 mr-2">
-                      <div 
-                        className="bg-teal-primary h-2 rounded-full" 
+                      <div
+                        className="bg-teal-primary h-2 rounded-full"
                         style={{ width: `${Math.min(attendanceRate, 100)}%` }}
                       ></div>
                     </div>

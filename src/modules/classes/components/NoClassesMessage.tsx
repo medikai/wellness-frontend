@@ -11,7 +11,7 @@ const NoClassesMessage = () => {
           You haven&apos;t booked any classes yet. Start by booking a demo class to experience our health and waylness programs.
         </p>
       </div>
-      <Button variant="primary" size="lg">
+      <Button variant="default" size="lg">
         Book a Demo Class
       </Button>
     </Card>

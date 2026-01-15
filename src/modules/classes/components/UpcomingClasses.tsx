@@ -20,18 +20,18 @@ interface UpcomingClassesProps {
 
 const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses }) => {
   const router = useRouter();
-  
+
   const formatClassDate = (date: string, time: string): string => {
     const dateObj = new Date(date);
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     };
     return `${dateObj.toLocaleDateString('en-US', options)} at ${time}`;
   };
-  
+
   if (upcomingClasses.length === 0) {
     return (
       <div className="text-center py-12">
@@ -67,7 +67,7 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses }) =>
               </p>
             </div>
             <p className="text-sm text-neutral-medium mb-6 leading-relaxed">
-              {classItem.type === 'demo' 
+              {classItem.type === 'demo'
                 ? 'Experience our health and wellness classes with this free demo session.'
                 : 'Join our live health and wellness class designed for your needs.'
               }
@@ -76,9 +76,9 @@ const UpcomingClasses: React.FC<UpcomingClassesProps> = ({ upcomingClasses }) =>
               <span className="text-sm text-neutral-medium font-medium">
                 {classItem.type === 'demo' ? 'Free Demo' : 'Included in Plan'}
               </span>
-              <Button 
-                variant="primary" 
-                size="md"
+              <Button
+                variant="default"
+                size="default"
                 onClick={() => handleJoinClass(classItem)}
               >
                 {classItem.type === 'demo' ? 'Start Self-Paced' : 'Join Class'}

@@ -28,7 +28,7 @@ export default function CognitiveTestCard({
   className = ''
 }: CognitiveTestCardProps) {
   const { fontSizePx } = useFontSize()
-  
+
   const [state, setState] = useState<CognitiveTestState>({
     phase: 'instruction',
     currentItemIndex: 0,
@@ -216,24 +216,24 @@ export default function CognitiveTestCard({
   const currentProgress = state.phase === 'test' && config.test.items.length > 0
     ? ((state.currentItemIndex + 1) / config.test.items.length) * 100
     : state.phase === 'practice' && config.practice.items.length > 0
-    ? ((state.currentItemIndex + 1) / config.practice.items.length) * 100
-    : 0
+      ? ((state.currentItemIndex + 1) / config.practice.items.length) * 100
+      : 0
 
   return (
     <div className={`w-full max-w-4xl mx-auto ${className}`}>
       <Card className="p-6 md:p-8 shadow-xl">
         {/* Header with Test Title */}
-        <div className="mb-6 border-b border-gray-200 pb-4">
+        <div className="mb-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 
+              <h2
                 className="font-bold text-gray-900 mb-2"
                 style={{ fontSize: `${Math.max(20, fontSizePx * 1.5)}px` }}
               >
                 {config.title}
               </h2>
               {config.description && (
-                <p 
+                <p
                   className="text-gray-600"
                   style={{ fontSize: `${fontSizePx}px` }}
                 >
@@ -241,7 +241,7 @@ export default function CognitiveTestCard({
                 </p>
               )}
             </div>
-            
+
             {/* Accessibility Controls */}
             <div className="flex items-center gap-3">
               <AccessibilityControls />
@@ -260,13 +260,13 @@ export default function CognitiveTestCard({
         {(state.phase === 'practice' || state.phase === 'test') && (
           <div className="mb-6">
             <div className="flex items-center justify-between mb-2">
-              <span 
+              <span
                 className="text-sm font-medium text-gray-700"
                 style={{ fontSize: `${fontSizePx}px` }}
               >
                 {state.phase === 'practice' ? 'Practice' : 'Test'} Progress
               </span>
-              <span 
+              <span
                 className="text-sm font-medium text-gray-700"
                 style={{ fontSize: `${fontSizePx}px` }}
               >

@@ -17,25 +17,25 @@ const QuickActions = () => {
           <Icon name="gamepad" size="lg" color="#4CAF9D" className="mx-auto mb-4" />
           <h3 className="font-semibold text-[#2C4A52] mb-2">Book New Class</h3>
           <p className="text-sm text-[#6B7280] mb-4">Schedule your next health session</p>
-          <Button variant="outline" size="md" className="w-full">
+          <Button variant="outline" size="default" className="w-full">
             Book Now
           </Button>
         </Card>
-        
+
         <Card hover className="p-6 text-center">
           <Icon name="heart" size="lg" color="#4CAF9D" className="mx-auto mb-4" />
           <h3 className="font-semibold text-[#2C4A52] mb-2">View Progress</h3>
           <p className="text-sm text-[#6B7280] mb-4">Track your health journey</p>
-          <Button variant="outline" size="md" className="w-full">
+          <Button variant="outline" size="default" className="w-full">
             View Progress
           </Button>
         </Card>
-        
+
         <Card hover className="p-6 text-center">
           <Icon name="settings" size="lg" color="#4CAF9D" className="mx-auto mb-4" />
           <h3 className="font-semibold text-[#2C4A52] mb-2">Manage Classes</h3>
           <p className="text-sm text-[#6B7280] mb-4">Update your class preferences</p>
-          <Button variant="outline" size="md" className="w-full">
+          <Button variant="outline" size="default" className="w-full">
             Manage
           </Button>
         </Card>
@@ -44,9 +44,9 @@ const QuickActions = () => {
           <Icon name="gamepad" size="lg" color="#4CAF9D" className="mx-auto mb-4" />
           <h3 className="font-semibold text-[#2C4A52] mb-2">Self-Paced Session</h3>
           <p className="text-sm text-[#6B7280] mb-4">Start a self-paced waylness session</p>
-          <Button 
-            variant="primary" 
-            size="md" 
+          <Button
+            variant="default"
+            size="default"
             className="w-full"
             onClick={handleSelfPaced}
           >

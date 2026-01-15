@@ -575,7 +575,7 @@ function PollsPanel() {
             +
           </button>
         </div>
-        <button className="px-3 py-1 bg-[var(--accent)] text-white rounded hover:bg-[var(--secondary)]" onClick={create}>
+        <button className="px-3 py-1 bg-[var(--primary)] text-white rounded hover:bg-[var(--secondary)]" onClick={create}>
           Create Poll
         </button>
       </div>

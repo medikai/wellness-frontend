@@ -55,10 +55,10 @@ const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
 
   const handleCardClick = (cardIndex: number) => {
     if (selectedAnswer !== null || showResult) return;
-    
+
     setSelectedAnswer(cardIndex);
     setShowResult(true);
-    
+
     if (cardIndex === currentGame.correctPosition) {
       setScore(score + 20);
     }
@@ -89,15 +89,15 @@ const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
   };
 
   return (
-    <div className="text-center">
+    <div className="text-center ">
       <h3 className="text-xl font-semibold mb-4">Memory Match</h3>
-      
+
       {/* Game Challenge */}
       <div className="mb-6">
         <h4 className="text-lg font-bold text-gray-800 mb-4">
           {currentGame.question}
         </h4>
-        
+
         {/* Card Grid */}
         <div className="grid grid-cols-2 gap-3 max-w-xs mx-auto mb-4">
           {currentGame.cards.map((card, index) => (
@@ -105,15 +105,14 @@ const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
               key={card.id}
               onClick={() => handleCardClick(index)}
               disabled={showResult || card.isRevealed}
-              className={`aspect-square rounded-lg border-2 transition-all duration-300 flex items-center justify-center text-2xl font-bold ${
-                card.isRevealed || (showResult && index === currentGame.correctPosition)
-                  ? 'bg-white border-green-300 shadow-md'
-                  : showResult && selectedAnswer === index && index !== currentGame.correctPosition
+              className={`aspect-square rounded-lg border-2 transition-all duration-300 flex items-center justify-center text-2xl font-bold ${card.isRevealed || (showResult && index === currentGame.correctPosition)
+                ? 'bg-white border-green-300 shadow-md'
+                : showResult && selectedAnswer === index && index !== currentGame.correctPosition
                   ? 'bg-red-100 border-red-300 text-red-600'
                   : showHint && index === currentGame.correctPosition
-                  ? 'bg-yellow-100 border-yellow-300'
-                  : 'bg-blue-50 border-blue-200 hover:bg-blue-100 hover:border-blue-300'
-              }`}
+                    ? 'bg-yellow-100 border-yellow-300'
+                    : 'bg-blue-50 border-blue-200 hover:bg-blue-100 hover:border-blue-300'
+                }`}
             >
               {card.isRevealed || (showResult && index === currentGame.correctPosition) || (showHint && index === currentGame.correctPosition)
                 ? card.emoji
@@ -144,16 +143,14 @@ const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
         {/* Result Display */}
         {showResult && (
           <div className="mb-4">
-            <div className={`p-3 rounded-lg mb-3 ${
-              selectedAnswer === currentGame.correctPosition
-                ? 'bg-green-100 border border-green-300'
-                : 'bg-red-100 border border-red-300'
-            }`}>
-              <p className={`text-sm font-bold ${
-                selectedAnswer === currentGame.correctPosition
-                  ? 'text-green-800'
-                  : 'text-red-800'
+            <div className={`p-3 rounded-lg mb-3 ${selectedAnswer === currentGame.correctPosition
+              ? 'bg-green-100 border border-green-300'
+              : 'bg-red-100 border border-red-300'
               }`}>
+              <p className={`text-sm font-bold ${selectedAnswer === currentGame.correctPosition
+                ? 'text-green-800'
+                : 'text-red-800'
+                }`}>
                 {selectedAnswer === currentGame.correctPosition
                   ? '✓ Correct! Well done!'
                   : '✗ Incorrect. The correct answer is highlighted in green.'}
@@ -176,7 +173,7 @@ const MemoryMatchModal: React.FC<MemoryMatchModalProps> = () => {
           <span className="text-sm text-gray-600">{Math.round(getProgress())}%</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2 mb-3">
-          <div 
+          <div
             className="bg-purple-600 h-2 rounded-full transition-all duration-500"
             style={{ width: `${getProgress()}%` }}
           ></div>

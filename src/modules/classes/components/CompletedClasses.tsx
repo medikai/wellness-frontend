@@ -41,7 +41,7 @@ const CompletedClasses: React.FC<CompletedClassesProps> = ({ completedClasses, f
               <span className="text-sm text-green-500 font-medium">
                 ✓ Completed
               </span>
-              <Button variant="outline" size="md">
+              <Button variant="outline" size="default">
                 View Details
               </Button>
             </div>

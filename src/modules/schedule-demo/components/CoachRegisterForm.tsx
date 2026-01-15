@@ -247,7 +247,7 @@ const CoachRegisterForm = () => {
 
         <Button
           type="submit"
-          variant="primary"
+          variant="default"
           size="lg"
           className="w-full py-3 text-base font-semibold rounded-lg"
           disabled={isLoading}

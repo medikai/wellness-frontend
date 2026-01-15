@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useAppDispatch } from '@/store/hooks';
 import { setUser } from '@/store/slices/authSlice';
 import { useAuth } from '@/contexts/AuthContext';
+import Logo from './Logo';
 
 
 // interface User {
@@ -182,9 +183,9 @@ const RegisterForm = () => {
         role: json.role,
         isAuthenticated: true
       };
-      
+
       dispatch(setUser(userData));
-      
+
       // Update AuthContext state
       login(userData);
 
@@ -205,9 +206,14 @@ const RegisterForm = () => {
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-neutral-dark mb-1">Get Started Now</h2>
-        <p className="text-sm text-neutral-medium">Enter your credentials to access your account</p>
+      <div className="mb-3 flex flex-col items-start">
+        <div className=" pl-1 scale-110">
+          <Logo />
+        </div>
+        <div className="w-full text-left pb-2">
+          <h2 className="text-2xl font-bold text-neutral-dark mb-1 ">Get Started Now</h2>
+          <p className="text-sm text-neutral-medium ">Enter your credentials to access your account</p>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -353,7 +359,7 @@ const RegisterForm = () => {
 
         <Button
           type="submit"
-          variant="primary"
+          variant="default"
           size="lg"
           className="w-full py-3 text-base font-semibold rounded-lg"
           disabled={isLoading}

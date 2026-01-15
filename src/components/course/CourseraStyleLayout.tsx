@@ -478,10 +478,10 @@ export default function CourseraStyleLayout({
       case 'quiz':
         return <QuizContent content={activeContent} />
       case 'games':
-      // case 'game':
+        // case 'game':
         return <GameContent content={activeContent} />
       case 'activities':
-      // case 'activity':
+        // case 'activity':
         return <ActivityContent content={activeContent} />
       case 'text':
       default:
@@ -763,7 +763,7 @@ export default function CourseraStyleLayout({
                 chapters.length === 0 ||
                 currentChapterIndex === chapters.length - 1
               }
-              variant="primary"
+              variant="default"
               className="flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <span>Next Chapter</span>

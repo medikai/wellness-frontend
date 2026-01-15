@@ -26,7 +26,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
   // Check if current path is auth page or homepage
   const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/register-coach' || pathname === '/self-paced' || pathname === '/schedule-demo';
   const isHomePage = pathname === '/';
-  
+
   // Check if current path is a meeting page
   const isMeetingPage = pathname?.startsWith('/meeting') || pathname === '/host' || pathname === '/join';
 
@@ -44,7 +44,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
 
     // Initial check
     checkMobile();
-    
+
     // Add event listener
     window.addEventListener('resize', checkMobile);
 
@@ -58,7 +58,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       return;
     }
 
-    const wasMeetingPage = previousPathnameRef.current 
+    const wasMeetingPage = previousPathnameRef.current
       ? (previousPathnameRef.current.startsWith('/meeting') || previousPathnameRef.current === '/host' || previousPathnameRef.current === '/join')
       : false;
 
@@ -92,7 +92,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       const target = event.target as Node;
       const isOutsideDesktop = userDropdownDesktopRef.current ? !userDropdownDesktopRef.current.contains(target) : true;
       const isOutsideMobile = userDropdownMobileRef.current ? !userDropdownMobileRef.current.contains(target) : true;
-      
+
       if (isOutsideDesktop && isOutsideMobile) {
         setUserDropdownOpen(false);
       }
@@ -153,45 +153,45 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
       />
 
       {/* Main Content */}
-      <div className={`min-h-screen transition-all duration-300 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-64"}`}>
+      <div className={`min-h-screen transition-all duration-300 ${sidebarCollapsed ? "lg:pl-20" : "lg:pl-80"}`}>
         {/* Mobile Header */}
-        <header className="bg-white/95 backdrop-blur-sm shadow border-b border-neutral-light/50 lg:hidden sticky top-0 z-30">
+        <header className="bg-teal-primary backdrop-blur-md shadow border-b border-white/10 lg:hidden sticky top-0 z-30">
           <div className="flex items-center justify-between px-4 py-3">
             <button
               onClick={toggleSidebar}
-              className="p-2.5 rounded-xl hover:bg-teal-light/50 transition-all duration-200 group"
+              className="p-2.5 rounded-xl hover:bg-white/10 transition-all duration-200 group"
             >
-              <Icon name="menu" size="md" color="#059669" />
+              <Icon name="menu" size="md" color="white" />
             </button>
-            
+
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md">
-                <Icon name="heart" size="sm" color="white" />
+              <div className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md">
+                <Icon name="heart" size="sm" color="#2D7D6B" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-neutral-dark">waylness</h1>
-                <p className="text-xs text-teal-primary font-medium">Health Companion</p>
+                <h1 className="text-lg font-bold text-white">waylness</h1>
+                <p className="text-xs text-white/80 font-medium">Health Companion</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-2">
               <TextSizeControl variant="header" />
               <div className="relative" ref={userDropdownMobileRef}>
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="w-9 h-9 bg-gradient-to-br from-teal-primary to-teal-dark rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
+                  className="w-9 h-9 bg-white rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-shadow duration-200 cursor-pointer"
                 >
-                  <Icon name="user" size="sm" color="white" />
+                  <Icon name="user" size="sm" color="#2D7D6B" />
                 </button>
 
                 {userDropdownOpen && (
                   <>
                     {/* Backdrop */}
-                    <div 
-                      className="fixed inset-0 z-10" 
+                    <div
+                      className="fixed inset-0 z-10"
                       onClick={() => setUserDropdownOpen(false)}
                     />
-                    
+
                     {/* Dropdown */}
                     <div className="absolute right-0 top-full mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-2 overflow-hidden">
                       <button
@@ -204,7 +204,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                         <Icon name="user" size="sm" color="#059669" />
                         <span className="font-medium">Profile</span>
                       </button>
-                      
+
                       <button
                         onClick={handleLogout}
                         className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-red-50 transition-colors duration-200 text-neutral-dark"
@@ -221,7 +221,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
         </header>
 
         {/* Desktop Header */}
-        <header className="bg-white/95 backdrop-blur-sm shadow-sm border-b border-neutral-light/50 hidden lg:block sticky top-0 z-30">
+        <header className="bg-teal-primary backdrop-blur-md shadow-sm border-b border-white/10 hidden lg:block sticky top-0 z-30">
           <div className="flex items-center justify-between px-8 py-4">
             <div className="flex items-center space-x-4">
               {/* <div className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
@@ -232,29 +232,29 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                 <p className="text-sm text-teal-primary font-medium">Health Companion</p>
               </div> */}
             </div>
-            
+
             <div className="flex items-center space-x-6">
-              
-              
+
+
               <TextSizeControl variant="header" />
-              
-              
+
+
               <div className="relative" ref={userDropdownDesktopRef}>
                 <button
                   onClick={() => setUserDropdownOpen(!userDropdownOpen)}
-                  className="w-12 h-12 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200 cursor-pointer"
+                  className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200 cursor-pointer"
                 >
-                  <Icon name="user" size="md" color="white" />
+                  <Icon name="user" size="md" color="#2D7D6B" />
                 </button>
 
                 {userDropdownOpen && (
                   <>
                     {/* Backdrop */}
-                    <div 
-                      className="fixed inset-0 z-10" 
+                    <div
+                      className="fixed inset-0 z-10"
                       onClick={() => setUserDropdownOpen(false)}
                     />
-                    
+
                     {/* Dropdown */}
                     <div className="absolute right-0 top-full mt-3 w-48 bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-neutral-light/50 z-20 py-2 overflow-hidden">
                       <button
@@ -267,7 +267,7 @@ const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
                         <Icon name="user" size="sm" color="#059669" />
                         <span className="font-medium">Profile</span>
                       </button>
-                      
+
                       <button
                         onClick={handleLogout}
                         className="w-full px-4 py-3 flex items-center space-x-3 text-left hover:bg-red-50 transition-colors duration-200 text-neutral-dark"
