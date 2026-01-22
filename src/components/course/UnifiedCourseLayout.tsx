@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import {
   Course,
+  CourseContent,
   Section,
   Chapter,
   RawChapterContent,
@@ -43,6 +44,13 @@ interface HTMLElementWithFS extends HTMLElement {
   webkitRequestFullscreen?: () => Promise<void>
   mozRequestFullScreen?: () => Promise<void>
   msRequestFullscreen?: () => Promise<void>
+}
+
+const getContentType = (content: CourseContent | RawChapterContent): string => {
+  if ('content_type' in content) {
+    return content.content_type
+  }
+  return content.type
 }
 
 export default function UnifiedCourseLayout({
@@ -355,7 +363,7 @@ export default function UnifiedCourseLayout({
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-neutral-light/50 p-4 lg:p-8 min-h-[400px]">
-            {activeContent.content_type === 'video' && (
+            {getContentType(activeContent) === 'video' && (
               <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-md">
                 <iframe
                   src={(activeContent as RawChapterContent).content_data?.embed_url || (activeContent as VideoContent).embed_url || (activeContent as VideoContent).url || ''}
@@ -366,11 +374,11 @@ export default function UnifiedCourseLayout({
               </div>
             )}
 
-            {activeContent.content_type === 'text' && (
+            {getContentType(activeContent) === 'text' && (
               <div className="prose max-w-none prose-teal" dangerouslySetInnerHTML={{ __html: (activeContent as RawChapterContent).content_data?.html || (activeContent as TextContent).html || '' }} />
             )}
 
-            {activeContent.content_type === 'quiz' && (
+            {getContentType(activeContent) === 'quiz' && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Quiz</h2>
                 {(activeContent as RawChapterContent).content_data?.questions?.map((q, i: number) => (
@@ -389,9 +397,9 @@ export default function UnifiedCourseLayout({
               </div>
             )}
 
-            {!['video', 'text', 'quiz'].includes(activeContent.content_type) && (
+            {!['video', 'text', 'quiz'].includes(getContentType(activeContent)) && (
               <div className="text-center py-10">
-                <p className="font-semibold mb-2">Content Type: {activeContent.content_type}</p>
+                <p className="font-semibold mb-2">Content Type: {getContentType(activeContent)}</p>
                 <p className="text-sm text-neutral-medium">This content type is not yet fully supported in this preview.</p>
               </div>
             )}
