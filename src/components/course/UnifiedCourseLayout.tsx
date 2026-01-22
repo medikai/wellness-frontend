@@ -6,6 +6,10 @@ import {
   Course,
   Section,
   Chapter,
+  RawChapterContent,
+  VideoContent,
+  TextContent,
+  QuizContent,
 } from '@/types/course'
 import { courseService } from '@/services/courseService'
 
@@ -189,7 +193,7 @@ export default function UnifiedCourseLayout({
     let activeContentId: string | undefined
     if (Array.isArray(firstChapter.content) && firstChapter.content.length > 0) {
       // Cast to any to safely access id if types differ slightly, but Api types say content is array of RawChapterContent
-      activeContentId = (firstChapter.content[0] as any).id
+      activeContentId = (firstChapter.content[0] as RawChapterContent).id
     }
 
     setSelectedSection({
@@ -326,9 +330,9 @@ export default function UnifiedCourseLayout({
 
     if (!activeChapter) return <div>Chapter not found</div>
 
-    let activeContent: any = null
+    let activeContent: CourseContent | RawChapterContent | null = null
     if (Array.isArray(activeChapter.content)) {
-      activeContent = activeChapter.content.find((c: any) => c.id === selectedSection.activeContentId)
+      activeContent = (activeChapter.content as RawChapterContent[]).find(c => c.id === selectedSection.activeContentId) || null
     } else {
       activeContent = activeChapter.content
     }
@@ -354,7 +358,7 @@ export default function UnifiedCourseLayout({
             {activeContent.content_type === 'video' && (
               <div className="aspect-video bg-black rounded-xl overflow-hidden shadow-md">
                 <iframe
-                  src={(activeContent.content_data as any).embed_url}
+                  src={(activeContent as RawChapterContent).content_data?.embed_url || (activeContent as VideoContent).embed_url || (activeContent as VideoContent).url || ''}
                   className="w-full h-full"
                   allowFullScreen
                   title="Video Player"
@@ -363,13 +367,13 @@ export default function UnifiedCourseLayout({
             )}
 
             {activeContent.content_type === 'text' && (
-              <div className="prose max-w-none prose-teal" dangerouslySetInnerHTML={{ __html: (activeContent.content_data as any).html || '' }} />
+              <div className="prose max-w-none prose-teal" dangerouslySetInnerHTML={{ __html: (activeContent as RawChapterContent).content_data?.html || (activeContent as TextContent).html || '' }} />
             )}
 
             {activeContent.content_type === 'quiz' && (
               <div>
                 <h2 className="text-xl font-bold mb-4">Quiz</h2>
-                {(activeContent.content_data as any).questions?.map((q: any, i: number) => (
+                {(activeContent as RawChapterContent).content_data?.questions?.map((q, i: number) => (
                   <div key={i} className="mb-6 p-4 border rounded-xl bg-neutral-light/10">
                     <p className="font-semibold mb-3 text-lg">{q.q}</p>
                     <div className="space-y-3">

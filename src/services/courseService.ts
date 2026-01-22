@@ -8,7 +8,7 @@ import {
     Module
 } from '@/types/course'
 
-const API_BASE_URL = '/api'
+// const API_BASE_URL = '/api'
 
 // Helper to get cookies - usually handled by browser automatically for same-origin requests
 // If specific header needed as in example 'Cookie: student_cookies.txt', we might need to handle it,
@@ -122,7 +122,8 @@ const findContent = (contentId: string): { content: RawChapterContent, index: nu
 }
 
 export const courseService = {
-    async getOutline(courseId: string): Promise<ApiOutlineResponse> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getOutline(_courseId: string): Promise<ApiOutlineResponse> {
         // Simulate delay
         await new Promise(resolve => setTimeout(resolve, 800))
 
@@ -151,7 +152,8 @@ export const courseService = {
         }
     },
 
-    async getFirstContent(courseId: string): Promise<RawChapterContent> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async getFirstContent(_courseId: string): Promise<RawChapterContent> {
         return (MOCK_COURSE.modules[0].sections[0].chapters![0].content as RawChapterContent[])[0]
     },
 
@@ -195,7 +197,8 @@ export const courseService = {
         await new Promise(resolve => setTimeout(resolve, 500))
     },
 
-    async uncompleteContent(contentId: string, courseId: string): Promise<void> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    async uncompleteContent(contentId: string, _courseId: string): Promise<void> {
         console.log(`[Mock API] Content ${contentId} uncompleted`)
     }
 }

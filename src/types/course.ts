@@ -263,7 +263,7 @@ export interface ApiOutlineResponse {
       version: string
       currency: string
       group_id: string
-      metadata: any
+      metadata: Record<string, unknown>
       created_at: string
       updated_at: string
       is_template: boolean

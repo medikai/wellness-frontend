@@ -25,8 +25,8 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         const response = await fetch('/api/auth/me', { cache: 'no-store' });
-        const data = await response.json();
-        
+        const data = await response.json() as { ok: boolean; profile?: UserProfile; user?: { id: string; email?: string; role?: string; name?: string } };
+
         if (data.ok && data.profile) {
           setProfile(data.profile);
         } else if (data.ok && data.user) {
@@ -109,7 +109,7 @@ export default function ProfilePage() {
                   {profile.role === 'coach' ? 'Coach' : 'Student'}
                 </span>
               )}
-              
+
               <div className="space-y-2 mt-4">
                 <div className="flex items-center space-x-3">
                   <div className="w-5 h-5 flex items-center justify-center">
