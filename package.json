@@ -9,9 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@radix-ui/react-slot": "^1.2.4",
     "@reduxjs/toolkit": "^2.9.2",
     "@supabase/supabase-js": "^2.58.0",
     "@videosdk.live/react-sdk": "0.4.2",
+    "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "emoji-picker-element": "^1.27.0",
     "jsonwebtoken": "^9.0.2",
@@ -20,7 +22,8 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-redux": "^9.2.0",
-    "redux-persist": "^6.0.0"
+    "redux-persist": "^6.0.0",
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
