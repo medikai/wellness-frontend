@@ -1,11 +1,8 @@
 import {
     ApiOutlineResponse,
-    ApiContentResponse,
     ApiProgressResponse,
-    ApiNextResponse,
     RawChapterContent,
     Course,
-    Module
 } from '@/types/course'
 
 // const API_BASE_URL = '/api'

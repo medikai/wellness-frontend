@@ -6,6 +6,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Icon, Card } from '@/components/ui';
 import { useRouter } from 'next/navigation';
 
+import Link from 'next/link';
+import Image from 'next/image';
+
 interface UserProfile {
   id: string;
   fullname: string;
@@ -91,10 +94,13 @@ export default function ProfilePage() {
             {/* Avatar */}
             <div className="w-24 h-24 bg-gradient-to-br from-teal-primary to-teal-dark rounded-2xl flex items-center justify-center shadow-lg">
               {profile.avatar_url ? (
-                <img
+                <Image
                   src={profile.avatar_url}
                   alt={profile.fullname}
+                  width={96}
+                  height={96}
                   className="w-24 h-24 rounded-2xl object-cover"
+                  unoptimized
                 />
               ) : (
                 <Icon name="user" size="xl" color="white" />

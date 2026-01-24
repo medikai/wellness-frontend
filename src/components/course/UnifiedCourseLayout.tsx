@@ -8,7 +8,6 @@ import {
   Section,
   Chapter,
   RawChapterContent,
-  VideoContent,
   TextContent,
   QuizContent,
   QuizQuestion,
@@ -40,11 +39,7 @@ interface DocumentWithFS extends Document {
   msExitFullscreen?: () => Promise<void>
 }
 
-interface HTMLElementWithFS extends HTMLElement {
-  webkitRequestFullscreen?: () => Promise<void>
-  mozRequestFullScreen?: () => Promise<void>
-  msRequestFullscreen?: () => Promise<void>
-}
+
 
 const getContentType = (content: CourseContent | RawChapterContent): string => {
   if ('content_type' in content) {
@@ -56,8 +51,8 @@ const getContentType = (content: CourseContent | RawChapterContent): string => {
 export default function UnifiedCourseLayout({
   courseId,
   course: initialCourse,
-  initialModuleId,
-  initialSectionId,
+  initialModuleId: _initialModuleId,
+  initialSectionId: _initialSectionId,
   onClose,
 }: {
   courseId: string
@@ -126,31 +121,16 @@ export default function UnifiedCourseLayout({
     loadInitial()
   }, [course])
 
-  // Reset state when content changes
+  const activeContentId = selectedSection?.activeContentId
   useEffect(() => {
     setSelectedOptions({})
     setQuizFeedback(null)
     setOneWordAnswer('')
     setGameStatus('start')
-  }, [selectedSection?.activeContentId])
+  }, [activeContentId])
 
-  const [isFullscreen, setIsFullscreen] = useState(false)
 
-  const checkFullscreen = (): boolean => {
-    const doc = document as DocumentWithFS
-    return Boolean(
-      document.fullscreenElement ||
-      doc.webkitFullscreenElement ||
-      doc.mozFullScreenElement ||
-      doc.msFullscreenElement,
-    )
-  }
 
-  useEffect(() => {
-    const handler = () => setIsFullscreen(checkFullscreen())
-    document.addEventListener('fullscreenchange', handler)
-    return () => document.removeEventListener('fullscreenchange', handler)
-  }, [])
 
   const toggleModule = (moduleId: string) => {
     const newSet = new Set<string>()
@@ -170,6 +150,7 @@ export default function UnifiedCourseLayout({
     let activeContentId: string | undefined
     if (Array.isArray(firstChapter.content) && firstChapter.content.length > 0) {
       // Safe access
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const contentArray = firstChapter.content as any[];
       activeContentId = contentArray[0].id;
     }
@@ -224,6 +205,7 @@ export default function UnifiedCourseLayout({
         setSelectedSection({
           ...selectedSection, // safely spread existing valid state
           activeChapterId: nextChapter.id,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           activeContentId: (nextChapter.content as any).id || undefined // Assuming structure
         });
         return;
@@ -237,6 +219,7 @@ export default function UnifiedCourseLayout({
             sectionId: nextSection.id,
             section: nextSection,
             activeChapterId: nextSection.chapters[0].id,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             activeContentId: (nextSection.chapters[0].content as any).id || undefined
           });
         }
@@ -253,6 +236,7 @@ export default function UnifiedCourseLayout({
               sectionId: nextSection.id,
               section: nextSection,
               activeChapterId: nextSection.chapters[0].id,
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               activeContentId: (nextSection.chapters[0].content as any).id || undefined
             });
             setExpandedModules(new Set([nextModule.id]));
@@ -268,10 +252,7 @@ export default function UnifiedCourseLayout({
     }
   }
 
-  const handlePrevious = async () => {
-    // Simplified previous logic (can be robust like next later)
-    alert("Previous functionality coming soon");
-  }
+
 
   // --- Type Specific Handlers ---
 
@@ -509,12 +490,13 @@ export default function UnifiedCourseLayout({
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2 overflow-x-auto hide-scrollbar">
             {course?.modules.map((module) => {
-              const isExpanded = expandedModules.has(module.id)
+              // const isExpanded = expandedModules.has(module.id)
               const isCurrentModule = selectedSection?.moduleId === module.id;
 
               return (
                 <div key={module.id} className="relative">
                   <button
+                    onClick={() => toggleModule(module.id)}
                     className={`flex items-center space-x-2 px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap
                     ${isCurrentModule
                         ? 'bg-white text-teal-dark shadow-sm'
