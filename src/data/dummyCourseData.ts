@@ -96,24 +96,7 @@ export const dummyCourse: Course = {
             }
           ]
         },
-        {
-          id: 'm1-s3',
-          title: 'Fun & Games',
-          description: 'Reinforce learning with play',
-          chapters: [
-            {
-              id: 'm1-c5',
-              title: 'Pass the Bottle',
-              description: 'Online Version',
-              content: {
-                type: 'games',
-                title: 'Pass the Bottle',
-                game_id: 'pass-the-bottle',
-                description: 'A virtual water bottle spins! If it lands on you, say one reason to drink water.'
-              }
-            }
-          ]
-        }
+
       ]
     },
     {
@@ -205,24 +188,7 @@ export const dummyCourse: Course = {
             }
           ]
         },
-        {
-          id: 'm2-s3',
-          title: 'Fun & Games',
-          description: 'Hydration Hero Board',
-          chapters: [
-            {
-              id: 'm2-c5',
-              title: 'Hydration Hero Board',
-              description: 'Online Version',
-              content: {
-                type: 'games',
-                title: 'Hydration Hero Board',
-                game_id: 'hydration-board',
-                description: 'Roll the dice and move across the board! Collect Water Wisdom points.'
-              }
-            }
-          ]
-        }
+
       ]
     },
     {
@@ -314,24 +280,7 @@ export const dummyCourse: Course = {
             }
           ]
         },
-        {
-          id: 'm3-s3',
-          title: 'Fun & Games',
-          description: 'Memory Drop Challenge',
-          chapters: [
-            {
-              id: 'm3-c5',
-              title: 'Memory Drop Challenge',
-              description: 'Online Version',
-              content: {
-                type: 'games',
-                title: 'Memory Drop Challenge',
-                game_id: 'memory-drop',
-                description: 'Click droplets to reveal questions and earn points!'
-              }
-            }
-          ]
-        }
+
       ]
     }
   ]
