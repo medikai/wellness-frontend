@@ -16,7 +16,7 @@ const CourseModal: React.FC<CourseModalProps> = ({ isOpen, onClose }) => {
     return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
             <div className="bg-white w-[90%] h-[90%] rounded-2xl overflow-hidden relative flex flex-col">
-                <div className="flex-1 overflow-auto">
+                <div className="flex-1 overflow-hidden">
                     <UnifiedCourseLayout
                         course={dummyCourse}
                         courseId="mock-course-1"

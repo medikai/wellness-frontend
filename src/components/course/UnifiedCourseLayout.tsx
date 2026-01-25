@@ -15,6 +15,7 @@ import {
   GameContent,
 } from '@/types/course'
 import { courseService } from '@/services/courseService'
+import confetti from 'canvas-confetti'
 
 import { Icon } from '@/components/ui'
 
@@ -129,6 +130,37 @@ export default function UnifiedCourseLayout({
     setGameStatus('start')
   }, [activeContentId])
 
+  // Progress Calculation
+  const allChapters = course?.modules.flatMap(m => m.sections.flatMap(s => (s as SectionWithChapters).chapters)) || [];
+  const currentChapterIndex = allChapters.findIndex(c => c.id === selectedSection?.activeChapterId);
+  const progress = allChapters.length > 0 ? Math.round(((currentChapterIndex + 1) / allChapters.length) * 100) : 0;
+
+  const triggerCelebration = () => {
+    const duration = 3 * 1000;
+    const animationEnd = Date.now() + duration;
+    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999 };
+
+    const randomInRange = (min: number, max: number) => Math.random() * (max - min) + min;
+
+    const interval: any = setInterval(function () {
+      const timeLeft = animationEnd - Date.now();
+
+      if (timeLeft <= 0) {
+        return clearInterval(interval);
+      }
+
+      const particleCount = 50 * (timeLeft / duration);
+      // Fire from center (modal center is roughly viewport center)
+      confetti({
+        ...defaults,
+        particleCount,
+        origin: { x: 0.5, y: 0.6 }, // Slightly below center to look like it's popping up
+        gravity: 0.8,
+        scalar: 1.2
+      });
+    }, 250);
+  }
+
 
 
 
@@ -240,12 +272,14 @@ export default function UnifiedCourseLayout({
               activeContentId: (nextSection.chapters[0].content as any).id || undefined
             });
             setExpandedModules(new Set([nextModule.id]));
+            triggerCelebration(); // Celebration on module completion
           }
         }
         return;
       }
 
-      alert("Congratulations! You have completed the course.");
+      triggerCelebration();
+      // alert("Congratulations! You have completed the course.");
 
     } catch (e) {
       console.error(e)
@@ -301,18 +335,13 @@ export default function UnifiedCourseLayout({
   }
 
   const toggleOption = (qId: string, optId: string, isRadio: boolean) => {
-    setSelectedOptions(prev => {
-      if (isRadio) {
-        return { ...prev, [qId]: [optId] };
-      } else {
-        const current = prev[qId] || [];
-        if (current.includes(optId)) {
-          return { ...prev, [qId]: current.filter(x => x !== optId) };
-        } else {
-          return { ...prev, [qId]: [...current, optId] };
-        }
-      }
-    });
+    // Find the question and its options to determine correctness
+    // This requires finding the question in the course data again or passing it in.
+    // simpler to traverse or modify how toggleOption is called, but let's stick to safe access.
+
+    // We can infer correctness if we pass it or if we find it. 
+    // Given the structure, finding it in `toggleOption` is expensive/complex without passing data.
+    // Let's refactor the render loop to handle the logic inline or pass necessary data.
   }
 
 
@@ -331,12 +360,19 @@ export default function UnifiedCourseLayout({
     const type = getContentType(activeContent);
 
     return (
-      <div className="flex-1 h-full overflow-y-auto p-6 lg:p-10">
+      <div className="flex-1 h-full overflow-y-auto hide-scrollbar p-6 lg:p-10">
         <div className="max-w-5xl mx-auto h-full flex flex-col">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold text-neutral-dark">{activeChapter.title}</h1>
-            <div className="bg-teal-50 text-teal-700 px-4 py-2 rounded-full text-sm font-semibold tracking-wide shadow-sm">
-              {selectedSection.section.title}
+            <div className="flex items-center gap-4">
+              {quizFeedback && (
+                <div className={`px-4 py-2 rounded-full text-sm font-bold animate-fade-in ${quizFeedback.includes("Correct") || quizFeedback.includes("Perfect") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                  {quizFeedback}
+                </div>
+              )}
+              <div className="bg-teal-50 text-teal-700 px-4 py-2 rounded-full text-sm font-semibold tracking-wide shadow-sm">
+                {selectedSection.section.title}
+              </div>
             </div>
           </div>
 
@@ -359,6 +395,8 @@ export default function UnifiedCourseLayout({
                 <h2 className="text-xl font-bold mb-6">{(activeContent as QuizContent).title}</h2>
                 {(activeContent as QuizContent).questions.map((q, idx) => {
                   const isMultiple = q.options.filter(o => o.correct).length > 1;
+                  const isSingleQuestion = (activeContent as QuizContent).questions.length === 1;
+
                   return (
                     <div key={q.id} className="mb-8">
                       <p className="font-semibold text-lg mb-4">{idx + 1}. {q.question}</p>
@@ -368,7 +406,44 @@ export default function UnifiedCourseLayout({
                           return (
                             <button
                               key={opt.id}
-                              onClick={() => toggleOption(q.id, opt.id, !isMultiple)}
+                              onClick={() => {
+                                const correctOptions = q.options.filter(o => o.correct).map(o => o.id);
+                                const isCorrect = opt.correct;
+
+                                if (isMultiple) {
+                                  // Multiple Choice Logic (Instant Validation)
+                                  if (isCorrect) {
+                                    // Add if not already selected
+                                    const currentSelected = selectedOptions[q.id] || [];
+                                    if (!currentSelected.includes(opt.id)) {
+                                      const newSelected = [...currentSelected, opt.id];
+                                      setSelectedOptions(prev => ({ ...prev, [q.id]: newSelected }));
+
+                                      // Check if ALL correct are found
+                                      const allFound = correctOptions.every(id => newSelected.includes(id));
+                                      if (allFound) {
+                                        setQuizFeedback("Perfect! All correct.");
+                                        setTimeout(handleNext, 1500);
+                                      } else {
+                                        setQuizFeedback(`Correct! Find ${correctOptions.length - newSelected.length} more.`);
+                                      }
+                                    }
+                                  } else {
+                                    // Incorrect
+                                    setQuizFeedback("Incorrect choice. Try again!");
+                                  }
+                                } else {
+                                  // Single Choice Logic
+                                  // toggleOption(q.id, opt.id, !isMultiple); // This line is no longer needed as logic is inline
+                                  setSelectedOptions(prev => ({ ...prev, [q.id]: [opt.id] })); // Select the option
+                                  if (opt.correct) {
+                                    setQuizFeedback("Correct! Moving on...");
+                                    setTimeout(handleNext, 1500);
+                                  } else {
+                                    setQuizFeedback("Incorrect. Try again!");
+                                  }
+                                }
+                              }}
                               className={`w-full text-left p-4 rounded-xl border-2 transition-all flex items-center justify-between
                                                     ${isSelected ? 'border-teal-primary bg-teal-50' : 'border-neutral-200 hover:border-teal-200'}
                                                 `}
@@ -382,19 +457,6 @@ export default function UnifiedCourseLayout({
                     </div>
                   )
                 })}
-
-                {quizFeedback && (
-                  <div className={`p-4 rounded-lg mb-4 text-center font-bold ${quizFeedback.includes("Correct") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                    {quizFeedback}
-                  </div>
-                )}
-
-                <button
-                  onClick={() => handleQuizSubmit((activeContent as QuizContent).questions)}
-                  className="w-full bg-teal-primary text-white py-3 rounded-xl font-bold hover:bg-teal-dark transition-colors"
-                >
-                  Submit Answer
-                </button>
               </div>
             )}
 
@@ -411,12 +473,6 @@ export default function UnifiedCourseLayout({
                   className="w-full p-4 text-lg border-2 border-neutral-300 rounded-xl focus:border-teal-primary outline-none mb-6"
                 />
 
-                {quizFeedback && (
-                  <div className={`p-4 rounded-lg mb-4 text-center font-bold ${quizFeedback.includes("Correct") ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                    {quizFeedback}
-                  </div>
-                )}
-
                 <button
                   onClick={() => handleOneWordSubmit((activeContent as ActivityContent).options![0])} // Assuming correct answer is in options[0]
                   className="w-full bg-teal-primary text-white py-3 rounded-xl font-bold hover:bg-teal-dark transition-colors"
@@ -427,10 +483,10 @@ export default function UnifiedCourseLayout({
             )}
 
             {type === 'games' && (
-              <div className="flex flex-col items-center justify-center py-10 text-center">
+              <div className="py-10 text-center w-full">
                 <div className="text-6xl mb-6">🎮</div>
                 <h2 className="text-2xl font-bold mb-2">{(activeContent as GameContent).title}</h2>
-                <p className="text-neutral-medium max-w-md mb-8">{(activeContent as GameContent).description}</p>
+                <p className="text-neutral-medium w-full max-w-2xl mx-auto mb-8">{(activeContent as GameContent).description}</p>
 
                 {gameStatus === 'start' && (
                   <button onClick={() => setGameStatus('playing')} className="bg-teal-primary text-white px-8 py-3 rounded-full font-bold text-lg animate-bounce">
@@ -521,6 +577,13 @@ export default function UnifiedCourseLayout({
             </button>
           )}
         </div>
+      </div>
+
+      <div className="w-full bg-neutral-light h-1.5">
+        <div
+          className="bg-orange-primary h-1.5 transition-all duration-500 ease-out"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
       <div className="flex-1 overflow-hidden flex flex-col relative">
